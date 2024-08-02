@@ -1,16 +1,26 @@
+require('dotenv').config();
 const express = require('express');
+
+// DB
+const connectDb = require('./db/db');
+// Routers
+const authRouter = require('./routes/auth-router');
 
 const app = express();
 
+app.use("/api/auth", authRouter);
 
-app.get('/',(req,res)=> {
+app.get('/', (req, res) => {
     res.send("Welcome To Blog Site");
 })
 
 const port = 2024;
 const host = '127.0.0.1';
 
-app.listen(port, host, ()=> {
-    console.log(`Server is started on http://${host}:${port}`);
-    
+
+connectDb().then(() => {
+    app.listen(port, host, () => {
+        console.log(`Server is started on http://${host}:${port}`);
+
+    })
 })
