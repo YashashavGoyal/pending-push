@@ -36,11 +36,19 @@ const loginUser = async (req, res) => {
                 message: "Invalid Credential",
             });
         }
-
-        if (userExist.password === password) {
+        
+        const isPass = await userExist.comparePass(password);
+        
+        if (isPass) {
             res.status(200).json({
                 message: "Login Successfull",
+                userId: userExist._id
             })
+        }
+        else{
+            res.status(400).json({
+                message: "Invalid Credential",
+            });
         }
 
     } catch (error) {
