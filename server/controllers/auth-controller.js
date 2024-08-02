@@ -17,6 +17,7 @@ const createUser = async (req, res) => {
 
         res.status(201).json({
             message: "Account Created Successfully",
+            token: user.generateToken(),
             userId: user._id,
         })
 
@@ -42,6 +43,7 @@ const loginUser = async (req, res) => {
         if (isPass) {
             res.status(200).json({
                 message: "Login Successfull",
+                token: userExist.generateToken(),
                 userId: userExist._id
             })
         }
