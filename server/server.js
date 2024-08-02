@@ -8,6 +8,8 @@ const authRouter = require('./routes/auth-router');
 
 const app = express();
 
+app.use(express.json());
+
 app.use("/api/auth", authRouter);
 
 app.get('/', (req, res) => {
@@ -19,7 +21,7 @@ const host = '127.0.0.1';
 
 
 connectDb().then(() => {
-    app.listen(port, host, () => {
+    app.listen(port, () => {
         console.log(`Server is started on http://${host}:${port}`);
 
     })
