@@ -19,7 +19,7 @@ const authmiddleware = (req, res, next) => {
                 password: 0,
             });
 
-        req.user = userData;
+        req.user = isVerified;
         req.token = userToken;
         req.userId = isVerified.userId;
 
