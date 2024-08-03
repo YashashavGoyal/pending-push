@@ -6,7 +6,8 @@ const adminMiddleware = require('../middleware/admin-middleware');
 const {
     adminLogin,
     getAdminUsers,
-    getUserPost
+    getUserPost,
+    deleteUser
 } = require('../controllers/admin-controller');
 
 const router = express.Router();
@@ -16,6 +17,8 @@ router.route('/login').post(adminLogin);
 router.route('/users').get(authmiddleware, adminMiddleware, getAdminUsers);
 
 router.route('/:id/posts').get(authmiddleware, adminMiddleware, getUserPost);
+
+router.route('/:id/delete').delete(authmiddleware, adminMiddleware, deleteUser);
 
 
 module.exports = router;

@@ -55,23 +55,45 @@ const getUserPost = async (req, res) => {
         const user = await User.findById(id);
 
         if (!user) {
-            return res.status(404).json({message: "User Not Found"});
+            return res.status(404).json({ message: "User Not Found" });
         }
 
         const userData = await user.populate('posts');
         const posts = await userData.posts;
 
         res.status(200)
-        .json({message: "Post Fetched Succesfully",
-            posts,
-        })
+            .json({
+                message: "Post Fetched Succesfully",
+                posts,
+            })
 
     } catch (error) {
         // console.error(error);
         return res.status(500)
-        .json({message: "Cannot Get Post For This User"});
+            .json({ message: "Cannot Get Post For This User" });
+    }
+}
+
+// Delete User
+const deleteUser = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const user = await User.findById(id);
+
+        if (!user) {
+            return res.status(404).json({ message: "User Not Found" });
+        }
+
+        await User.deleteOne({_id:id});
+
+        res.status(200).json({message: "User Deleted"});
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500)
+            .json({ message: "Cannot Delete User Internal Server Error" });
     }
 }
 
 
-module.exports = { adminLogin, getAdminUsers, getUserPost };
+module.exports = { adminLogin, getAdminUsers, getUserPost, deleteUser };
