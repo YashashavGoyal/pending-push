@@ -95,7 +95,7 @@ const deletePost = async (req, res) => {
         }
 
         const deletePost = await Post.deleteOne({ _id: postId });
-        console.log(deletePost);
+        // console.log(deletePost);
 
         await removePostToUser(userId, postId);
 
@@ -109,8 +109,38 @@ const deletePost = async (req, res) => {
 
 }
 
+// Removing Post Id to User Post Array
 const removePostToUser = async (userId, postId) => {
     await User.findByIdAndUpdate(userId, { $pull: { posts: postId } });
 }
 
-module.exports = { createPost, editPost, deletePost };
+// Get Post
+const getPost = async (req, res) => {
+    const userId = req.userId;
+    console.log(userId);
+
+    try {
+        // Find the user by ID and populate the posts field
+        const user = await User.findById(userId).populate('posts');
+        const posts = await user.posts;
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        if (posts.length === 0) {
+            return res.status(404).json({message: "No Posts Found"});
+        }
+
+        res.status(200)
+        .json({
+            message: "Posts Is Refreshed",
+            posts,
+        });
+
+    } catch (error) {
+        console.error(error);   
+        res.status(500).json({ message: "Internal Server Error: Cannot get posts" });
+    }
+}
+module.exports = { createPost, editPost, deletePost, getPost };
