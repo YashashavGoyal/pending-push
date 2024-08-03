@@ -5,12 +5,14 @@ const express = require('express');
 const connectDb = require('./db/db');
 // Routers
 const authRouter = require('./routes/auth-router');
+const postRouter = require('./routes/post-route');
 
 const app = express();
 
 app.use(express.json());
 
 app.use("/api/auth", authRouter);
+app.use("/api/post", postRouter);
 
 app.get('/', (req, res) => {
     res.send("Welcome To Blog Site");

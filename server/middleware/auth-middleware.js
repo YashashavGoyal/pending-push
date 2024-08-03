@@ -1,0 +1,32 @@
+const jwt = require("jsonwebtoken");
+const User = require("../models/User-model");
+
+const authmiddleware = (req, res, next) => {
+    const token = req.header("Authorization");
+
+    if (!token) {
+        return res.status(400)
+            .json({ message: "Invalid User" });
+    }
+
+    const userToken = token.replace("Bearer", "").trim();
+
+    try {
+        const isVerified = jwt.verify(userToken, process.env.JWT_SECRET_KEY);
+
+        const userData = User.findOne({ email: isVerified.email })
+            .select({
+                password: 0,
+            });
+
+        req.user = userData;
+        req.token = userToken;
+        req.userId = isVerified.userId;
+
+        next();
+    } catch (error) {
+        res.status(401).json({ message: "User can not verified" });
+    }
+}
+
+module.exports = authmiddleware;
