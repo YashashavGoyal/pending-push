@@ -11,7 +11,7 @@ const router = express.Router();
 
 router.route('/new').post(authmiddleware, createPost);
 
-router.route('/:id/edit').post(authmiddleware, editPost);
+router.route('/:id/edit').patch(authmiddleware, editPost);
 
 router.route('/:id/delete').delete(authmiddleware, deletePost);
 

@@ -117,7 +117,7 @@ const removePostToUser = async (userId, postId) => {
 // Get Post
 const getPost = async (req, res) => {
     const userId = req.userId;
-    console.log(userId);
+    // console.log(userId);
 
     try {
         // Find the user by ID and populate the posts field
