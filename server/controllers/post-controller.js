@@ -129,18 +129,42 @@ const getPost = async (req, res) => {
         }
 
         if (posts.length === 0) {
-            return res.status(404).json({message: "No Posts Found"});
+            return res.status(404).json({ message: "No Posts Found" });
         }
 
         res.status(200)
-        .json({
-            message: "Posts Is Refreshed",
-            posts,
-        });
+            .json({
+                message: "Posts Is Refreshed",
+                posts,
+            });
 
     } catch (error) {
-        console.error(error);   
+        console.error(error);
         res.status(500).json({ message: "Internal Server Error: Cannot get posts" });
     }
 }
-module.exports = { createPost, editPost, deletePost, getPost };
+
+// Get Post For Feed -- Pagination
+const getPaginationPost = async (req, res) => {
+    const page = parseInt(req.params.num) || 1;
+    const limit = parseInt(req.params.limit) || 10;
+    try {
+        const skip = (page - 1) * limit;
+
+        const posts = await Post.find().sort({ createdAt: -1 }).skip(skip).limit(limit);
+
+        if (posts.length === 0) {
+            return res.status(404).json({ message: "No posts found" });
+        }
+
+        // Send the posts as a response
+        res.status(200)
+            .json({ message: "Post Fetched Successfully", posts });
+    } catch (error) {
+        // console.error(error);
+        res.status(500)
+            .json({ message: "Internal Server Error Can't Fetch Posts" });
+    }
+}
+
+module.exports = { createPost, editPost, deletePost, getPost, getPaginationPost };
