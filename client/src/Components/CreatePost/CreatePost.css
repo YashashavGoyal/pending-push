@@ -1,10 +1,12 @@
 .write {
     padding-top: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .writeImg {
-    margin-left: 150px;
-    width: 70vw;
+    width: 70%;
     height: 250px;
     border-radius: 10px;
     object-fit: cover;
@@ -15,7 +17,6 @@
 }
 
 .writeFormGroup {
-    margin-left: 150px;
     display: flex;
     align-items: center;
 }
@@ -37,7 +38,7 @@
     font-size: 30px;
     border: none;
     padding: 20px;
-    width: 70vw;
+    width: 70%;
 }
 
 .writeInput::placeholder {
@@ -50,7 +51,9 @@
 }
 
 .writeText {
-    width: 70vw;
+    display: block;
+    margin: auto;
+    width: 70%;
     height: 100vh;
     font-family: inherit;
     font-size: 20px;
