@@ -5,9 +5,6 @@ import './Feed.css';
 export default function Feed() {
     return (
         <section className='feed'>
-            <div className="create">
-                <CreatePost />
-            </div>
             <div className="posts">
                 <Post />
                 <Post />

@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const cors = require('cors');
 
 // DB
 const connectDb = require('./db/db');
@@ -11,6 +12,14 @@ const adminRouter = require('./routes/admin-route');
 const app = express();
 
 app.use(express.json());
+
+const corsOptions ={
+    origin: "http://localhost:5173",
+    methods: "GET, POST, PUT, PATCH, DELETE",
+    credentials: true,
+}
+
+app.use(cors());
 
 app.use("/api/auth", authRouter);
 app.use("/api/post", postRouter);

@@ -1,22 +1,5 @@
 section.feed {
     display: flex;
     padding: 50px;
-}
-
-.feed>.create {
-    max-width: 500px;
-}
-
-.feed .write{
-    padding-top: 0;
-}
-
-.feed .writeForm {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.feed .writeFormGroup {
-    width: 100%;
+    position: relative;
 }

@@ -17,15 +17,20 @@ const Home = () => {
     useEffect(() => {
         if (path === '/') {
             setHead("Blogs");
-        } else if (path === '/about') {
+        }
+        else if (path === '/about') {
             setHead("About");
-        } else if (path === '/contact') {
+        }
+        else if (path === '/contact') {
             setHead('Contact Us');
-        } else if (path === '/register') {
+        }
+        else if (path === '/register') {
             setHead('Register');
-        } else if (path === '/login') {
+        }
+        else if (path === '/login') {
             setHead("Login");
-        } else if (path === '/create-post') {
+        }
+        else if (path === '/create-post') {
             setHead(null);
         }
     }, [path])

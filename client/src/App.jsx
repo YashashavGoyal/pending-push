@@ -9,7 +9,7 @@ import Feed from './Components/Feed/Feed';
 
 
 const App = () => {
-    const user = true;
+    const user = false;
     return (
         <>
             <BrowserRouter>
