@@ -1,4 +1,5 @@
-import { createContext, useContext } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 export const AuthContext = createContext();
 
@@ -6,9 +7,69 @@ export const AuthProvider = ({ children }) => {
 
     const API = `http://127.0.0.1:2024`;
 
+    // token state variable
+    const [token, setToken] = useState(localStorage.getItem('token'));
+
+    // user state variable
+    const [user, setUser] = useState({});
+
+    // setting token in LS
+    const setTokenInLS = (token) => {
+        localStorage.setItem("token", token);
+        setToken(token);
+    }
+
+    // getting user data
+    const getUser = async () => {
+        const url = `${API}/api/auth/user/info`;
+
+        try {
+
+            if (token !== null) {
+                const response = await fetch(url, {
+                    method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    }
+                });
+
+                const resdata = await response.json();
+                
+                if (response.ok) {
+                    const userData = await resdata.user;
+                    console.log(userData);
+                    setUser(userData);
+                }
+                else {
+                    toast.error(resdata.message, 'try to Login Again');
+                }
+            }
+
+        } catch (error) {
+            console.log(`usr data error`, error);
+        }
+
+    }
+
+    // handling logout
+    const logoutUser = () => {
+        setToken("");
+        return localStorage.removeItem("token");
+    }
+
+
+    useEffect(() => {
+        getUser();
+    }, [token])
+
+    const isLoggedIn = !!token;
 
     const contextContent = {
         API,
+        token,
+        isLoggedIn,
+        setTokenInLS,
+        logoutUser,
     }
 
     return (

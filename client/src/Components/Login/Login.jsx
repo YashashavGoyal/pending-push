@@ -8,7 +8,7 @@ export default function Login() {
 
     const navigate = useNavigate();
 
-    const {API} = useAuth();
+    const { API, setTokenInLS } = useAuth();
     const url = `${API}/api/auth/login`;
 
     const [data, setData] = useState({
@@ -26,7 +26,7 @@ export default function Login() {
         })
     }
 
-    const handleSubmit = async (e) => { 
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         const respone = await fetch(url, {
@@ -38,10 +38,16 @@ export default function Login() {
         });
 
         const resData = await respone.json();
+        // console.log(resData);
+        
         if (respone.ok) {
             toast.success(resData.message);
-            setData({email:"", password:""});
+            setData({ email: "", password: "" });
+            setTokenInLS(resData.token)
             navigate("/");
+        }
+        else {
+            toast.error(resData.message);
         }
     }
 

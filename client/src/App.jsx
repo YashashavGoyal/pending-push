@@ -6,6 +6,7 @@ import Login from './Components/Login/Login';
 import CreatePost from './Components/CreatePost/CreatePost';
 import About from './Components/About/About';
 import Feed from './Components/Feed/Feed';
+import Logout from './Components/Logout/Logout';
 
 
 const App = () => {
@@ -21,6 +22,7 @@ const App = () => {
                         <Route path='create-post' element={<CreatePost />} />
                         <Route path='register' element={<Register />} />
                         <Route path='login' element={<Login />} />
+                        <Route path='logout' element={<Logout />} />
                     </Route>
                 </Routes>
             </BrowserRouter>

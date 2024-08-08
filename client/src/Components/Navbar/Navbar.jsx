@@ -1,8 +1,11 @@
 import { Link } from "react-router-dom";
+import { useAuth } from "../../utils/auth";
 import "./Navbar.css";
 
 export default function Navbar() {
-    const user = false;
+
+    const { isLoggedIn } = useAuth();
+
     return (
         <nav className="top">
             <div className="topLeft">
@@ -20,18 +23,20 @@ export default function Navbar() {
                         <Link to='/contact'>CONTACT</Link>
                     </li>
                     {
-                        (user) ?
+                        (isLoggedIn) ?
                             <>
                                 <li className="topListItem">
                                     <Link to='/create-post'>WRITE</Link>
                                 </li>
-                                <li className="topListItem">LOGOUT</li>
+                                <li className="topListItem">
+                                    <Link to='/logout'>LOGOUT</Link>
+                                </li>
                             </> : ""
                     }
                 </ul>
             </div>
             <div className="topRight">
-                {user ? (
+                {isLoggedIn ? (
                     <>
                         <Link className="link" to="/settings">
                             <img
