@@ -13,6 +13,9 @@ export const AuthProvider = ({ children }) => {
     // user state variable
     const [user, setUser] = useState({});
 
+    // user state variable
+    const [isLoading, setIsLoading] = useState(true);
+
     // setting token in LS
     const setTokenInLS = (token) => {
         localStorage.setItem("token", token);
@@ -24,7 +27,7 @@ export const AuthProvider = ({ children }) => {
         const url = `${API}/api/auth/user/info`;
 
         try {
-
+            setIsLoading(true);
             if (token !== null) {
                 const response = await fetch(url, {
                     method: "GET",
@@ -39,6 +42,10 @@ export const AuthProvider = ({ children }) => {
                     const userData = await resdata.user;
                     // console.log(userData);
                     setUser(userData);
+                    setIsLoading(false);
+                }
+                else{
+                    setIsLoading(false);
                 }
             }
 
@@ -59,7 +66,7 @@ export const AuthProvider = ({ children }) => {
         getUser();
     }, [token])
 
-    const isLoggedIn = !!token;
+    let isLoggedIn = !!token;
 
     const contextContent = {
         API,

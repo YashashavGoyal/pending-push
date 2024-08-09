@@ -14,9 +14,12 @@ import Logout from './Components/Logout/Logout';
 
 const App = () => {
 
-    const { isLoggedin } = useAuth();
-    console.log(isLoggedin);
-    
+    const { isLoggedin, isLoading } = useAuth();
+
+    if (isLoading) {
+        return <h1>Loading...</h1>
+    }
+
     return (
         <>
             <BrowserRouter>

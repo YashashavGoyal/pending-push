@@ -8,6 +8,7 @@ const connectDb = require('./db/db');
 const authRouter = require('./routes/auth-router');
 const postRouter = require('./routes/post-route');
 const adminRouter = require('./routes/admin-route');
+const contactRouter = require('./routes/contact-route');
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.use(cors());
 app.use("/api/auth", authRouter);
 app.use("/api/post", postRouter);
 app.use("/api/admin", adminRouter);
+app.use("/api/contact", contactRouter);
 
 app.get('/', (req, res) => {
     res.send("Welcome To Blog Site");
