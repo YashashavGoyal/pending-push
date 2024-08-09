@@ -1,4 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { useAuth } from './utils/auth';
+
+// Components
 import Home from './Layouts/Home/Home';
 import Register from './Components/Register/Register';
 import Contact from './Components/Contact/Contact';
@@ -10,13 +13,16 @@ import Logout from './Components/Logout/Logout';
 
 
 const App = () => {
-    const user = false;
+
+    const { isLoggedin } = useAuth();
+    console.log(isLoggedin);
+    
     return (
         <>
             <BrowserRouter>
                 <Routes>
                     <Route path='/' element={<Home />}>
-                        <Route path='' element={(user) ? <Feed /> : <></>} />
+                        <Route path='' element={(isLoggedin) ? <Feed /> : <></>} />
                         <Route path='about' element={<About />} />
                         <Route path='contact' element={<Contact />} />
                         <Route path='create-post' element={<CreatePost />} />

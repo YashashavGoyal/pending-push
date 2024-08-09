@@ -37,11 +37,8 @@ export const AuthProvider = ({ children }) => {
                 
                 if (response.ok) {
                     const userData = await resdata.user;
-                    console.log(userData);
+                    // console.log(userData);
                     setUser(userData);
-                }
-                else {
-                    toast.error(resdata.message, 'try to Login Again');
                 }
             }
 
@@ -68,6 +65,7 @@ export const AuthProvider = ({ children }) => {
         API,
         token,
         isLoggedIn,
+        user,
         setTokenInLS,
         logoutUser,
     }
