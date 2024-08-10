@@ -15,7 +15,7 @@ import PrivateRoute from './utils/PrivateRoute';
 
 const App = () => {
 
-    const { user, isLoading } = useAuth();
+    const { user, isLoading, isLoggedIn } = useAuth();
 
     if (isLoading) {
         return <h1>Loading...</h1>
@@ -32,9 +32,9 @@ const App = () => {
                         <Route path='register' element={<Register />} />
                         <Route path='login' element={<Login />} />
                         {/* PRIVATE ROUTES */}
-                        <Route path='feed' element={<PrivateRoute user={user}><Feed /></PrivateRoute>} />
-                        <Route path='create-post' element={<PrivateRoute user={user}><CreatePost /></PrivateRoute>} />
-                        <Route path='logout' element={<PrivateRoute user={user}><Logout /></PrivateRoute>} />
+                        <Route path='feed' element={<PrivateRoute user={isLoggedIn}><Feed /></PrivateRoute>} />
+                        <Route path='create-post' element={<PrivateRoute user={isLoggedIn}><CreatePost /></PrivateRoute>} />
+                        <Route path='logout' element={<PrivateRoute user={isLoggedIn}><Logout /></PrivateRoute>} />
                     </Route>
                 </Routes>
             </BrowserRouter>
