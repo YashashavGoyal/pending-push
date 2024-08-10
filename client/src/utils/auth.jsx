@@ -9,10 +9,10 @@ export const AuthProvider = ({ children }) => {
 
     // token state variable
     const [token, setToken] = useState(localStorage.getItem('token'));
-    
+
     // user state variable
     const [user, setUser] = useState({});
-    
+
     // loading state variable
     const [isLoading, setIsLoading] = useState(true);
 
@@ -72,6 +72,15 @@ export const AuthProvider = ({ children }) => {
 
     // getting posts
 
+    // limiting words in post content
+    const limitWords = (text, wordLimit) => {
+        const words = text.split(' ');
+        if (words.length > wordLimit) {
+            return words.slice(0, wordLimit).join(' ') + '...';
+        }
+        return text;
+    };
+
     // getting posts
     const getPostsForFeed = async (pageNum) => {
         const postUrl = `${API}/api/post/page/${pageNum}`
@@ -116,6 +125,7 @@ export const AuthProvider = ({ children }) => {
         hasMore,
         pageNum,
         setPageNum,
+        limitWords,
         setTokenInLS,
         logoutUser,
     }

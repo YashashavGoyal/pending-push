@@ -1,7 +1,10 @@
 import { Link } from "react-router-dom";
 import './Post.css';
+import { useAuth } from "../../utils/auth";
 
 export default function Post(props) {
+
+    const { limitWords } = useAuth();
 
     const { post } = props;
 
@@ -38,7 +41,7 @@ export default function Post(props) {
                     <span className="postDate">{date}</span>
                 </div>
                 <p className="postDesc">
-                    {content}
+                    {limitWords(content, 40)}
                 </p>
                 <span className="postAuthor"> author : {username}</span>
             </div></>
