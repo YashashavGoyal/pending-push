@@ -3,14 +3,17 @@ import './Post.css';
 
 export default function Post(props) {
 
-    const { img } = props;
+    const { post } = props;
+
+    const { author, content, date, title } = post;
+    const { username } = author;
 
     return (
         <>
             <div className="post">
                 <img
                     className="postImg"
-                    src={img}
+                    src=""
                     alt=""
                 />
                 <div className="postInfo">
@@ -28,18 +31,16 @@ export default function Post(props) {
                     </div>
                     <span className="postTitle">
                         <Link to="/post/abc" className="link">
-                            Lorem ipsum dolor sit amet
+                            {title}
                         </Link>
                     </span>
                     <hr />
-                    <span className="postDate">1 hour ago</span>
+                    <span className="postDate">{date}</span>
                 </div>
                 <p className="postDesc">
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Assumenda
-                    officia architecto deserunt deleniti? Labore ipsum aspernatur magnam
-                    fugiat, reprehenderit praesentium blanditiis quos cupiditate ratione
-                    atque, exercitationem quibusdam, reiciendis odio laboriosam?
+                    {content}
                 </p>
+                <span className="postAuthor"> author : {username}</span>
             </div></>
     )
 }

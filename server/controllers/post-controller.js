@@ -144,27 +144,43 @@ const getPost = async (req, res) => {
     }
 }
 
-// Get Post For Feed -- Pagination
 const getPaginationPost = async (req, res) => {
     const page = parseInt(req.params.num) || 1;
     const limit = parseInt(req.params.limit) || 10;
+
     try {
         const skip = (page - 1) * limit;
 
-        const posts = await Post.find().sort({ createdAt: -1 }).skip(skip).limit(limit);
+        const posts = await Post.find()
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit)
+            .populate('author');
+
+        // Get the total count of posts in the collection
+        const totalPosts = await Post.countDocuments();
+
+        // Calculate whether there are more posts to load
+        const hasMore = skip + posts.length < totalPosts;
 
         if (posts.length === 0) {
-            return res.status(404).json({ message: "No posts found" });
+            return res.status(404)
+                .json({
+                    message: "No posts found",
+                });
         }
 
-        // Send the posts as a response
-        res.status(200)
-            .json({ message: "Post Fetched Successfully", posts });
+        // Send the posts and metadata as a response
+        res.status(200).json({
+            message: "Posts Fetched Successfully",
+            posts,
+            hasMore,
+        });
     } catch (error) {
-        // console.error(error);
-        res.status(500)
-            .json({ message: "Internal Server Error Can't Fetch Posts" });
+        res.status(500).json({
+            message: "Internal Server Error. Can't Fetch Posts",
+        });
     }
-}
+};
 
 module.exports = { createPost, editPost, deletePost, getPost, getPaginationPost };

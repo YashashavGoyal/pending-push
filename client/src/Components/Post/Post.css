@@ -47,6 +47,16 @@
   margin-top: 15px;
 }
 
+.postAuthor {
+  margin-left: auto;
+  font-family: "Lora", serif;
+  font-style: italic;
+  font-size: 13px;
+  font-weight: 400;
+  color: #999999;
+  margin-top: 15px;
+}
+
 .postDesc {
   font-family: "Varela Round", Arial, Helvetica, sans-serif;
   font-weight: 400;

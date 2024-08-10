@@ -14,7 +14,7 @@ import Logout from './Components/Logout/Logout';
 
 const App = () => {
 
-    const { isLoggedin, isLoading } = useAuth();
+    const { user, isLoading } = useAuth();
 
     if (isLoading) {
         return <h1>Loading...</h1>
@@ -25,7 +25,7 @@ const App = () => {
             <BrowserRouter>
                 <Routes>
                     <Route path='/' element={<Home />}>
-                        <Route path='' element={(isLoggedin) ? <Feed /> : <></>} />
+                        <Route path='' element={(user) ? <Feed /> : <></>} />
                         <Route path='about' element={<About />} />
                         <Route path='contact' element={<Contact />} />
                         <Route path='create-post' element={<CreatePost />} />
