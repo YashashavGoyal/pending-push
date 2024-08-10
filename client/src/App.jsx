@@ -10,6 +10,7 @@ import CreatePost from './Components/CreatePost/CreatePost';
 import About from './Components/About/About';
 import Feed from './Components/Feed/Feed';
 import Logout from './Components/Logout/Logout';
+import PrivateRoute from './utils/PrivateRoute';
 
 
 const App = () => {
@@ -25,13 +26,15 @@ const App = () => {
             <BrowserRouter>
                 <Routes>
                     <Route path='/' element={<Home />}>
-                        <Route path='' element={(user) ? <Feed /> : <></>} />
+                        {/* PUBLIC ROUTES */}
                         <Route path='about' element={<About />} />
                         <Route path='contact' element={<Contact />} />
-                        <Route path='create-post' element={<CreatePost />} />
                         <Route path='register' element={<Register />} />
                         <Route path='login' element={<Login />} />
-                        <Route path='logout' element={<Logout />} />
+                        {/* PRIVATE ROUTES */}
+                        <Route path='feed' element={<PrivateRoute user={user}><Feed /></PrivateRoute>} />
+                        <Route path='create-post' element={<PrivateRoute user={user}><CreatePost /></PrivateRoute>} />
+                        <Route path='logout' element={<PrivateRoute user={user}><Logout /></PrivateRoute>} />
                     </Route>
                 </Routes>
             </BrowserRouter>
