@@ -5,7 +5,8 @@ const {
     createUser,
     loginUser,
     updateUser,
-    getUser
+    getUser,
+    getUserPostEach
 } = require('../controllers/auth-controller');
 const authmiddleware = require('../middleware/auth-middleware');
 
@@ -18,5 +19,7 @@ router.route("/login").post(loginUser);
 router.route('/user/update').patch(authmiddleware, updateUser);
 
 router.route('/user/info').get(authmiddleware, getUser);
+
+router.route('/user/post').get(authmiddleware, getUserPostEach);
 
 module.exports = router;

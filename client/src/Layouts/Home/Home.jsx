@@ -30,6 +30,9 @@ const Home = () => {
         else if (path === '/login') {
             setHead("Login");
         }
+        else if (path === '/feed') {
+            setHead("Read Blogs");
+        }
         else if (path === '/create-post') {
             setHead(null);
         }

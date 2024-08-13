@@ -6,8 +6,9 @@ footer {
     padding: 0 20px;
     font-size: 20px;
     font-family: monospace;
+    background: white;
 }
 
-footer a{
+footer a {
     color: black;
 }

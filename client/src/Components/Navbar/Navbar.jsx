@@ -4,7 +4,11 @@ import "./Navbar.css";
 
 export default function Navbar() {
 
-    const { isLoggedIn } = useAuth();
+    const { isLoggedIn, isLoading } = useAuth();
+
+    if (isLoading) {
+        return <h1>Loading....</h1>
+    }
 
     return (
         <nav className="top">
@@ -14,7 +18,9 @@ export default function Navbar() {
             <div className="topCenter">
                 <ul className="topList">
                     <li className="topListItem">
-                        <Link to="/">HOME</Link>
+                        <Link to={
+                            (isLoggedIn)?'/feed':"/"
+                        }>HOME</Link>
                     </li>
                     <li className="topListItem">
                         <Link to='/about'>ABOUT</Link>
@@ -38,7 +44,7 @@ export default function Navbar() {
             <div className="topRight">
                 {isLoggedIn ? (
                     <>
-                        <Link className="link" to="/settings">
+                        <Link className="link" to="/user/admin">
                             <img
                                 className="topImg"
                                 src="https://images.pexels.com/photos/1858175/pexels-photo-1858175.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"

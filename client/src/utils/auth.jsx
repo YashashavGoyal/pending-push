@@ -106,13 +106,14 @@ export const AuthProvider = ({ children }) => {
         }
     }
 
-
     useEffect(() => {
-        getPostsForFeed(pageNum);
-        // console.log(pageNum);
-        // console.log(posts);
+        if (token) {
+            getPostsForFeed(pageNum);
+            // console.log(pageNum);
+            // console.log(posts);
 
-    }, [pageNum]);
+        }
+    }, [pageNum, token]);
 
     let isLoggedIn = !!token;
 
@@ -127,6 +128,7 @@ export const AuthProvider = ({ children }) => {
         setPageNum,
         limitWords,
         setTokenInLS,
+        getUser,
         logoutUser,
     }
 

@@ -103,7 +103,7 @@ const getUser = async (req, res) => {
 
         if (!userData) {
             return res.status(404)
-                .json({ message: "User Not Found "});
+                .json({ message: "User Not Found " });
         }
 
         return res.status(200).json({
@@ -119,5 +119,34 @@ const getUser = async (req, res) => {
     }
 }
 
+const getUserPostEach = async (req, res) => {
+    try {
+        const id = req.userId;
+        const user = await User.findById(id).populate('posts');
 
-module.exports = { createUser, loginUser, updateUser, getUser };
+        if (!user) {
+            return res.status(404)
+                .json({ message: 'User Not Found' })
+        }
+
+        const posts = await user.posts;
+
+        return res.status(200)
+            .json({
+                message: "Post Fetched Succeessfully",
+                posts,
+            });
+    } catch (error) {
+        // console.error('User Post', error);
+        res.status(500)
+            .json({ message: `Internal Server Error Post Cannot Fetched` })
+    }
+}
+
+module.exports = {
+    createUser,
+    loginUser,
+    updateUser,
+    getUser,
+    getUserPostEach,
+};

@@ -11,15 +11,22 @@ import About from './Components/About/About';
 import Feed from './Components/Feed/Feed';
 import Logout from './Components/Logout/Logout';
 import PrivateRoute from './utils/PrivateRoute';
+import Admin from './Layouts/Admin/Admin';
+import AdminProtect from './utils/AdminProtect';
+import AdminPosts from './Components/AdminPosts/AdminPosts';
+import AdminProfile from './Components/Profile/AdminProfile';
 
 
 const App = () => {
 
-    const { user, isLoading, isLoggedIn } = useAuth();
+    const { isLoading, isLoggedIn } = useAuth();
 
+    
     if (isLoading) {
         return <h1>Loading...</h1>
     }
+    
+    
 
     return (
         <>
@@ -32,9 +39,15 @@ const App = () => {
                         <Route path='register' element={<Register />} />
                         <Route path='login' element={<Login />} />
                         {/* PRIVATE ROUTES */}
-                        <Route path='feed' element={<PrivateRoute user={isLoggedIn}><Feed /></PrivateRoute>} />
-                        <Route path='create-post' element={<PrivateRoute user={isLoggedIn}><CreatePost /></PrivateRoute>} />
-                        <Route path='logout' element={<PrivateRoute user={isLoggedIn}><Logout /></PrivateRoute>} />
+                        <Route path='feed' element={<PrivateRoute isLoggedIn={isLoggedIn}><Feed /></PrivateRoute>} />
+                        <Route path='create-post' element={<PrivateRoute isLoggedIn={isLoggedIn}><CreatePost /></PrivateRoute>} />
+                        <Route path='logout' element={<PrivateRoute isLoggedIn={isLoggedIn}><Logout /></PrivateRoute>} />
+                    </Route>
+                    <Route path='/user/admin' element={
+                        <PrivateRoute isLoggedIn={isLoggedIn}><Admin /></PrivateRoute>
+                    } >
+                        <Route path='posts' element={<AdminPosts />} />
+                        <Route path='profile' element={<AdminProfile />} />
                     </Route>
                 </Routes>
             </BrowserRouter>

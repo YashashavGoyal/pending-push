@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
-import './Post.css';
 import { useAuth } from "../../utils/auth";
+import './Post.css';
 
 export default function Post(props) {
 

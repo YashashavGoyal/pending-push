@@ -16,7 +16,7 @@ router.route('/login').post(adminLogin);
 
 router.route('/users').get(authmiddleware, adminMiddleware, getAdminUsers);
 
-router.route('/:id/posts').get(authmiddleware, adminMiddleware, getUserPost);
+router.route('/:id/posts').get(authmiddleware, getUserPost);
 
 router.route('/:id/delete').delete(authmiddleware, adminMiddleware, deleteUser);
 

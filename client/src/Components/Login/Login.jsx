@@ -41,10 +41,10 @@ export default function Login() {
         // console.log(resData);
         
         if (respone.ok) {
-            toast.success(resData.message);
             setData({ email: "", password: "" });
             setTokenInLS(resData.token)
-            navigate("/");
+            navigate("/feed");
+            toast.success(resData.message);
         }
         else {
             toast.error(resData.message);
