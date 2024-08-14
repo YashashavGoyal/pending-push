@@ -8,7 +8,7 @@ export default function Feed() {
 
     const { posts, hasMore, pageNum, setPageNum } = useAuth();
 
-    console.log(posts);
+    // console.log(posts);
     if (!posts) {
         return <h1>Loading....</h1>
     }

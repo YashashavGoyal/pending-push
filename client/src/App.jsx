@@ -15,18 +15,20 @@ import Admin from './Layouts/Admin/Admin';
 import AdminProtect from './utils/AdminProtect';
 import AdminPosts from './Components/AdminPosts/AdminPosts';
 import AdminProfile from './Components/Profile/AdminProfile';
+import AuthAdmin from './Layouts/AuthAdmin/AuthAdmin';
+import AuthUsers from './Components/AuthUsers/AuthUsers';
 
 
 const App = () => {
 
     const { isLoading, isLoggedIn } = useAuth();
 
-    
+
     if (isLoading) {
         return <h1>Loading...</h1>
     }
-    
-    
+
+
 
     return (
         <>
@@ -43,11 +45,20 @@ const App = () => {
                         <Route path='create-post' element={<PrivateRoute isLoggedIn={isLoggedIn}><CreatePost /></PrivateRoute>} />
                         <Route path='logout' element={<PrivateRoute isLoggedIn={isLoggedIn}><Logout /></PrivateRoute>} />
                     </Route>
+
+
                     <Route path='/user/admin' element={
                         <PrivateRoute isLoggedIn={isLoggedIn}><Admin /></PrivateRoute>
                     } >
                         <Route path='posts' element={<AdminPosts />} />
                         <Route path='profile' element={<AdminProfile />} />
+                    </Route>
+
+
+                    <Route path='/auth/admin' element={
+                        <AdminProtect><AuthAdmin /></AdminProtect>
+                    } >
+                        <Route path='users' element={<AuthUsers />} />
                     </Route>
                 </Routes>
             </BrowserRouter>

@@ -64,7 +64,7 @@ export default function AdminProfile() {
                 toast.success(resData.message);
                 getUser();
                 setDisplay('none');
-                setDisabled(true)
+                setDisabled(true);
             }
         } catch (error) {
             console.log('update error', error);

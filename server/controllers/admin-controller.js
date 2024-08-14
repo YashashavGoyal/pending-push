@@ -40,8 +40,8 @@ const adminLogin = async (req, res) => {
 // Get All Users For Admin
 const getAdminUsers = async (req, res) => {
     try {
-        const user = await User.find({});
-        res.status(200).json({ message: "Successfully Fetched Users", user });
+        const users = await User.find({});
+        res.status(200).json({ message: "Successfully Fetched Users", users });
     } catch (error) {
         // console.error(error);
         res.status(500).json({ message: "Internal Server Error Cannot Get All Users" });
