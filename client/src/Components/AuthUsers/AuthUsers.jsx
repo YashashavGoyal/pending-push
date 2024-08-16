@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../../utils/auth";
 import Users from "../Users/Users";
 import './AuthUsers.css'
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
 
 export default function AuthUsers() {
 
@@ -23,9 +23,9 @@ export default function AuthUsers() {
 
             const resData = await response.json();
             if (response.ok) {
-                console.log(resData);
+                // console.log(resData);
                 setUsers(resData.users);
-                toast.success(resData.message);
+                // toast.success(resData.message);
             }
 
         } catch (error) {

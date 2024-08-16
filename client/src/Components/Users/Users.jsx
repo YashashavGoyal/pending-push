@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import './Users.css'
 
 export default function Users(props) {
 
@@ -18,7 +19,14 @@ export default function Users(props) {
                         <p className="phone">{phone}</p>
                     </div>
                     <div className="operation">
-                        <Link to={_id} className="btn">Delete</Link>
+                        <Link
+                        to={`${_id}/view`}
+                        className="view"
+                        >View</Link>
+                        <Link
+                            to={(!isAdmin)?`${_id}/delete`:""}
+                            className="btn"
+                        >Delete</Link>
                     </div>
                 </div>
             </div>

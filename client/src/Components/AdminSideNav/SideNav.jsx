@@ -40,6 +40,12 @@ export function SideNav() {
                         </Link>
                     </li>
                     <li>
+                        <Link to='contacts' className="logout">
+                            <i className="fas fa-sign-out-alt"></i>
+                            <span className="nav-item">Messages</span>
+                        </Link>
+                    </li>
+                    <li>
                         <Link to='profile' className="logout">
                             <i className="fas fa-sign-out-alt"></i>
                             <span className="nav-item">Profile</span>

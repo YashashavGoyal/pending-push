@@ -41,7 +41,7 @@ export default function Contact() {
             const resData = await response.json();
             if (response.ok) {
                 toast.success(resData.message);
-                setData({ message: "" });
+                setData({ ...data, message: "" });
             }
 
         } catch (error) {
@@ -97,7 +97,7 @@ export default function Contact() {
                     onChange={handleInput}
                 ></textarea>
 
-                <button type="submit" className="contactButton">contact</button>
+                <button type="submit" className="contactButton">Send Msg</button>
             </form>
         </div>
     )

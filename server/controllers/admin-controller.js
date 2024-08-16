@@ -1,4 +1,6 @@
 const User = require("../models/User-model");
+const Contact = require("../models/contact-model");
+const Post = require("../models/post-model");
 
 // Login Admin
 const adminLogin = async (req, res) => {
@@ -84,9 +86,9 @@ const deleteUser = async (req, res) => {
             return res.status(404).json({ message: "User Not Found" });
         }
 
-        await User.deleteOne({_id:id});
+        await User.deleteOne({ _id: id });
 
-        res.status(200).json({message: "User Deleted"});
+        res.status(200).json({ message: "User Deleted" });
 
     } catch (error) {
         console.error(error);
@@ -95,5 +97,55 @@ const deleteUser = async (req, res) => {
     }
 }
 
+// Get All Posts For Admin
+const getAdminPosts = async (req, res) => {
+    try {
+        const posts = await Post.find({});
+        res.status(200).json({ message: "Successfully Fetched Posts", posts });
+    } catch (error) {
+        // console.error(error);
+        res.status(500).json({ message: "Internal Server Error Cannot Get All Posts" });
+    }
+}
 
-module.exports = { adminLogin, getAdminUsers, getUserPost, deleteUser };
+// Get All Msg
+const getAdminContacts = async (req, res) => {
+    try {
+        const message = await Contact.find({});
+        res.status(200).json({ message: "Successfully Fetched Contacts", message });
+    } catch (error) {
+        // console.error(error);
+        res.status(500).json({ message: "Internal Server Error Cannot Get All Contacts" });
+    }
+}
+
+// Delete Contact By Id
+const deleteMsg = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const msg = await Contact.findById(id);
+
+        if (!msg) {
+            return res.status(404).json({ message: "Message Not Found" });
+        }
+
+        await msg.deleteOne({ _id: id });
+
+        res.status(200).json({ message: "Message Deleted" });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500)
+            .json({ message: "Cannot Delete Message Internal Server Error" });
+    }
+}
+
+module.exports = {
+    adminLogin,
+    getAdminUsers,
+    getUserPost,
+    deleteUser,
+    getAdminPosts,
+    getAdminContacts,
+    deleteMsg,
+};

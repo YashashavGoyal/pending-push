@@ -17,6 +17,11 @@ import AdminPosts from './Components/AdminPosts/AdminPosts';
 import AdminProfile from './Components/Profile/AdminProfile';
 import AuthAdmin from './Layouts/AuthAdmin/AuthAdmin';
 import AuthUsers from './Components/AuthUsers/AuthUsers';
+import DeleteUser from './Components/Users/DeleteUser/DeleteUser';
+import ViewUserPosts from './Components/Users/ViewUserPosts/ViewUserPosts';
+import AllPosts from './Components/Users/AllPosts/AllPosts';
+import GetMessages from './Components/Users/GetMessages/GetMessages';
+import DeleteMsg from './Components/Users/DeleteMsg/DeleteMsg';
 
 
 const App = () => {
@@ -59,6 +64,12 @@ const App = () => {
                         <AdminProtect><AuthAdmin /></AdminProtect>
                     } >
                         <Route path='users' element={<AuthUsers />} />
+                        <Route path='users/:id/delete' element={<DeleteUser />} />
+                        <Route path='users/:id/view' element={<ViewUserPosts />} />
+                        <Route path='posts' element={<AllPosts />} />
+                        <Route path='contacts/:id/delete' element={<DeleteMsg />} />
+                        <Route path='contacts' element={<GetMessages />} />
+                        <Route path='profile' element={<AdminProfile />} />
                     </Route>
                 </Routes>
             </BrowserRouter>

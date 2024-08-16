@@ -1,0 +1,24 @@
+.user {
+    background: white;
+    padding: 20px;
+    text-align: right;
+    border-radius: 10px;
+}
+
+.user .operation{
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.user .view {
+    color: rgb(101, 95, 160);
+}
+
+.user .btn {
+    color: red;
+}
+
+.user .title {
+    text-transform: uppercase;
+}
