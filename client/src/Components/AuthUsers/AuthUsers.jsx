@@ -37,12 +37,16 @@ export default function AuthUsers() {
         getAllUsers();
     }, [])
 
+    if (users.length === 0) {
+        return <h2>No Users Found</h2>
+    }
+
     return (
         <>
             <div className="users-conatiner">
                 {
-                    users.map((user,index)=>{
-                        return <Users user={user} key={index}/>
+                    users.map((user, index) => {
+                        return <Users user={user} key={index} />
                     })
                 }
             </div>

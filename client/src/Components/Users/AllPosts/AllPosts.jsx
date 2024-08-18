@@ -30,6 +30,10 @@ export default function AllPosts() {
         getAllPosts();
     }, [])
 
+    if (allPosts.length === 0) {
+        return <h2>No Post Found</h2>
+    }
+
     return (
         <div className="posts-container">
             {allPosts.map((post, index) => {

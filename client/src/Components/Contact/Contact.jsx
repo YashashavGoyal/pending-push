@@ -61,6 +61,14 @@ export default function Contact() {
                 user: user._id,
             });
         }
+        else {
+            setData({
+                username: "",
+                email: "",
+                message: "",
+                user: "",
+            });
+        }
     }, [user]);
 
     return (
@@ -81,7 +89,7 @@ export default function Contact() {
                 <input
                     className="contactInput"
                     type="text"
-                    placeholder="Enter your email..."
+                    placeholder="Enter your Phone..."
                     id="email"
                     value={data.email || ""}
                     onChange={handleInput}

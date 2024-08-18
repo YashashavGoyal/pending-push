@@ -36,10 +36,15 @@ export default function ViewUserPosts() {
         getUserPosts();
     }, [])
 
+    if (userPosts.length === 0) {
+        return <h1>No Post Found For This User</h1>
+    }
+
     return (
         <>
             <div className="posts-container">
                 {userPosts.map((post, index) => {
+
                     return <Post post={post} key={index} />
                 })}
             </div>

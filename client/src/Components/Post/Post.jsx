@@ -4,9 +4,16 @@ import './Post.css';
 
 export default function Post(props) {
 
+    // console.log(props);
+
+
     const { limitWords } = useAuth();
 
     const { post } = props;
+
+    if (post.author === null) {
+        return <h1>Loading...</h1>
+    }
 
     const { author, content, date, title } = post;
     const { username } = author;

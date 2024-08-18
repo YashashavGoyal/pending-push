@@ -20,6 +20,13 @@ export default function Feed() {
 
                     {
                         posts.map((post, index) => {
+
+                            if (post.author === null) {
+                                post.author = {
+                                    username: "unknown",
+                                }
+                            }
+
                             return (
                                 <Post post={post} key={index} />
                             )
