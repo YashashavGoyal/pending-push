@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { toast } from 'react-toastify'
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../utils/auth";
 import "./Register.css";
 
@@ -41,6 +41,8 @@ export default function Register() {
         });
 
         const resData = await respone.json();
+        // console.log(resData);
+
 
         if (respone.ok) {
             toast.success(resData.message);
@@ -69,6 +71,7 @@ export default function Register() {
                     name="username"
                     value={data.username}
                     onChange={handleInput}
+                    required
                 />
 
                 <label htmlFor="email">Email</label>
@@ -80,6 +83,7 @@ export default function Register() {
                     name="email"
                     value={data.email}
                     onChange={handleInput}
+                    required
                 />
 
                 <label htmlFor="phone">Phone</label>
@@ -91,6 +95,7 @@ export default function Register() {
                     name="phone"
                     value={data.phone}
                     onChange={handleInput}
+                    required
                 />
 
                 <label htmlFor="password">Password</label>
@@ -102,12 +107,13 @@ export default function Register() {
                     name="password"
                     value={data.password}
                     onChange={handleInput}
+                    required
 
                 />
 
                 <button className="registerButton">Register</button>
             </form>
-            <button className="registerLoginButton">Login</button>
+            <Link to='/login' className="registerLoginButton">Login</Link>
         </div>
     )
 }

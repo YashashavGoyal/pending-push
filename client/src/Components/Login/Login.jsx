@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../utils/auth";
 import "./Login.css";
 import { toast } from "react-toastify";
@@ -39,7 +39,7 @@ export default function Login() {
 
         const resData = await respone.json();
         // console.log(resData);
-        
+
         if (respone.ok) {
             setData({ email: "", password: "" });
             setTokenInLS(resData.token)
@@ -83,7 +83,7 @@ export default function Login() {
                     type="submit"
                 >Login</button>
             </form>
-            <button className="loginRegisterButton">Register</button>
+            <Link to='/register' className="loginRegisterButton">Register</Link>
         </div>
     );
 }

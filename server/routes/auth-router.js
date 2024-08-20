@@ -9,12 +9,14 @@ const {
     getUserPostEach
 } = require('../controllers/auth-controller');
 const authmiddleware = require('../middleware/auth-middleware');
+const validate = require('../middleware/validators-middleware');
+const schema = require('../validators/auth-validator');
 
 const router = express.Router();
 
-router.route("/register").post(createUser);
+router.route("/register").post(validate(schema.signupSchema), createUser);
 
-router.route("/login").post(loginUser);
+router.route("/login").post(validate(schema.loginSchema), loginUser);
 
 router.route('/user/update').patch(authmiddleware, updateUser);
 

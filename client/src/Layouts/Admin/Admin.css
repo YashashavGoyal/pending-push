@@ -73,7 +73,7 @@ nav .fas {
     margin-left: 10px;
 }
 
-a:hover {
+.container nav a:hover {
     background: #eee;
 }
 
