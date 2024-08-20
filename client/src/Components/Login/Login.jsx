@@ -38,7 +38,7 @@ export default function Login() {
         });
 
         const resData = await respone.json();
-        // console.log(resData);
+        console.log(resData);
 
         if (respone.ok) {
             setData({ email: "", password: "" });

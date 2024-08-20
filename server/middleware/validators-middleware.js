@@ -4,9 +4,17 @@ const validate = (schema) => async (req, res, next) => {
         req.body = parsedBody;
         next();
     } catch (err) {
-        // console.error('validate error', error);
-        return res.status(400)
-            .json({  message: err.errors[0].message })
+
+        // console.log(err.errors[0].message);
+        
+        const msg = err.errors[0].message;
+        const error = {
+            status: 422,
+            message: msg,
+            discription: "Form Validation Error From Zod",
+        }
+
+        next(error);
     }
 }
 
