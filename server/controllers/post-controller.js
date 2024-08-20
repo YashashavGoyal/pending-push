@@ -26,11 +26,18 @@ const createPost = async (req, res, next) => {
         return res.status(201)
             .json({ message: "Post Created Successfully" });
 
-    } catch (error) {
-        return res.status(500)
-            .json({
-                message: "Internal Server Error Post Not Created",
-            })
+    } catch (err) {
+        // return res.status(500)
+        //     .json({
+        //         message: "Internal Server Error Post Not Created",
+        //     })
+
+        const error = {
+            status: 500,
+            message: "Internal Server Error Post Not Created",
+            discription: err,
+        }
+        next(error);
     }
 }
 
@@ -71,9 +78,16 @@ const editPost = async (req, res) => {
                 userId: userId,
             })
 
-    } catch (error) {
-        res.status(500)
-            .json({ message: "Internal Server Error: Post Not Updated" });
+    } catch (err) {
+        // res.status(500)
+        //     .json({ message: "Internal Server Error: Post Not Updated" });
+
+        const error = {
+            status: 500,
+            message: "Internal Server Error: Post Not Updated",
+            discription: err,
+        }
+        next(error);
     }
 }
 
@@ -102,9 +116,16 @@ const deletePost = async (req, res) => {
         return res.status(200).json({
             message: "Post Deleted Successfully",
         })
-    } catch (error) {
-        return res.status(500)
-            .json({ message: "Internal Server Error Post Not Deleted" });
+    } catch (err) {
+        // return res.status(500)
+        //     .json({ message: "Internal Server Error Post Not Deleted" });
+
+        const error = {
+            status: 500,
+            message: "Internal Server Error Post Not Deleted",
+            discription: err,
+        }
+        next(error);
     }
 
 }
@@ -138,9 +159,16 @@ const getPost = async (req, res) => {
                 posts,
             });
 
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Internal Server Error: Cannot get posts" });
+    } catch (err) {
+        // console.error(error);
+        // res.status(500).json({ message: "Internal Server Error: Cannot get posts" });
+
+        const error = {
+            status: 500,
+            message: "Internal Server Error: Cannot get posts",
+            discription: err,
+        }
+        next(error);
     }
 }
 
@@ -176,10 +204,17 @@ const getPaginationPost = async (req, res) => {
             posts,
             hasMore,
         });
-    } catch (error) {
-        res.status(500).json({
+    } catch (err) {
+        // res.status(500).json({
+        //     message: "Internal Server Error. Can't Fetch Posts",
+        // });
+
+        const error = {
+            status: 500,
             message: "Internal Server Error. Can't Fetch Posts",
-        });
+            discription: err,
+        }
+        next(error);
     }
 };
 

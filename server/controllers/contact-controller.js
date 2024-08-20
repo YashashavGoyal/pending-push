@@ -13,12 +13,19 @@ const sendMsg = async (req, res, next) => {
             user,
         })
 
-        return res.status(200).json({message: "Message Sent Successfully"});
+        return res.status(200).json({ message: "Message Sent Successfully" });
 
-    } catch (error) {
-        // console.error(error);
-        res.status(500)
-            .json({ message: "Internal Server Error Connot Send Message" });
+    } catch (err) {
+        // console.error(err);
+        // res.status(500)
+        //     .json({ message: "Internal Server Error Connot Send Message" });
+
+        const error = {
+            status: 500,
+            message: "Internal Server Error Connot Send Message",
+            discription: err,
+        }
+        next(error);
     }
 }
 

@@ -22,8 +22,15 @@ const createUser = async (req, res) => {
             userId: user._id,
         })
 
-    } catch (error) {
-        res.status(500).json({ message: "Internal Server Error" });
+    } catch (err) {
+        // res.status(500).json({ message: "Internal Server Error" });
+
+        const error = {
+            status: 500,
+            message: "Internal Server Error Cannot Create User",
+            discription: err,
+        }
+        next(error);
     }
 }
 
@@ -55,10 +62,15 @@ const loginUser = async (req, res) => {
             });
         }
 
-    } catch (error) {
-        res.status(500).json({
-            message: "Internal Server Error",
-        })
+    } catch (err) {
+        // res.status(500).json({message: "Internal Server Error"})
+
+        const error = {
+            status: 500,
+            message: "Internal Server Error Cannot Login User",
+            discription: err,
+        }
+        next(error);
     }
 }
 
@@ -111,11 +123,17 @@ const getUser = async (req, res) => {
             user: userData,
         })
 
-    } catch (error) {
+    } catch (err) {
         // console.log(error);
-        return res.status(500)
-            .json({ message: "Internal Serrver Error Can't Get User Info" });
+        // return res.status(500)
+        //     .json({ message: "Internal Serrver Error Can't Get User Info" });
 
+        const error = {
+            status: 500,
+            message: "Internal Serrver Error Can't Get User Info",
+            discription: err,
+        }
+        next(error);
     }
 }
 
@@ -136,10 +154,17 @@ const getUserPostEach = async (req, res) => {
                 message: "Post Fetched Succeessfully",
                 posts,
             });
-    } catch (error) {
+    } catch (err) {
         // console.error('User Post', error);
-        res.status(500)
-            .json({ message: `Internal Server Error Post Cannot Fetched` })
+        // res.status(500)
+        //     .json({ message: `Internal Server Error Post Cannot Fetched` })
+
+        const error = {
+            status: 500,
+            message: `Internal Server Error Post Cannot Fetched`,
+            discription: err,
+        }
+        next(error);
     }
 }
 

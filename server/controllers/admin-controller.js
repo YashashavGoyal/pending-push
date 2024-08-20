@@ -32,10 +32,17 @@ const adminLogin = async (req, res) => {
                 user
             });
 
-    } catch (error) {
+    } catch (err) {
         // console.error(error);
-        res.status(500)
-            .json({ message: "Internal Server Error Can't Login Admin" });
+        // res.status(500)
+        //     .json({ message: "Internal Server Error Can't Login Admin" });
+
+        const error = {
+            status: 500,
+            message: "Internal Server Error Can't Login Admin",
+            discription: err,
+        }
+        next(error);
     }
 }
 
@@ -44,9 +51,16 @@ const getAdminUsers = async (req, res) => {
     try {
         const users = await User.find({});
         res.status(200).json({ message: "Successfully Fetched Users", users });
-    } catch (error) {
+    } catch (err) {
         // console.error(error);
-        res.status(500).json({ message: "Internal Server Error Cannot Get All Users" });
+        // res.status(500).json({ message: "Internal Server Error Cannot Get All Users" });
+
+        const error = {
+            status: 500,
+            message: "Internal Server Error Cannot Get All Users",
+            discription: err,
+        }
+        next(error);
     }
 }
 
@@ -69,10 +83,17 @@ const getUserPost = async (req, res) => {
                 posts,
             })
 
-    } catch (error) {
+    } catch (err) {
         // console.error(error);
-        return res.status(500)
-            .json({ message: "Cannot Get Post For This User" });
+        // return res.status(500)
+        //     .json({ message: "Cannot Get Post For This User" });
+
+        const error = {
+            status: 500,
+            message: "Cannot Get Post For This User",
+            discription: err,
+        }
+        next(error);
     }
 }
 
@@ -90,10 +111,17 @@ const deleteUser = async (req, res) => {
 
         res.status(200).json({ message: "User Deleted" });
 
-    } catch (error) {
-        console.error(error);
-        return res.status(500)
-            .json({ message: "Cannot Delete User Internal Server Error" });
+    } catch (err) {
+        // console.error(err);
+        // return res.status(500)
+        //     .json({ message: "Cannot Delete User Internal Server Error" });
+
+        const error = {
+            status: 500,
+            message: "Cannot Delete User Internal Server Error",
+            discription: err,
+        }
+        next(error);
     }
 }
 
@@ -102,9 +130,16 @@ const getAdminPosts = async (req, res) => {
     try {
         const posts = await Post.find({});
         res.status(200).json({ message: "Successfully Fetched Posts", posts });
-    } catch (error) {
+    } catch (err) {
         // console.error(error);
-        res.status(500).json({ message: "Internal Server Error Cannot Get All Posts" });
+        // res.status(500).json({ message: "Internal Server Error Cannot Get All Posts" });
+
+        const error = {
+            status: 500,
+            message: "Internal Server Error Cannot Get All Posts",
+            discription: err,
+        }
+        next(error);
     }
 }
 
@@ -113,9 +148,16 @@ const getAdminContacts = async (req, res) => {
     try {
         const message = await Contact.find({});
         res.status(200).json({ message: "Successfully Fetched Contacts", message });
-    } catch (error) {
+    } catch (err) {
         // console.error(error);
-        res.status(500).json({ message: "Internal Server Error Cannot Get All Contacts" });
+        // res.status(500).json({ message: "Internal Server Error Cannot Get All Contacts" });
+
+        const error = {
+            status: 500,
+            message: "Internal Server Error Cannot Get All Contacts",
+            discription: err,
+        }
+        next(error);
     }
 }
 
@@ -133,10 +175,17 @@ const deleteMsg = async (req, res) => {
 
         res.status(200).json({ message: "Message Deleted" });
 
-    } catch (error) {
-        console.error(error);
-        return res.status(500)
-            .json({ message: "Cannot Delete Message Internal Server Error" });
+    } catch (err) {
+        // console.error(err);
+        // return res.status(500)
+        //     .json({ message: "Cannot Delete Message Internal Server Error" });
+
+        const error = {
+            status: 500,
+            message: "Cannot Delete Message Internal Server Error",
+            discription: err,
+        }
+        next(error);
     }
 }
 

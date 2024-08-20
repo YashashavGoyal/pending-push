@@ -24,8 +24,16 @@ const authmiddleware = (req, res, next) => {
         req.userId = isVerified.userId;
 
         next();
-    } catch (error) {
-        res.status(401).json({ message: "User can not verified" });
+    } catch (err) {
+        // res.status(401).json({ message: "User can not verified" });
+        // console.log(err);
+
+        const error = {
+            status: 401,
+            message: "User can not verified",
+            discription: err,
+        }
+        next(error);
     }
 }
 
