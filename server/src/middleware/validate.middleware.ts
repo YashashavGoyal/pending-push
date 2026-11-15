@@ -1,20 +1,18 @@
-import { Request, Response, NextFunction } from 'express';
+import { FastifyRequest, FastifyReply } from 'fastify';
 import { ZodSchema, ZodError } from 'zod';
 import { ValidationError } from '../errors/app-error.js';
 
-export const validate = (schema: ZodSchema) => {
-  return async (req: Request, _res: Response, next: NextFunction): Promise<void> => {
+export const validateBody = (schema: ZodSchema) => {
+  return async (request: FastifyRequest, _reply: FastifyReply): Promise<void> => {
     try {
-      req.body = await schema.parseAsync(req.body);
-      next();
+      request.body = await schema.parseAsync(request.body);
     } catch (error) {
       if (error instanceof ZodError) {
         const firstIssue = error.issues[0];
         const errorMessage = firstIssue ? `${firstIssue.path.join('.') || 'field'}: ${firstIssue.message}` : 'Validation error';
-        next(new ValidationError(errorMessage, error.flatten().fieldErrors));
-      } else {
-        next(error);
+        throw new ValidationError(errorMessage, error.flatten().fieldErrors);
       }
+      throw error;
     }
   };
 };

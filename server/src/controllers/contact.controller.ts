@@ -1,18 +1,16 @@
-import { Request, Response, NextFunction } from 'express';
+import { FastifyRequest, FastifyReply } from 'fastify';
 import { ContactService } from '../services/contact.service.js';
+import { ContactInput } from '../validators/contact.validator.js';
 
 export class ContactController {
   constructor(private readonly contactService: ContactService) {}
 
-  public send = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    try {
-      await this.contactService.sendMessage(req.body);
-      res.status(200).json({
-        success: true,
-        message: 'Message Sent Successfully',
-      });
-    } catch (error) {
-      next(error);
-    }
+  public send = async (request: FastifyRequest, reply: FastifyReply): Promise<void> => {
+    const body = request.body as ContactInput;
+    await this.contactService.sendMessage(body);
+    reply.status(200).send({
+      success: true,
+      message: 'Message Sent Successfully',
+    });
   };
 }

@@ -1,11 +1,11 @@
-import { Request, Response, NextFunction } from 'express';
+import { FastifyRequest, FastifyReply } from 'fastify';
 import jwt from 'jsonwebtoken';
 import { config } from '../config/env.js';
 import { UnauthorizedError } from '../errors/app-error.js';
 import { AuthPayload } from '../types/index.js';
 
-export const authMiddleware = (req: Request, _res: Response, next: NextFunction): void => {
-  const authHeader = req.header('Authorization');
+export const authPreHandler = async (request: FastifyRequest, _reply: FastifyReply): Promise<void> => {
+  const authHeader = request.headers.authorization;
 
   if (!authHeader) {
     throw new UnauthorizedError('Authentication token missing');
@@ -23,16 +23,13 @@ export const authMiddleware = (req: Request, _res: Response, next: NextFunction)
 
     const role = decoded.role || (decoded.isAdmin ? 'admin' : 'user');
 
-    req.user = { userId, role };
-    req.userId = userId;
-    req.token = token;
-
-    next();
+    request.user = { userId, role };
+    request.userId = userId;
+    request.token = token;
   } catch (error) {
     if (error instanceof UnauthorizedError) {
-      next(error);
-    } else {
-      next(new UnauthorizedError('Invalid or expired authentication token', error));
+      throw error;
     }
+    throw new UnauthorizedError('Invalid or expired authentication token', error);
   }
 };

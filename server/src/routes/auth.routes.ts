@@ -1,15 +1,43 @@
-import { Router } from 'express';
+import { FastifyInstance } from 'fastify';
 import { AuthController } from '../controllers/auth.controller.js';
-import { authMiddleware } from '../middleware/auth.middleware.js';
-import { validate } from '../middleware/validate.middleware.js';
+import { authPreHandler } from '../middleware/auth.middleware.js';
+import { validateBody } from '../middleware/validate.middleware.js';
 import { registerSchema, loginSchema } from '../validators/auth.validator.js';
 
-export const createAuthRouter = (authController: AuthController): Router => {
-  const router = Router();
+export const registerAuthRoutes = (fastify: FastifyInstance, authController: AuthController): void => {
+  fastify.post(
+    '/register',
+    {
+      preHandler: validateBody(registerSchema),
+      schema: {
+        description: 'Register a new user account',
+        tags: ['Authentication'],
+      },
+    },
+    authController.register
+  );
 
-  router.post('/register', validate(registerSchema), authController.register);
-  router.post('/login', validate(loginSchema), authController.login);
-  router.get('/user/info', authMiddleware, authController.getMe);
+  fastify.post(
+    '/login',
+    {
+      preHandler: validateBody(loginSchema),
+      schema: {
+        description: 'Login with email and password',
+        tags: ['Authentication'],
+      },
+    },
+    authController.login
+  );
 
-  return router;
+  fastify.get(
+    '/user/info',
+    {
+      preHandler: authPreHandler,
+      schema: {
+        description: 'Get current user profile',
+        tags: ['Authentication'],
+      },
+    },
+    authController.getMe
+  );
 };

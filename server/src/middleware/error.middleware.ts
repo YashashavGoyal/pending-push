@@ -1,31 +1,38 @@
-import { Request, Response, NextFunction } from 'express';
+import { FastifyError, FastifyRequest, FastifyReply } from 'fastify';
 import { AppError } from '../errors/app-error.js';
 import { config } from '../config/env.js';
 
-export const errorMiddleware = (
-  err: Error | AppError,
-  _req: Request,
-  res: Response,
-  _next: NextFunction
+export const errorHandler = (
+  error: FastifyError | AppError | Error,
+  _request: FastifyRequest,
+  reply: FastifyReply
 ): void => {
-  if (err instanceof AppError) {
-    res.status(err.statusCode).json({
+  if (error instanceof AppError) {
+    reply.status(error.statusCode).send({
       success: false,
-      message: err.message,
-      ...(err.details ? { error: { details: err.details } } : {}),
-      // backward compatibility for older frontend if expecting "discription"
-      discription: err.message,
+      message: error.message,
+      ...(error.details ? { error: { details: error.details } } : {}),
+      discription: error.message,
     });
     return;
   }
 
-  // Unhandled / system errors
-  console.error('Unhandled Server Error:', err);
+  // Fastify internal validation error
+  if ('validation' in error && error.validation) {
+    reply.status(400).send({
+      success: false,
+      message: error.message,
+      discription: error.message,
+    });
+    return;
+  }
 
-  res.status(500).json({
+  console.error('Unhandled Fastify Server Error:', error);
+
+  reply.status(500).send({
     success: false,
     message: 'Internal Server Error',
-    ...(config.nodeEnv === 'development' ? { error: { details: err.message, stack: err.stack } } : {}),
+    ...(config.nodeEnv === 'development' ? { error: { details: error.message, stack: error.stack } } : {}),
     discription: 'Internal Server Error',
   });
 };

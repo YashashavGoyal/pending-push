@@ -1,7 +1,9 @@
-import express, { Application, Request, Response } from 'express';
-import cors from 'cors';
+import Fastify, { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
+import cors from '@fastify/cors';
+import swagger from '@fastify/swagger';
+import swaggerUi from '@fastify/swagger-ui';
 import { config } from './config/env.js';
-import { errorMiddleware } from './middleware/error.middleware.js';
+import { errorHandler } from './middleware/error.middleware.js';
 import { setupRoutes } from './routes/index.js';
 import { UserMemoryRepository } from './repositories/memory/user.memory.repository.js';
 import { PostMemoryRepository } from './repositories/memory/post.memory.repository.js';
@@ -15,31 +17,74 @@ import { PostController } from './controllers/post.controller.js';
 import { ContactController } from './controllers/contact.controller.js';
 import { AdminController } from './controllers/admin.controller.js';
 
-export const createApp = (): Application => {
-  const app = express();
+export const createApp = async (): Promise<FastifyInstance> => {
+  const fastify = Fastify({
+    logger: {
+      level: config.nodeEnv === 'development' ? 'info' : 'warn',
+    },
+  });
 
-  // Basic Middlewares
-  app.use(express.json());
-  app.use(
-    cors({
-      origin: [config.clientUrl, 'http://localhost:5173', 'http://localhost:3000'],
-      methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-      credentials: true,
-    })
-  );
+  // Global Error Handler
+  fastify.setErrorHandler(errorHandler);
 
-  // Health / welcome endpoints
-  app.get('/', (_req: Request, res: Response) => {
-    res.status(200).json({
+  // CORS
+  await fastify.register(cors, {
+    origin: [config.clientUrl, 'http://localhost:5173', 'http://localhost:3000'],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+    credentials: true,
+  });
+
+  // OpenAPI / Swagger Documentation
+  await fastify.register(swagger, {
+    openapi: {
+      info: {
+        title: 'Blogs API Documentation',
+        description: 'Industry-standard high-performance REST API for blogging platform',
+        version: '2.0.0',
+      },
+      servers: [
+        {
+          url: `http://${config.host}:${config.port}`,
+          description: 'Development Server',
+        },
+      ],
+      components: {
+        securitySchemes: {
+          bearerAuth: {
+            type: 'http',
+            scheme: 'bearer',
+            bearerFormat: 'JWT',
+          },
+        },
+      },
+    },
+  });
+
+  await fastify.register(swaggerUi, {
+    routePrefix: '/documentation',
+    uiConfig: {
+      docExpansion: 'list',
+      deepLinking: true,
+    },
+  });
+
+  // Health and root check
+  fastify.get('/', async (_request: FastifyRequest, reply: FastifyReply) => {
+    return reply.status(200).send({
       success: true,
-      message: 'Welcome To Blogs API (v2 Modernized Architecture)',
+      message: 'Welcome To Blogs API (Fastify Engine)',
+      docs: '/documentation',
       status: 'healthy',
       timestamp: new Date().toISOString(),
     });
   });
 
-  app.get('/health', (_req: Request, res: Response) => {
-    res.status(200).json({ status: 'ok', uptime: process.uptime() });
+  fastify.get('/health', async (_request: FastifyRequest, reply: FastifyReply) => {
+    return reply.status(200).send({
+      status: 'ok',
+      uptime: process.uptime(),
+      framework: 'Fastify',
+    });
   });
 
   // Dependency Injection Wiring
@@ -57,17 +102,12 @@ export const createApp = (): Application => {
   const contactController = new ContactController(contactService);
   const adminController = new AdminController(authService, adminService);
 
-  const apiRouter = setupRoutes({
+  await setupRoutes(fastify, {
     authController,
     postController,
     contactController,
     adminController,
   });
 
-  app.use(apiRouter);
-
-  // Centralized Error Handling
-  app.use(errorMiddleware);
-
-  return app;
+  return fastify;
 };
