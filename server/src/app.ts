@@ -38,8 +38,8 @@ export const createApp = async (): Promise<FastifyInstance> => {
   await fastify.register(swagger, {
     openapi: {
       info: {
-        title: 'Blogs API Documentation',
-        description: 'Industry-standard high-performance REST API for blogging platform',
+        title: 'Pending Push API Documentation',
+        description: 'High-performance REST API powering the Pending Push publishing platform',
         version: '2.0.0',
       },
       servers: [
@@ -72,7 +72,7 @@ export const createApp = async (): Promise<FastifyInstance> => {
   fastify.get('/', async (_request: FastifyRequest, reply: FastifyReply) => {
     return reply.status(200).send({
       success: true,
-      message: 'Welcome To Blogs API (Fastify Engine)',
+      message: 'Welcome to Pending Push API (Fastify Engine)',
       docs: '/documentation',
       status: 'healthy',
       timestamp: new Date().toISOString(),
