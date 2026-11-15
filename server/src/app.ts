@@ -5,9 +5,9 @@ import swaggerUi from '@fastify/swagger-ui';
 import { config } from './config/env.js';
 import { errorHandler } from './middleware/error.middleware.js';
 import { setupRoutes } from './routes/index.js';
-import { UserMemoryRepository } from './repositories/memory/user.memory.repository.js';
-import { PostMemoryRepository } from './repositories/memory/post.memory.repository.js';
-import { ContactMemoryRepository } from './repositories/memory/contact.memory.repository.js';
+import { UserDrizzleRepository } from './repositories/drizzle/user.drizzle.repository.js';
+import { PostDrizzleRepository } from './repositories/drizzle/post.drizzle.repository.js';
+import { ContactDrizzleRepository } from './repositories/drizzle/contact.drizzle.repository.js';
 import { AuthService } from './services/auth.service.js';
 import { PostService } from './services/post.service.js';
 import { ContactService } from './services/contact.service.js';
@@ -87,10 +87,10 @@ export const createApp = async (): Promise<FastifyInstance> => {
     });
   });
 
-  // Dependency Injection Wiring
-  const userRepository = new UserMemoryRepository();
-  const postRepository = new PostMemoryRepository(userRepository);
-  const contactRepository = new ContactMemoryRepository();
+  // Dependency Injection Wiring (PostgreSQL via Drizzle ORM)
+  const userRepository = new UserDrizzleRepository();
+  const postRepository = new PostDrizzleRepository();
+  const contactRepository = new ContactDrizzleRepository();
 
   const authService = new AuthService(userRepository);
   const postService = new PostService(postRepository);
