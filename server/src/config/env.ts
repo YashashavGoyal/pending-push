@@ -8,5 +8,5 @@ export const config = {
   jwtSecret: process.env.JWT_SECRET_KEY || 'default_jwt_secret_key_change_in_production',
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || '30d',
   nodeEnv: process.env.NODE_ENV || 'development',
-  databaseUrl: process.env.DATABASE_URL || process.env.MONGODB_URI || '',
+  databaseUrl: process.env.DATABASE_URL || '',
 };
