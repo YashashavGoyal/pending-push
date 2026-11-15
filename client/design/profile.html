@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alex Rivera (@alexrivera) - Profile & Public Insights - BlogSphere</title>
+  <link rel="stylesheet" href="css/design-system.css">
+  <link rel="stylesheet" href="css/navbar-footer.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header class="site-header">
+    <div class="container navbar">
+      <a href="index.html" class="brand-logo">
+        <span class="brand-icon">✦</span>
+        <span>Blog<span class="text-gradient">Sphere</span></span>
+      </a>
+
+      <nav>
+        <ul class="nav-links">
+          <li class="nav-item"><a href="index.html">Home</a></li>
+          <li class="nav-item"><a href="feed.html">Explore Feed</a></li>
+          <li class="nav-item"><a href="post-dev.html">Devs Hub</a></li>
+          <li class="nav-item"><a href="tutorial.html">Tutorials</a></li>
+          <li class="nav-item"><a href="confessions.html">Confessions</a></li>
+          <li class="nav-item"><a href="random.html">🎲 Surprise Me</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="theme-toggle-btn" title="Toggle Theme">🌙</button>
+        <a href="post-dev.html" class="btn btn-primary btn-sm">✍️ Write Post</a>
+
+        <div class="user-menu-wrapper">
+          <button class="user-avatar-btn">
+            <img class="user-avatar-img" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&q=80" alt="Alex">
+            <span style="font-size: 0.85rem; font-weight: 600; padding: 0 0.25rem;">Alex</span>
+            <span style="font-size: 0.65rem; color: var(--text-muted);">▼</span>
+          </button>
+          <div class="dropdown-menu">
+            <a href="dashboard.html" class="dropdown-link">📊 Author Dashboard</a>
+            <a href="profile.html" class="dropdown-link active">👤 Public Profile & Insights</a>
+            <a href="settings.html" class="dropdown-link">⚙️ Account Settings</a>
+            <a href="preferences.html" class="dropdown-link">🎨 Reader Preferences</a>
+          </div>
+        </div>
+        <button class="mobile-nav-toggle">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="page-wrapper">
+    <div class="container">
+
+      <!-- Profile Header Card -->
+      <section class="card" style="margin-bottom: var(--space-8); padding: var(--space-8);">
+        <div style="display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: var(--space-6);">
+          
+          <div style="display: flex; gap: var(--space-6); align-items: center; flex-wrap: wrap;">
+            <img style="width: 5.5rem; height: 5.5rem; border-radius: 999px; object-fit: cover; border: 3px solid var(--accent-primary);" 
+                 src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80" 
+                 alt="Alex Rivera">
+            <div>
+              <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+                <h1 style="font-size: 1.75rem; font-weight: 800;">Alex Rivera</h1>
+                <span class="badge badge-primary">✓ Verified Author</span>
+                <span class="badge badge-dev">Staff Engineer</span>
+              </div>
+              <div style="font-size: 0.95rem; color: var(--text-muted); margin-top: 0.15rem;">@alexrivera • San Francisco, CA</div>
+              <p style="color: var(--text-secondary); max-width: 620px; margin-top: 0.5rem; font-size: 0.95rem;">
+                Staff Engineer & Technical Writer. Building modern full-stack web applications with Next.js, Fastify, and TypeScript. Open source contributor and architecture advocate.
+              </p>
+              <div style="display: flex; gap: var(--space-4); margin-top: var(--space-3); font-size: 0.85rem; color: var(--text-muted);">
+                <span>👥 <strong>1,240</strong> Followers</span>
+                <span>👤 <strong>189</strong> Following</span>
+                <span>🔗 <a href="#" style="color: var(--accent-primary);">alexrivera.dev</a></span>
+              </div>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: var(--space-3);">
+            <button class="btn btn-primary">Follow</button>
+            <a href="settings.html" class="btn btn-secondary">Edit Profile</a>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- PUBLIC INSIGHTS SECTION (Highlighted Feature) -->
+      <section class="insights-card">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-6); flex-wrap: wrap; gap: var(--space-3);">
+          <div>
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <span class="badge badge-tutorial">🟢 Public Profile Insights</span>
+              <span class="text-muted" style="font-size: 0.8rem;">Transparent Creator Analytics</span>
+            </div>
+            <h2 class="title-section" style="margin-top: 0.35rem;">Readership Impact & Community Engagement</h2>
+          </div>
+          <span class="text-muted" style="font-size: 0.85rem;">Last 12 Months Activity</span>
+        </div>
+
+        <!-- Metric Highlights -->
+        <div class="kpi-grid" style="margin-bottom: var(--space-6);">
+          <div class="kpi-card">
+            <div class="kpi-label">Total Article Reads</div>
+            <div class="kpi-value" style="color: var(--accent-primary);">142.8K</div>
+            <div class="text-muted" style="font-size: 0.775rem;">12.4K hours spent reading</div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-label">Audience Upvotes</div>
+            <div class="kpi-value" style="color: var(--accent-rose);">6,890</div>
+            <div class="text-muted" style="font-size: 0.775rem;">98.4% positive feedback</div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-label">Tutorial Completions</div>
+            <div class="kpi-value" style="color: var(--accent-emerald);">1,450</div>
+            <div class="text-muted" style="font-size: 0.775rem;">Across 4 interactive guides</div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-label">Reader Retention</div>
+            <div class="kpi-value" style="color: var(--accent-purple);">78.2%</div>
+            <div class="text-muted" style="font-size: 0.775rem;">Read past 80% mark</div>
+          </div>
+        </div>
+
+        <!-- 52-Week Activity Heatmap -->
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem;">
+            <span>Publishing & Contribution Frequency (52 Weeks)</span>
+            <span class="text-muted" style="font-size: 0.75rem;">Less 🟩 🟩 🟩 🟩 More</span>
+          </div>
+          
+          <div class="heatmap-grid">
+            <div class="heatmap-cell level-1"></div>
+            <div class="heatmap-cell level-2"></div>
+            <div class="heatmap-cell level-4"></div>
+            <div class="heatmap-cell level-3"></div>
+            <div class="heatmap-cell level-1"></div>
+            <div class="heatmap-cell level-0"></div>
+            <div class="heatmap-cell level-2"></div>
+            <div class="heatmap-cell level-4"></div>
+            <div class="heatmap-cell level-2"></div>
+            <div class="heatmap-cell level-1"></div>
+            <div class="heatmap-cell level-3"></div>
+            <div class="heatmap-cell level-4"></div>
+            <div class="heatmap-cell level-2"></div>
+            <div class="heatmap-cell level-3"></div>
+            <div class="heatmap-cell level-4"></div>
+            <div class="heatmap-cell level-1"></div>
+            
+            <div class="heatmap-cell level-3"></div>
+            <div class="heatmap-cell level-4"></div>
+            <div class="heatmap-cell level-2"></div>
+            <div class="heatmap-cell level-1"></div>
+            <div class="heatmap-cell level-0"></div>
+            <div class="heatmap-cell level-3"></div>
+            <div class="heatmap-cell level-4"></div>
+            <div class="heatmap-cell level-4"></div>
+            <div class="heatmap-cell level-3"></div>
+            <div class="heatmap-cell level-2"></div>
+            <div class="heatmap-cell level-1"></div>
+            <div class="heatmap-cell level-4"></div>
+            <div class="heatmap-cell level-3"></div>
+            <div class="heatmap-cell level-2"></div>
+            <div class="heatmap-cell level-1"></div>
+            <div class="heatmap-cell level-4"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Profile Content Tabs -->
+      <div class="feed-tabs" data-tab-group="profile-content" style="margin-bottom: var(--space-6);">
+        <button class="feed-tab active" data-tab-target="#published-posts">Published Articles (28)</button>
+        <button class="feed-tab" data-tab-target="#author-tutorials">Tutorials (4)</button>
+        <button class="feed-tab" data-tab-target="#about-author">About & Bio</button>
+      </div>
+
+      <!-- Tab Content: Published Posts -->
+      <div id="published-posts" data-tab-content="profile-content">
+        <div class="posts-grid">
+          
+          <article class="post-card">
+            <img class="post-card-cover" src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=600&q=80" alt="Fastify">
+            <div class="post-card-body">
+              <div class="post-card-meta">
+                <span class="badge badge-dev">💻 Devs Blog</span>
+                <span>7 min read</span>
+              </div>
+              <h3 class="post-card-title">
+                <a href="post-dev.html">Building High-Throughput Web Applications with Fastify and Next.js 15</a>
+              </h3>
+              <p class="post-card-excerpt">
+                A deep dive into combining Fastify's schema-driven backend with Next.js Server Components.
+              </p>
+              <div class="post-card-footer">
+                <span class="text-muted">Published Nov 15, 2026</span>
+                <span style="color: var(--accent-rose); font-weight: 600;">❤️ 642</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="post-card">
+            <img class="post-card-cover" src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=600&q=80" alt="Tutorial">
+            <div class="post-card-body">
+              <div class="post-card-meta">
+                <span class="badge badge-tutorial">📚 Tutorial</span>
+                <span>14 min read</span>
+              </div>
+              <h3 class="post-card-title">
+                <a href="tutorial.html">Hands-on Masterclass: Building an Analytics Heatmap Dashboard from Scratch</a>
+              </h3>
+              <p class="post-card-excerpt">
+                Interactive step-by-step tutorial with checklists, code runner snippets, and progress tracker.
+              </p>
+              <div class="post-card-footer">
+                <span class="text-muted">Published Nov 12, 2026</span>
+                <span style="color: var(--accent-rose); font-weight: 600;">❤️ 1,320</span>
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <div>© 2026 BlogSphere Public Profile & Insights.</div>
+        <div><a href="feed.html" class="text-muted">Explore Feed</a></div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/mock-data.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/interactions.js"></script>
+</body>
+</html>

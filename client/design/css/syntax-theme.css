@@ -1,0 +1,128 @@
+/* ==========================================================================
+   SYNTAX HIGHLIGHTING & MARKDOWN ARTICLE TYPOGRAPHY
+   Optimized for Dev Blogs, Code Snippets, Diffs, and Technical Tutorials
+   ========================================================================== */
+
+/* Markdown Article Prose */
+.prose {
+  font-size: 1.075rem;
+  line-height: 1.8;
+  color: var(--text-primary);
+}
+
+.prose p {
+  margin-bottom: 1.4rem;
+}
+
+.prose h1, .prose h2, .prose h3, .prose h4 {
+  color: var(--text-primary);
+  font-weight: 700;
+  line-height: 1.3;
+  margin-top: 2.2rem;
+  margin-bottom: 1rem;
+}
+
+.prose h2 {
+  font-size: 1.65rem;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 0.5rem;
+}
+
+.prose h3 {
+  font-size: 1.35rem;
+}
+
+.prose ul, .prose ol {
+  margin-bottom: 1.4rem;
+  padding-left: 1.6rem;
+}
+
+.prose li {
+  margin-bottom: 0.4rem;
+}
+
+.prose blockquote {
+  border-left: 4px solid var(--accent-primary);
+  padding: 0.8rem 1.25rem;
+  background-color: var(--accent-primary-subtle);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  margin: 1.5rem 0;
+  font-style: italic;
+  color: var(--text-secondary);
+}
+
+.prose code:not(pre code) {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  background-color: var(--bg-tertiary);
+  color: var(--accent-primary);
+  padding: 0.2rem 0.45rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+}
+
+/* Syntax Token Colors (Theme-responsive) */
+.token-keyword { color: #f43f5e; font-weight: 600; }
+.token-function { color: #38bdf8; }
+.token-string { color: #4ade80; }
+.token-comment { color: #64748b; font-style: italic; }
+.token-number { color: #fbbf24; }
+.token-operator { color: #cbd5e1; }
+.token-class { color: #c084fc; font-weight: 600; }
+.token-tag { color: #f43f5e; }
+.token-attr { color: #38bdf8; }
+
+/* Code Diff Blocks */
+.diff-line {
+  display: flex;
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-sm);
+}
+
+.diff-add {
+  background-color: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+}
+
+.diff-add::before {
+  content: "+ ";
+  font-weight: 700;
+}
+
+.diff-del {
+  background-color: rgba(244, 63, 94, 0.2);
+  color: #fb7185;
+}
+
+.diff-del::before {
+  content: "- ";
+  font-weight: 700;
+}
+
+/* Callout Boxes */
+.callout {
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-lg);
+  margin: var(--space-6) 0;
+  border: 1px solid transparent;
+}
+
+.callout-info {
+  background-color: var(--accent-primary-subtle);
+  border-color: var(--accent-primary);
+  color: var(--text-primary);
+}
+
+.callout-warning {
+  background-color: var(--accent-amber-subtle);
+  border-color: var(--accent-amber);
+  color: var(--text-primary);
+}
+
+.callout-tip {
+  background-color: var(--accent-emerald-subtle);
+  border-color: var(--accent-emerald);
+  color: var(--text-primary);
+}

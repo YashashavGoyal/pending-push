@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Feed & Explore - BlogSphere</title>
+  <link rel="stylesheet" href="css/design-system.css">
+  <link rel="stylesheet" href="css/navbar-footer.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header class="site-header">
+    <div class="container navbar">
+      <a href="index.html" class="brand-logo">
+        <span class="brand-icon">✦</span>
+        <span>Blog<span class="text-gradient">Sphere</span></span>
+      </a>
+
+      <nav>
+        <ul class="nav-links">
+          <li class="nav-item"><a href="index.html">Home</a></li>
+          <li class="nav-item"><a href="feed.html" class="active">Explore Feed</a></li>
+          <li class="nav-item"><a href="post-dev.html">Devs Hub</a></li>
+          <li class="nav-item"><a href="tutorial.html">Tutorials</a></li>
+          <li class="nav-item"><a href="confessions.html">Confessions</a></li>
+          <li class="nav-item"><a href="random.html">🎲 Surprise Me</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="theme-toggle-btn" title="Toggle Theme">🌙</button>
+        <a href="post-dev.html" class="btn btn-primary btn-sm">✍️ Write Post</a>
+
+        <div class="user-menu-wrapper">
+          <button class="user-avatar-btn">
+            <img class="user-avatar-img" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&q=80" alt="Alex">
+            <span style="font-size: 0.85rem; font-weight: 600; padding: 0 0.25rem;">Alex</span>
+            <span style="font-size: 0.65rem; color: var(--text-muted);">▼</span>
+          </button>
+          <div class="dropdown-menu">
+            <div class="dropdown-header">
+              <div class="dropdown-user-name">Alex Rivera</div>
+              <div class="dropdown-user-handle">@alexrivera • Author</div>
+            </div>
+            <a href="dashboard.html" class="dropdown-link">📊 Author Dashboard</a>
+            <a href="profile.html" class="dropdown-link">👤 Public Profile & Insights</a>
+            <a href="settings.html" class="dropdown-link">⚙️ Account Settings</a>
+            <a href="preferences.html" class="dropdown-link">🎨 Reader Preferences</a>
+            <div class="dropdown-divider"></div>
+            <a href="#" class="dropdown-link danger">🚪 Sign Out</a>
+          </div>
+        </div>
+        <button class="mobile-nav-toggle">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- FEED PAGE MAIN -->
+  <main class="page-wrapper">
+    <div class="container">
+      
+      <!-- Page Title & Subtitle -->
+      <div style="margin-bottom: var(--space-8);">
+        <h1 class="title-page">Community Feed</h1>
+        <p class="text-secondary" style="margin-top: 0.25rem;">
+          Explore stories, markdown engineering guides, step-by-step tutorials, and raw developer confessions.
+        </p>
+      </div>
+
+      <!-- Feed Controls Bar -->
+      <div class="feed-header-bar">
+        <!-- Tab Switcher -->
+        <div class="feed-tabs" data-tab-group="feed-filter">
+          <button class="feed-tab active" data-tab-target="#all">🔥 All Content</button>
+          <button class="feed-tab" data-tab-target="#devs">💻 Devs & Markdown</button>
+          <button class="feed-tab" data-tab-target="#tutorials">📚 Tutorials</button>
+          <button class="feed-tab" data-tab-target="#simple">✍️ Simple Stories</button>
+          <button class="feed-tab" data-tab-target="#confessions">🤫 Confessions</button>
+        </div>
+
+        <!-- Realtime Search Input -->
+        <div class="feed-search-wrapper">
+          <span class="feed-search-icon">🔍</span>
+          <input type="text" class="feed-search-input" placeholder="Search by title, tag, author...">
+        </div>
+      </div>
+
+      <!-- Topic Tag Filters -->
+      <div style="display: flex; gap: var(--space-2); margin-bottom: var(--space-6); flex-wrap: wrap; align-items: center;">
+        <span class="text-muted" style="font-size: 0.8rem; font-weight: 600;">Topics:</span>
+        <button class="badge badge-neutral" style="cursor: pointer;">All</button>
+        <button class="badge badge-dev" style="cursor: pointer;">#TypeScript</button>
+        <button class="badge badge-dev" style="cursor: pointer;">#Nextjs</button>
+        <button class="badge badge-dev" style="cursor: pointer;">#Fastify</button>
+        <button class="badge badge-tutorial" style="cursor: pointer;">#Architecture</button>
+        <button class="badge badge-confession" style="cursor: pointer;">#DevLife</button>
+      </div>
+
+      <!-- Feed Tab Content: All Posts -->
+      <div id="all" data-tab-content="feed-filter">
+        <div class="posts-grid">
+
+          <!-- 1. Dev Post -->
+          <article class="post-card">
+            <img class="post-card-cover" src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=600&q=80" alt="Fastify Next.js">
+            <div class="post-card-body">
+              <div class="post-card-meta">
+                <span class="badge badge-dev">💻 Devs Blog</span>
+                <span>7 min read</span>
+              </div>
+              <h3 class="post-card-title">
+                <a href="post-dev.html">Building High-Throughput Web Applications with Fastify and Next.js 15</a>
+              </h3>
+              <p class="post-card-excerpt">
+                A deep dive into combining Fastify's schema-driven backend with Next.js Server Components, featuring live syntax highlighting, copyable code, and architecture diffs.
+              </p>
+              <div class="post-card-footer">
+                <div class="author-chip">
+                  <div class="author-chip-avatar">AR</div>
+                  <span>Alex Rivera</span>
+                </div>
+                <div class="post-stats">
+                  <span>❤️ 642</span>
+                  <span>💬 38</span>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- 2. Tutorial Post -->
+          <article class="post-card">
+            <img class="post-card-cover" src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=600&q=80" alt="Heatmap Dashboard">
+            <div class="post-card-body">
+              <div class="post-card-meta">
+                <span class="badge badge-tutorial">📚 Tutorial • 4 Steps</span>
+                <span>14 min read</span>
+              </div>
+              <h3 class="post-card-title">
+                <a href="tutorial.html">Hands-on Masterclass: Building an Analytics Heatmap Dashboard from Scratch</a>
+              </h3>
+              <p class="post-card-excerpt">
+                Interactive step-by-step tutorial with checklists, prerequisites checklist, code runner snippets, and progress tracker.
+              </p>
+              <div class="post-card-footer">
+                <div class="author-chip">
+                  <div class="author-chip-avatar">AR</div>
+                  <span>Alex Rivera</span>
+                </div>
+                <div class="post-stats">
+                  <span>❤️ 1.3K</span>
+                  <span>💬 92</span>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- 3. Simple Editorial Post -->
+          <article class="post-card">
+            <img class="post-card-cover" src="https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=600&q=80" alt="Cognitive Bandwidth">
+            <div class="post-card-body">
+              <div class="post-card-meta">
+                <span class="badge badge-primary">✍️ Simple Blog</span>
+                <span>5 min read</span>
+              </div>
+              <h3 class="post-card-title">
+                <a href="post-simple.html">The Subtle Art of Protecting Your Cognitive Bandwidth as an Engineer</a>
+              </h3>
+              <p class="post-card-excerpt">
+                Why endless context switching ruins engineering teams, and how structured asynchronous communication unlocks effortless 4-hour deep focus blocks.
+              </p>
+              <div class="post-card-footer">
+                <div class="author-chip">
+                  <div class="author-chip-avatar" style="background-color: var(--accent-rose);">ER</div>
+                  <span>Elena Rostova</span>
+                </div>
+                <div class="post-stats">
+                  <span>❤️ 819</span>
+                  <span>💬 54</span>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- 4. CSS Modern Dev Post -->
+          <article class="post-card">
+            <img class="post-card-cover" src="https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=600&q=80" alt="CSS Subgrid">
+            <div class="post-card-body">
+              <div class="post-card-meta">
+                <span class="badge badge-dev">💻 Devs Blog</span>
+                <span>6 min read</span>
+              </div>
+              <h3 class="post-card-title">
+                <a href="post-dev.html">CSS Container Queries and Subgrid: The Modern Layout Revolution</a>
+              </h3>
+              <p class="post-card-excerpt">
+                Ditch breakpoint-heavy media query hacks for modular component-driven responsive layouts that automatically adapt to any container width.
+              </p>
+              <div class="post-card-footer">
+                <div class="author-chip">
+                  <div class="author-chip-avatar" style="background-color: var(--accent-cyan);">SC</div>
+                  <span>Sarah Chen</span>
+                </div>
+                <div class="post-stats">
+                  <span>❤️ 540</span>
+                  <span>💬 22</span>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- 5. Confession Post Card -->
+          <article class="post-card" style="border-left: 4px solid var(--accent-rose);">
+            <div class="post-card-body" style="padding-top: var(--space-6);">
+              <div class="post-card-meta">
+                <span class="badge badge-confession">🤫 Confession</span>
+                <span>2 hours ago</span>
+              </div>
+              <h3 class="post-card-title">
+                <a href="confessions.html">"We spent 9 months migrating to 24 microservices, then quietly merged 18 back into a monolith..."</a>
+              </h3>
+              <p class="post-card-excerpt">
+                Deploy times plummeted from 42 minutes to 90 seconds. Nobody dares to tell VP of Product, but our on-call rotations are finally peaceful again.
+              </p>
+              <div class="post-card-footer">
+                <div class="author-chip">
+                  <span style="font-size: 1.25rem;">🦇</span>
+                  <span class="text-muted">Shadow Architect (Anon)</span>
+                </div>
+                <div class="post-stats">
+                  <span style="color: var(--accent-rose); font-weight: 600;">❤️ 894 Relates</span>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- 6. Architectural Tutorial -->
+          <article class="post-card">
+            <img class="post-card-cover" src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=600&q=80" alt="Clean Architecture">
+            <div class="post-card-body">
+              <div class="post-card-meta">
+                <span class="badge badge-tutorial">📚 Tutorial • 5 Steps</span>
+                <span>18 min read</span>
+              </div>
+              <h3 class="post-card-title">
+                <a href="tutorial.html">Architecting 4-Tier Node.js Apps: Controllers, Services & Repositories</a>
+              </h3>
+              <p class="post-card-excerpt">
+                How to decouple database queries from business logic using TypeScript interfaces and memory repositories for zero-friction unit testing.
+              </p>
+              <div class="post-card-footer">
+                <div class="author-chip">
+                  <div class="author-chip-avatar">AR</div>
+                  <span>Alex Rivera</span>
+                </div>
+                <div class="post-stats">
+                  <span>❤️ 980</span>
+                  <span>💬 47</span>
+                </div>
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </div>
+
+      <!-- Sane, Modern Pagination Controls -->
+      <div style="display: flex; align-items: center; justify-content: center; gap: var(--space-3); margin-top: var(--space-12);">
+        <button class="btn btn-secondary btn-sm" disabled>← Previous</button>
+        <button class="btn btn-primary btn-sm">1</button>
+        <button class="btn btn-secondary btn-sm">2</button>
+        <button class="btn btn-secondary btn-sm">3</button>
+        <span class="text-muted">...</span>
+        <button class="btn btn-secondary btn-sm">8</button>
+        <button class="btn btn-secondary btn-sm">Next →</button>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <div>© 2026 BlogSphere Feed. Designed for Next.js 15 App Router.</div>
+        <div><a href="index.html" class="text-muted">Back to Home</a></div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/mock-data.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/interactions.js"></script>
+</body>
+</html>

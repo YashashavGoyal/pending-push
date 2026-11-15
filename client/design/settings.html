@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Account Settings - BlogSphere</title>
+  <link rel="stylesheet" href="css/design-system.css">
+  <link rel="stylesheet" href="css/navbar-footer.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header class="site-header">
+    <div class="container navbar">
+      <a href="index.html" class="brand-logo">
+        <span class="brand-icon">✦</span>
+        <span>Blog<span class="text-gradient">Sphere</span></span>
+      </a>
+
+      <nav>
+        <ul class="nav-links">
+          <li class="nav-item"><a href="index.html">Home</a></li>
+          <li class="nav-item"><a href="feed.html">Explore Feed</a></li>
+          <li class="nav-item"><a href="post-dev.html">Devs Hub</a></li>
+          <li class="nav-item"><a href="tutorial.html">Tutorials</a></li>
+          <li class="nav-item"><a href="confessions.html">Confessions</a></li>
+          <li class="nav-item"><a href="random.html">🎲 Surprise Me</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="theme-toggle-btn" title="Toggle Theme">🌙</button>
+        <a href="post-dev.html" class="btn btn-primary btn-sm">✍️ Write Post</a>
+
+        <div class="user-menu-wrapper">
+          <button class="user-avatar-btn">
+            <img class="user-avatar-img" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&q=80" alt="Alex">
+            <span style="font-size: 0.85rem; font-weight: 600; padding: 0 0.25rem;">Alex</span>
+            <span style="font-size: 0.65rem; color: var(--text-muted);">▼</span>
+          </button>
+          <div class="dropdown-menu">
+            <a href="dashboard.html" class="dropdown-link">📊 Author Dashboard</a>
+            <a href="profile.html" class="dropdown-link">👤 Public Profile & Insights</a>
+            <a href="settings.html" class="dropdown-link active">⚙️ Account Settings</a>
+            <a href="preferences.html" class="dropdown-link">🎨 Reader Preferences</a>
+          </div>
+        </div>
+        <button class="mobile-nav-toggle">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="page-wrapper">
+    <div class="container">
+
+      <div style="margin-bottom: var(--space-8);">
+        <h1 class="title-page">Account & Profile Settings</h1>
+        <p class="text-secondary" style="font-size: 0.95rem; margin-top: 0.25rem;">
+          Manage your public presence, email security, and author credentials.
+        </p>
+      </div>
+
+      <div class="settings-container">
+        
+        <!-- Left Tab Nav -->
+        <aside class="dashboard-nav">
+          <a href="#profile-tab" class="dashboard-nav-item active">👤 Profile Information</a>
+          <a href="#security-tab" class="dashboard-nav-item">🔒 Security & Password</a>
+          <a href="#privacy-tab" class="dashboard-nav-item">👁️ Public Insights Visibility</a>
+          <a href="preferences.html" class="dashboard-nav-item">🎨 Reader Preferences →</a>
+        </aside>
+
+        <!-- Right: Settings Form -->
+        <section class="card">
+          
+          <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: var(--space-6);">
+            Public Profile Details
+          </h2>
+
+          <!-- Avatar Upload -->
+          <div style="display: flex; align-items: center; gap: var(--space-5); margin-bottom: var(--space-6); padding-bottom: var(--space-6); border-bottom: 1px solid var(--border-subtle);">
+            <img style="width: 4.5rem; height: 4.5rem; border-radius: 999px; object-fit: cover;" 
+                 src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" 
+                 alt="Avatar">
+            <div>
+              <div style="display: flex; gap: var(--space-3);">
+                <button class="btn btn-secondary btn-sm">Change Photo</button>
+                <button class="btn btn-ghost btn-sm" style="color: var(--accent-rose);">Remove</button>
+              </div>
+              <p class="form-help" style="margin-top: 0.35rem;">Recommended: Square JPG/PNG, at least 400x400px.</p>
+            </div>
+          </div>
+
+          <!-- Form Fields -->
+          <form onsubmit="event.preventDefault(); alert('Settings saved successfully!');">
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4);">
+              <div class="form-group">
+                <label class="form-label">Full Name</label>
+                <input type="text" class="form-input" value="Alex Rivera">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Username</label>
+                <input type="text" class="form-input" value="alexrivera">
+                <span class="form-help">Your profile URL: blogsphere.dev/@alexrivera</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Email Address</label>
+              <input type="email" class="form-input" value="alex@blogsphere.dev">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Bio (Markdown supported)</label>
+              <textarea class="form-textarea" rows="3">Staff Engineer & Technical Writer. Building modern full-stack web applications with Next.js, Fastify, and TypeScript. Open source contributor and architecture advocate.</textarea>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4);">
+              <div class="form-group">
+                <label class="form-label">Website / Portfolio</label>
+                <input type="url" class="form-input" value="https://alexrivera.dev">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Location</label>
+                <input type="text" class="form-input" value="San Francisco, CA">
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4);">
+              <div class="form-group">
+                <label class="form-label">GitHub Handle</label>
+                <input type="text" class="form-input" value="alexrivera">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Twitter / X Handle</label>
+                <input type="text" class="form-input" value="@alexrivera_dev">
+              </div>
+            </div>
+
+            <!-- Public Insights Visibility Toggle -->
+            <div style="margin-top: var(--space-6); padding: var(--space-4); background-color: var(--bg-tertiary); border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: space-between;">
+              <div>
+                <div style="font-weight: 600; font-size: 0.95rem;">Make Insights & Heatmap Public</div>
+                <div class="text-secondary" style="font-size: 0.8rem; margin-top: 0.15rem;">
+                  Allow readers to see your total read counts, completion rates, and 52-week publishing heatmap.
+                </div>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; gap: var(--space-3); margin-top: var(--space-8);">
+              <button type="button" class="btn btn-secondary">Discard</button>
+              <button type="submit" class="btn btn-primary">Save Changes</button>
+            </div>
+
+          </form>
+
+        </section>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <div>© 2026 BlogSphere Settings.</div>
+        <div><a href="profile.html" class="text-muted">View Profile</a></div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/mock-data.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/interactions.js"></script>
+</body>
+</html>

@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anonymous Confessions Wall - BlogSphere</title>
+  <link rel="stylesheet" href="css/design-system.css">
+  <link rel="stylesheet" href="css/navbar-footer.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* Modal styles */
+    .modal-backdrop {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      padding: var(--space-4);
+    }
+    .modal-box {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: var(--radius-xl);
+      max-width: 540px;
+      width: 100%;
+      padding: var(--space-6);
+      box-shadow: var(--shadow-xl);
+      animation: modalPop 200ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes modalPop {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header class="site-header">
+    <div class="container navbar">
+      <a href="index.html" class="brand-logo">
+        <span class="brand-icon">✦</span>
+        <span>Blog<span class="text-gradient">Sphere</span></span>
+      </a>
+
+      <nav>
+        <ul class="nav-links">
+          <li class="nav-item"><a href="index.html">Home</a></li>
+          <li class="nav-item"><a href="feed.html">Explore Feed</a></li>
+          <li class="nav-item"><a href="post-dev.html">Devs Hub</a></li>
+          <li class="nav-item"><a href="tutorial.html">Tutorials</a></li>
+          <li class="nav-item"><a href="confessions.html" class="active">Confessions</a></li>
+          <li class="nav-item"><a href="random.html">🎲 Surprise Me</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="theme-toggle-btn" title="Toggle Theme">🌙</button>
+        <button class="btn btn-primary btn-sm" data-open-confession-modal>🤫 Post Confession</button>
+
+        <div class="user-menu-wrapper">
+          <button class="user-avatar-btn">
+            <img class="user-avatar-img" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&q=80" alt="Alex">
+            <span style="font-size: 0.85rem; font-weight: 600; padding: 0 0.25rem;">Alex</span>
+            <span style="font-size: 0.65rem; color: var(--text-muted);">▼</span>
+          </button>
+          <div class="dropdown-menu">
+            <a href="dashboard.html" class="dropdown-link">📊 Author Dashboard</a>
+            <a href="profile.html" class="dropdown-link">👤 Public Profile & Insights</a>
+            <a href="settings.html" class="dropdown-link">⚙️ Account Settings</a>
+            <a href="preferences.html" class="dropdown-link">🎨 Reader Preferences</a>
+          </div>
+        </div>
+        <button class="mobile-nav-toggle">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="page-wrapper">
+    <div class="container-narrow">
+
+      <!-- Header & Intro -->
+      <section class="confessions-banner">
+        <div>
+          <span class="badge badge-confession">🤫 100% Anonymous & Ephemeral</span>
+          <h1 class="title-page" style="margin-top: 0.35rem; font-size: 1.85rem;">
+            The Engineering Confessions Wall
+          </h1>
+          <p class="text-secondary" style="font-size: 0.95rem; margin-top: 0.25rem;">
+            A judgment-free haven to share real tech burnout, imposter syndrome, production mishaps, and unspoken truths. No tracking, no user handles.
+          </p>
+        </div>
+        <button class="btn btn-primary" data-open-confession-modal>
+          ✍️ Share Anonymous Confession
+        </button>
+      </section>
+
+      <!-- Category Filter Chips -->
+      <div style="display: flex; gap: var(--space-2); margin-bottom: var(--space-6); flex-wrap: wrap;">
+        <button class="badge badge-confession" style="cursor: pointer;">All Confessions</button>
+        <button class="badge badge-neutral" style="cursor: pointer;">💼 Career & Work</button>
+        <button class="badge badge-neutral" style="cursor: pointer;">🔥 Production Incidents</button>
+        <button class="badge badge-neutral" style="cursor: pointer;">🤖 Imposter Syndrome</button>
+        <button class="badge badge-neutral" style="cursor: pointer;">☕ Coffee & Late Nights</button>
+      </div>
+
+      <!-- Confessions List -->
+      <div style="display: flex; flex-direction: column; gap: var(--space-6);">
+
+        <!-- Confession 1 -->
+        <article class="confession-card">
+          <div class="confession-header">
+            <div class="anon-avatar">
+              <div class="anon-icon">🦊</div>
+              <div>
+                <div>Midnight Fox</div>
+                <div class="text-muted" style="font-size: 0.75rem;">15 minutes ago • Imposter Syndrome</div>
+              </div>
+            </div>
+            <span class="badge badge-neutral">Verified Dev</span>
+          </div>
+
+          <p class="confession-text">
+            "I've been a Senior Software Engineer for 6 years, leading architectural reviews at a unicorn. I still look up how to center a div with flexbox vs grid every single Friday afternoon. Never gets old, and honestly? No regrets."
+          </p>
+
+          <div class="confession-actions">
+            <button class="relate-btn">
+              <span>❤️ Relate</span>
+              <span class="relate-count">382</span>
+            </button>
+            <div style="display: flex; gap: var(--space-3); color: var(--text-muted); font-size: 0.85rem;">
+              <span>💬 24 Anonymous replies</span>
+              <span>🔗 Share</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Confession 2 -->
+        <article class="confession-card">
+          <div class="confession-header">
+            <div class="anon-avatar">
+              <div class="anon-icon" style="background: linear-gradient(135deg, #8b5cf6, #3b82f6);">🦇</div>
+              <div>
+                <div>Shadow Architect</div>
+                <div class="text-muted" style="font-size: 0.75rem;">2 hours ago • Production Incidents</div>
+              </div>
+            </div>
+            <span class="badge badge-confession">🔥 Hot Take</span>
+          </div>
+
+          <p class="confession-text">
+            "We spent 9 months migrating our monolithic app into 24 microservices. Yesterday our team quietly merged 18 of them back into a single modular repo. Deploy times plummeted from 42 mins to 90 seconds. Nobody dares to tell the VP of Product."
+          </p>
+
+          <div class="confession-actions">
+            <button class="relate-btn" style="background-color: var(--accent-rose); color: #ffffff;">
+              <span>❤️ Relate</span>
+              <span class="relate-count">895</span>
+            </button>
+            <div style="display: flex; gap: var(--space-3); color: var(--text-muted); font-size: 0.85rem;">
+              <span>💬 67 Anonymous replies</span>
+              <span>🔗 Share</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Confession 3 -->
+        <article class="confession-card">
+          <div class="confession-header">
+            <div class="anon-avatar">
+              <div class="anon-icon" style="background: linear-gradient(135deg, #10b981, #06b6d4);">☕</div>
+              <div>
+                <div>Caffeine Gremlin</div>
+                <div class="text-muted" style="font-size: 0.75rem;">5 hours ago • Late Nights</div>
+              </div>
+            </div>
+            <span class="badge badge-neutral">Night Owl</span>
+          </div>
+
+          <p class="confession-text">
+            "I write my highest velocity code at 1:30 AM with synthwave cranked to 100%. In the morning 10 AM standup, I act exhausted and pretend I spent 8 disciplined hours solving it in Jira."
+          </p>
+
+          <div class="confession-actions">
+            <button class="relate-btn">
+              <span>❤️ Relate</span>
+              <span class="relate-count">512</span>
+            </button>
+            <div style="display: flex; gap: var(--space-3); color: var(--text-muted); font-size: 0.85rem;">
+              <span>💬 19 Anonymous replies</span>
+              <span>🔗 Share</span>
+            </div>
+          </div>
+        </article>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- MODAL: POST CONFESSION -->
+  <div id="confessionModal" class="modal-backdrop">
+    <div class="modal-box">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-4);">
+        <h3 style="font-size: 1.25rem; font-weight: 700;">Post Anonymous Confession</h3>
+        <button data-close-confession-modal style="background: transparent; border: none; font-size: 1.25rem; cursor: pointer; color: var(--text-muted);">✕</button>
+      </div>
+
+      <div class="callout callout-warning" style="margin-bottom: var(--space-4); font-size: 0.825rem;">
+        <span>🔒</span>
+        <div>
+          <strong>Strict Anonymity:</strong> Your confession will be assigned a random animal alias. IP addresses and user accounts are never tied to confessions.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Category</label>
+        <select class="form-select">
+          <option>💼 Career & Work</option>
+          <option>🔥 Production Incidents</option>
+          <option>🤖 Imposter Syndrome</option>
+          <option>☕ Coffee & Late Nights</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Your Confession</label>
+        <textarea class="form-textarea" rows="4" placeholder="Speak your mind freely..."></textarea>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: var(--space-3); margin-top: var(--space-4);">
+        <button class="btn btn-secondary" data-close-confession-modal>Cancel</button>
+        <button class="btn btn-primary" onclick="alert('Confession posted anonymously!'); document.getElementById('confessionModal').style.display='none';">Publish Anonymously</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <div>© 2026 BlogSphere Anonymous Wall.</div>
+        <div><a href="feed.html" class="text-muted">Return to Feed</a></div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/mock-data.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/interactions.js"></script>
+</body>
+</html>

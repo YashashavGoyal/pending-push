@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BlogSphere - Modern Developer & Editorial Community</title>
+  <link rel="stylesheet" href="css/design-system.css">
+  <link rel="stylesheet" href="css/navbar-footer.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- =========================================================================
+       NAVIGATION BAR
+       ========================================================================= -->
+  <header class="site-header">
+    <div class="container navbar">
+      <a href="index.html" class="brand-logo">
+        <span class="brand-icon">✦</span>
+        <span>Blog<span class="text-gradient">Sphere</span></span>
+      </a>
+
+      <!-- Desktop Links -->
+      <nav>
+        <ul class="nav-links">
+          <li class="nav-item"><a href="index.html" class="active">Home</a></li>
+          <li class="nav-item"><a href="feed.html">Explore Feed</a></li>
+          <li class="nav-item"><a href="post-dev.html">Devs Hub</a></li>
+          <li class="nav-item"><a href="tutorial.html">Tutorials</a></li>
+          <li class="nav-item"><a href="confessions.html">Confessions</a></li>
+          <li class="nav-item"><a href="random.html">🎲 Surprise Me</a></li>
+        </ul>
+      </nav>
+
+      <!-- Nav Actions -->
+      <div class="nav-actions">
+        <button class="theme-toggle-btn" title="Toggle Theme">🌙</button>
+        <a href="post-dev.html" class="btn btn-primary btn-sm">✍️ Write Post</a>
+
+        <!-- User Menu Dropdown -->
+        <div class="user-menu-wrapper">
+          <button class="user-avatar-btn" aria-label="Open User Menu">
+            <img class="user-avatar-img" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&q=80" alt="Alex Rivera">
+            <span style="font-size: 0.85rem; font-weight: 600; padding: 0 0.25rem;">Alex</span>
+            <span style="font-size: 0.65rem; color: var(--text-muted);">▼</span>
+          </button>
+          <div class="dropdown-menu">
+            <div class="dropdown-header">
+              <div class="dropdown-user-name">Alex Rivera</div>
+              <div class="dropdown-user-handle">@alexrivera • Author</div>
+            </div>
+            <a href="dashboard.html" class="dropdown-link">📊 Author Dashboard</a>
+            <a href="profile.html" class="dropdown-link">👤 Public Profile & Insights</a>
+            <a href="settings.html" class="dropdown-link">⚙️ Account Settings</a>
+            <a href="preferences.html" class="dropdown-link">🎨 Reader Preferences</a>
+            <div class="dropdown-divider"></div>
+            <a href="#" class="dropdown-link danger">🚪 Sign Out</a>
+          </div>
+        </div>
+
+        <!-- Mobile Drawer Hamburger -->
+        <button class="mobile-nav-toggle" aria-label="Toggle navigation">☰</button>
+      </div>
+    </div>
+
+    <!-- Mobile Drawer -->
+    <div class="mobile-drawer">
+      <a href="index.html" class="dropdown-link active">🏠 Home</a>
+      <a href="feed.html" class="dropdown-link">📰 Explore Feed</a>
+      <a href="post-dev.html" class="dropdown-link">💻 Devs Blog</a>
+      <a href="tutorial.html" class="dropdown-link">📚 Step-by-Step Tutorials</a>
+      <a href="confessions.html" class="dropdown-link">🤫 Anonymous Confessions</a>
+      <a href="random.html" class="dropdown-link">🎲 Surprise Me</a>
+      <div class="dropdown-divider"></div>
+      <a href="dashboard.html" class="dropdown-link">📊 Dashboard</a>
+      <a href="profile.html" class="dropdown-link">👤 Profile & Public Insights</a>
+      <a href="settings.html" class="dropdown-link">⚙️ Settings</a>
+      <a href="preferences.html" class="dropdown-link">🎨 Preferences</a>
+    </div>
+  </header>
+
+  <!-- =========================================================================
+       HERO SECTION
+       ========================================================================= -->
+  <main class="page-wrapper">
+    <div class="container">
+      
+      <section class="hero-section">
+        <div class="hero-badge">
+          <span>✨</span> Discover, Learn & Share with 50,000+ Creators
+        </div>
+        <h1 class="title-hero">
+          Where Engineering Meets <br>
+          <span class="text-gradient">Thoughtful Storytelling</span>
+        </h1>
+        <p class="hero-subtitle">
+          From in-depth technical breakdowns and interactive tutorials to heartfelt engineering confessions and daily life musings. Welcome to your all-in-one publishing platform.
+        </p>
+
+        <div class="hero-actions">
+          <a href="feed.html" class="btn btn-primary btn-lg">Explore All Posts →</a>
+          <a href="random.html" class="btn btn-secondary btn-lg">🎲 Read Random Post</a>
+        </div>
+
+        <!-- Use-case quick switchers -->
+        <div class="category-pills">
+          <a href="feed.html" class="cat-pill active">🔥 Trending</a>
+          <a href="post-dev.html" class="cat-pill">💻 Devs & Markdown</a>
+          <a href="tutorial.html" class="cat-pill">📚 Step-by-Step Tutorials</a>
+          <a href="confessions.html" class="cat-pill">🤫 Anonymous Confessions</a>
+          <a href="post-simple.html" class="cat-pill">✍️ Editorial & Essays</a>
+          <a href="profile.html" class="cat-pill">📈 Author Insights</a>
+        </div>
+      </section>
+
+      <!-- =====================================================================
+           FEATURED ARTICLES (DIVERSE USE-CASES)
+           ===================================================================== -->
+      <section style="margin-top: var(--space-12);">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-4);">
+          <div>
+            <h2 class="title-section">Featured Reads across Formats</h2>
+            <p class="text-muted" style="font-size: 0.9rem;">Curated highlights spanning dev deep-dives, guides, and stories</p>
+          </div>
+          <a href="feed.html" class="btn btn-ghost btn-sm">View Feed →</a>
+        </div>
+
+        <div class="posts-grid">
+          
+          <!-- Card 1: Dev Post with Code Badge -->
+          <article class="post-card">
+            <img class="post-card-cover" src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=600&q=80" alt="Code Cover">
+            <div class="post-card-body">
+              <div class="post-card-meta">
+                <span class="badge badge-dev">💻 Devs Blog</span>
+                <span>7 min read</span>
+              </div>
+              <h3 class="post-card-title">
+                <a href="post-dev.html">Building High-Throughput Web Applications with Fastify and Next.js 15</a>
+              </h3>
+              <p class="post-card-excerpt">
+                A deep dive into combining Fastify's schema-driven backend with Next.js Server Components, featuring live syntax highlighting, copyable code, and architecture diffs.
+              </p>
+              <div class="post-card-footer">
+                <div class="author-chip">
+                  <div class="author-chip-avatar">AR</div>
+                  <span>Alex Rivera</span>
+                </div>
+                <div class="post-stats">
+                  <span>❤️ 642</span>
+                  <span>💬 38</span>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 2: Interactive Tutorial -->
+          <article class="post-card">
+            <img class="post-card-cover" src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=600&q=80" alt="Tutorial Cover">
+            <div class="post-card-body">
+              <div class="post-card-meta">
+                <span class="badge badge-tutorial">📚 Interactive Tutorial</span>
+                <span>14 min • 4 Steps</span>
+              </div>
+              <h3 class="post-card-title">
+                <a href="tutorial.html">Hands-on Masterclass: Building an Analytics Heatmap Dashboard from Scratch</a>
+              </h3>
+              <p class="post-card-excerpt">
+                Interactive step-by-step tutorial with checklists, prerequisites checklist, code runner snippets, and progress tracker.
+              </p>
+              <div class="post-card-footer">
+                <div class="author-chip">
+                  <div class="author-chip-avatar">AR</div>
+                  <span>Alex Rivera</span>
+                </div>
+                <div class="post-stats">
+                  <span>❤️ 1.3K</span>
+                  <span>💬 92</span>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 3: Simple Editorial Blog -->
+          <article class="post-card">
+            <img class="post-card-cover" src="https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=600&q=80" alt="Editorial Cover">
+            <div class="post-card-body">
+              <div class="post-card-meta">
+                <span class="badge badge-primary">✍️ Simple Blog</span>
+                <span>5 min read</span>
+              </div>
+              <h3 class="post-card-title">
+                <a href="post-simple.html">The Subtle Art of Protecting Your Cognitive Bandwidth as an Engineer</a>
+              </h3>
+              <p class="post-card-excerpt">
+                Why endless context switching ruins engineering teams, and how structured asynchronous communication unlocks effortless 4-hour deep focus blocks.
+              </p>
+              <div class="post-card-footer">
+                <div class="author-chip">
+                  <div class="author-chip-avatar" style="background-color: var(--accent-rose);">ER</div>
+                  <span>Elena Rostova</span>
+                </div>
+                <div class="post-stats">
+                  <span>❤️ 819</span>
+                  <span>💬 54</span>
+                </div>
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </section>
+
+      <!-- =====================================================================
+           CONFESSIONS SPOTLIGHT BANNER
+           ===================================================================== -->
+      <section style="margin-top: var(--space-12);">
+        <div class="confessions-banner">
+          <div>
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.35rem;">
+              <span class="badge badge-confession">🤫 Confessions Corner</span>
+              <span class="text-muted" style="font-size: 0.8rem;">100% Anonymous</span>
+            </div>
+            <h3 style="font-size: 1.25rem; font-weight: 700;">Anonymous Musings, Hot Takes & Engineering Vulnerability</h3>
+            <p class="text-secondary" style="font-size: 0.9rem; margin-top: 0.25rem;">
+              "We spent 9 months migrating to 24 microservices, then quietly merged 18 back into a monolith..."
+            </p>
+          </div>
+          <div style="display: flex; gap: var(--space-3);">
+            <a href="confessions.html" class="btn btn-primary btn-sm">Explore Confessions Wall →</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- =====================================================================
+           PUBLIC AUTHOR INSIGHTS PREVIEW
+           ===================================================================== -->
+      <section style="margin-top: var(--space-12);">
+        <div class="card" style="background: linear-gradient(135deg, var(--bg-card), var(--bg-tertiary));">
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--space-4);">
+            <div>
+              <span class="badge badge-neutral">📈 Transparent Analytics</span>
+              <h3 class="title-section" style="margin-top: 0.5rem;">Public Author Insights & Impact Metrics</h3>
+              <p class="text-secondary" style="font-size: 0.9rem; max-width: 580px; margin-top: 0.25rem;">
+                Authors can make their engagement analytics public: monthly read volume, reader retention, and activity heatmaps are transparently visible to readers.
+              </p>
+            </div>
+            <a href="profile.html" class="btn btn-secondary">View Sample Public Profile & Insights →</a>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- =========================================================================
+       FOOTER
+       ========================================================================= -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="brand-logo">
+            <span class="brand-icon">✦</span>
+            <span>Blog<span class="text-gradient">Sphere</span></span>
+          </a>
+          <p>
+            A modern, developer-first blogging and knowledge-sharing platform built for clean code, deep tutorials, and transparent creator insights.
+          </p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Explore</h4>
+          <ul class="footer-links">
+            <li><a href="feed.html">Latest Feed</a></li>
+            <li><a href="post-dev.html">Devs & Code</a></li>
+            <li><a href="tutorial.html">Step-by-Step Tutorials</a></li>
+            <li><a href="confessions.html">Anonymous Confessions</a></li>
+            <li><a href="random.html">🎲 Surprise Post</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Account</h4>
+          <ul class="footer-links">
+            <li><a href="dashboard.html">Author Dashboard</a></li>
+            <li><a href="profile.html">Public Profile</a></li>
+            <li><a href="settings.html">Account Settings</a></li>
+            <li><a href="preferences.html">Reader Preferences</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Stack</h4>
+          <ul class="footer-links">
+            <li><span class="text-muted">Fastify 5.x Backend</span></li>
+            <li><span class="text-muted">Next.js 15 Ready</span></li>
+            <li><span class="text-muted">TypeScript Schemas</span></li>
+            <li><span class="text-muted">CSS Design Tokens</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>© 2026 BlogSphere. Crafted for seamless Next.js migration.</div>
+        <div>
+          <a href="privacy.html" class="text-muted" style="margin-right: 1rem;">Privacy</a>
+          <a href="terms.html" class="text-muted">Terms</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/mock-data.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/interactions.js"></script>
+</body>
+</html>

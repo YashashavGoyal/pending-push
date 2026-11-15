@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Creator Dashboard - BlogSphere</title>
+  <link rel="stylesheet" href="css/design-system.css">
+  <link rel="stylesheet" href="css/navbar-footer.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header class="site-header">
+    <div class="container navbar">
+      <a href="index.html" class="brand-logo">
+        <span class="brand-icon">✦</span>
+        <span>Blog<span class="text-gradient">Sphere</span></span>
+      </a>
+
+      <nav>
+        <ul class="nav-links">
+          <li class="nav-item"><a href="index.html">Home</a></li>
+          <li class="nav-item"><a href="feed.html">Explore Feed</a></li>
+          <li class="nav-item"><a href="post-dev.html">Devs Hub</a></li>
+          <li class="nav-item"><a href="tutorial.html">Tutorials</a></li>
+          <li class="nav-item"><a href="confessions.html">Confessions</a></li>
+          <li class="nav-item"><a href="random.html">🎲 Surprise Me</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="theme-toggle-btn" title="Toggle Theme">🌙</button>
+        <a href="post-dev.html" class="btn btn-primary btn-sm">✍️ Write Post</a>
+
+        <div class="user-menu-wrapper">
+          <button class="user-avatar-btn">
+            <img class="user-avatar-img" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&q=80" alt="Alex">
+            <span style="font-size: 0.85rem; font-weight: 600; padding: 0 0.25rem;">Alex</span>
+            <span style="font-size: 0.65rem; color: var(--text-muted);">▼</span>
+          </button>
+          <div class="dropdown-menu">
+            <a href="dashboard.html" class="dropdown-link active">📊 Author Dashboard</a>
+            <a href="profile.html" class="dropdown-link">👤 Public Profile & Insights</a>
+            <a href="settings.html" class="dropdown-link">⚙️ Account Settings</a>
+            <a href="preferences.html" class="dropdown-link">🎨 Reader Preferences</a>
+          </div>
+        </div>
+        <button class="mobile-nav-toggle">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="page-wrapper">
+    <div class="container">
+
+      <!-- Dashboard Layout -->
+      <div class="dashboard-grid">
+        
+        <!-- Left: Dashboard Navigation -->
+        <aside class="dashboard-nav">
+          <a href="dashboard.html" class="dashboard-nav-item active">📊 Overview & Metrics</a>
+          <a href="feed.html" class="dashboard-nav-item">📰 All Articles</a>
+          <a href="profile.html" class="dashboard-nav-item">👤 Public Profile</a>
+          <a href="settings.html" class="dashboard-nav-item">⚙️ Settings</a>
+          <a href="preferences.html" class="dashboard-nav-item">🎨 Preferences</a>
+        </aside>
+
+        <!-- Right: Dashboard Content -->
+        <section>
+          
+          <!-- Top greeting -->
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-6); flex-wrap: wrap; gap: var(--space-4);">
+            <div>
+              <h1 class="title-page">Welcome back, Alex</h1>
+              <p class="text-secondary" style="font-size: 0.95rem; margin-top: 0.25rem;">
+                Here is your content performance and audience engagement this month.
+              </p>
+            </div>
+            <a href="post-dev.html" class="btn btn-primary">+ Create New Article</a>
+          </div>
+
+          <!-- KPI Cards Grid -->
+          <div class="kpi-grid">
+            
+            <div class="kpi-card">
+              <div class="kpi-label">Total Reads</div>
+              <div class="kpi-value">142.8K</div>
+              <div class="kpi-trend positive">
+                <span>↑ 18.4%</span>
+                <span class="text-muted">vs last month</span>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-label">Total Views</div>
+              <div class="kpi-value">318.5K</div>
+              <div class="kpi-trend positive">
+                <span>↑ 24.1%</span>
+                <span class="text-muted">vs last month</span>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-label">Followers</div>
+              <div class="kpi-value">1,240</div>
+              <div class="kpi-trend positive">
+                <span>+ 84 new</span>
+                <span class="text-muted">this week</span>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-label">Avg. Engagement</div>
+              <div class="kpi-value">8.4%</div>
+              <div class="kpi-trend positive">
+                <span>↑ 1.2%</span>
+                <span class="text-muted">top 5% of creators</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Post Management Table -->
+          <div class="card">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-4);">
+              <h3 class="title-section">Your Published & Draft Articles</h3>
+              <div style="display: flex; gap: var(--space-2);">
+                <button class="btn btn-secondary btn-sm">Filter: All</button>
+              </div>
+            </div>
+
+            <div style="overflow-x: auto;">
+              <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
+                <thead>
+                  <tr style="border-bottom: 2px solid var(--border-subtle); text-align: left; color: var(--text-muted); font-size: 0.8rem;">
+                    <th style="padding: 0.75rem 0.5rem;">TITLE</th>
+                    <th style="padding: 0.75rem 0.5rem;">FORMAT</th>
+                    <th style="padding: 0.75rem 0.5rem;">STATUS</th>
+                    <th style="padding: 0.75rem 0.5rem;">READS</th>
+                    <th style="padding: 0.75rem 0.5rem;">LIKES</th>
+                    <th style="padding: 0.75rem 0.5rem; text-align: right;">ACTIONS</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  
+                  <tr style="border-bottom: 1px solid var(--border-subtle);">
+                    <td style="padding: 0.85rem 0.5rem; font-weight: 600;">
+                      <a href="post-dev.html" style="color: var(--text-primary);">Building High-Throughput Web Apps with Fastify and Next.js 15</a>
+                    </td>
+                    <td style="padding: 0.85rem 0.5rem;"><span class="badge badge-dev">Dev Blog</span></td>
+                    <td style="padding: 0.85rem 0.5rem;"><span class="badge badge-tutorial">Published</span></td>
+                    <td style="padding: 0.85rem 0.5rem;">18,450</td>
+                    <td style="padding: 0.85rem 0.5rem;">642</td>
+                    <td style="padding: 0.85rem 0.5rem; text-align: right;">
+                      <button class="btn btn-ghost btn-sm">Edit</button>
+                      <button class="btn btn-ghost btn-sm" style="color: var(--accent-rose);">Delete</button>
+                    </td>
+                  </tr>
+
+                  <tr style="border-bottom: 1px solid var(--border-subtle);">
+                    <td style="padding: 0.85rem 0.5rem; font-weight: 600;">
+                      <a href="tutorial.html" style="color: var(--text-primary);">Hands-on Masterclass: Building an Analytics Heatmap Dashboard</a>
+                    </td>
+                    <td style="padding: 0.85rem 0.5rem;"><span class="badge badge-tutorial">Tutorial</span></td>
+                    <td style="padding: 0.85rem 0.5rem;"><span class="badge badge-tutorial">Published</span></td>
+                    <td style="padding: 0.85rem 0.5rem;">24,500</td>
+                    <td style="padding: 0.85rem 0.5rem;">1,320</td>
+                    <td style="padding: 0.85rem 0.5rem; text-align: right;">
+                      <button class="btn btn-ghost btn-sm">Edit</button>
+                      <button class="btn btn-ghost btn-sm" style="color: var(--accent-rose);">Delete</button>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td style="padding: 0.85rem 0.5rem; font-weight: 600;">
+                      <span style="color: var(--text-secondary);">Decoupled Event Streaming with Redis Streams & WebSockets</span>
+                    </td>
+                    <td style="padding: 0.85rem 0.5rem;"><span class="badge badge-dev">Dev Blog</span></td>
+                    <td style="padding: 0.85rem 0.5rem;"><span class="badge badge-neutral">Draft</span></td>
+                    <td style="padding: 0.85rem 0.5rem;">—</td>
+                    <td style="padding: 0.85rem 0.5rem;">—</td>
+                    <td style="padding: 0.85rem 0.5rem; text-align: right;">
+                      <button class="btn btn-ghost btn-sm">Continue Writing</button>
+                    </td>
+                  </tr>
+
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </section>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <div>© 2026 BlogSphere Creator Analytics Engine.</div>
+        <div><a href="index.html" class="text-muted">Home</a></div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/mock-data.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/interactions.js"></script>
+</body>
+</html>
