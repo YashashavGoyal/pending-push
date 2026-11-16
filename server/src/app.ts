@@ -6,6 +6,10 @@ import swaggerUi from '@fastify/swagger-ui';
 import { config } from './config/env.js';
 import { errorHandler } from './middleware/error.middleware.js';
 import { setupRoutes } from './routes/index.js';
+import { IUserRepository } from './repositories/interfaces/user.repository.interface.js';
+import { ISessionRepository } from './repositories/interfaces/session.repository.interface.js';
+import { IPostRepository } from './repositories/interfaces/post.repository.interface.js';
+import { IContactRepository } from './repositories/interfaces/contact.repository.interface.js';
 import { UserDrizzleRepository } from './repositories/drizzle/user.drizzle.repository.js';
 import { SessionDrizzleRepository } from './repositories/drizzle/session.drizzle.repository.js';
 import { PostDrizzleRepository } from './repositories/drizzle/post.drizzle.repository.js';
@@ -19,7 +23,14 @@ import { PostController } from './controllers/post.controller.js';
 import { ContactController } from './controllers/contact.controller.js';
 import { AdminController } from './controllers/admin.controller.js';
 
-export const createApp = async (): Promise<FastifyInstance> => {
+export interface AppDependencies {
+  userRepository?: IUserRepository;
+  sessionRepository?: ISessionRepository;
+  postRepository?: IPostRepository;
+  contactRepository?: IContactRepository;
+}
+
+export const createApp = async (dependencies?: AppDependencies): Promise<FastifyInstance> => {
   const fastify = Fastify({
     logger: {
       level: config.nodeEnv === 'development' ? 'info' : 'warn',
@@ -95,11 +106,11 @@ export const createApp = async (): Promise<FastifyInstance> => {
     });
   });
 
-  // Dependency Injection Wiring (PostgreSQL via Drizzle ORM)
-  const userRepository = new UserDrizzleRepository();
-  const sessionRepository = new SessionDrizzleRepository();
-  const postRepository = new PostDrizzleRepository();
-  const contactRepository = new ContactDrizzleRepository();
+  // Dependency Injection Wiring
+  const userRepository = dependencies?.userRepository || new UserDrizzleRepository();
+  const sessionRepository = dependencies?.sessionRepository || new SessionDrizzleRepository();
+  const postRepository = dependencies?.postRepository || new PostDrizzleRepository();
+  const contactRepository = dependencies?.contactRepository || new ContactDrizzleRepository();
 
   const authService = new AuthService(userRepository, sessionRepository);
   const postService = new PostService(postRepository);
