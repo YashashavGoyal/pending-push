@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTheme } from './ThemeProvider';
@@ -12,6 +12,11 @@ export default function Navbar() {
   const { user, isAuthenticated, logout, isLoading } = useAuth();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // 1. Completely hide navbar on focused auth pages (/login & /register)
   if (pathname === '/login' || pathname === '/register') {
@@ -129,7 +134,9 @@ export default function Navbar() {
           </button>
 
           {/* AUTHENTICATION STATE RENDERING */}
-          {!isLoading && isAuthenticated && user ? (
+          {!mounted || isLoading ? (
+            <div style={{ width: '168px', height: '32px' }} />
+          ) : isAuthenticated && user ? (
             <>
               {/* Write a Push CTA */}
               <Link href="/studio" className="btn btn-primary btn-sm" style={{ borderRadius: 'var(--radius-full)' }}>
@@ -297,7 +304,7 @@ export default function Navbar() {
           <Link href="/confessions" className="dropdown-link" onClick={() => setMobileDrawerOpen(false)}>Confessions Space</Link>
           <Link href="/random" className="dropdown-link" onClick={() => setMobileDrawerOpen(false)}>Surprise Me</Link>
           <div className="dropdown-divider" />
-          {isAuthenticated && user ? (
+          {mounted && isAuthenticated && user ? (
             <>
               <Link href="/studio" className="dropdown-link" onClick={() => setMobileDrawerOpen(false)}>Markdown Studio</Link>
               <Link href="/dashboard" className="dropdown-link" onClick={() => setMobileDrawerOpen(false)}>Dashboard</Link>

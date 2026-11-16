@@ -57,9 +57,10 @@ export default function RegisterPage() {
   const handlePolicyScroll = () => {
     if (!scrollContainerRef.current) return;
     const { scrollTop, scrollHeight, clientHeight } = scrollContainerRef.current;
-    // If scrolled within 60px of bottom
-    if (scrollHeight - scrollTop <= clientHeight + 60) {
+    // If scrolled within 50px of bottom
+    if (scrollHeight - scrollTop <= clientHeight + 50) {
       setHasScrolledToBottom(true);
+      setAcceptedCheckbox(true);
     }
   };
 
@@ -68,13 +69,14 @@ export default function RegisterPage() {
       const { scrollHeight, clientHeight } = scrollContainerRef.current;
       if (scrollHeight <= clientHeight + 10) {
         setHasScrolledToBottom(true);
+        setAcceptedCheckbox(true);
       }
     }
   }, [showPolicyModal]);
 
   // Step 2: Accept policy and submit registration
   const handleFinalSubmit = async () => {
-    if (!hasScrolledToBottom && !acceptedCheckbox) {
+    if (!acceptedCheckbox) {
       return;
     }
 
@@ -472,10 +474,11 @@ export default function RegisterPage() {
                 </span>
               )}
 
-              <label style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', fontSize: '0.825rem', color: 'var(--text-main)', cursor: 'pointer' }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', fontSize: '0.825rem', color: hasScrolledToBottom ? 'var(--text-main)' : 'var(--text-muted)', cursor: hasScrolledToBottom ? 'pointer' : 'not-allowed' }}>
                 <input
                   type="checkbox"
-                  checked={acceptedCheckbox || hasScrolledToBottom}
+                  checked={acceptedCheckbox}
+                  disabled={!hasScrolledToBottom}
                   onChange={(e) => setAcceptedCheckbox(e.target.checked)}
                   style={{ accentColor: 'var(--brand-terracotta)' }}
                 />
@@ -495,15 +498,15 @@ export default function RegisterPage() {
               </button>
               <button
                 type="button"
-                disabled={(!hasScrolledToBottom && !acceptedCheckbox) || loading}
+                disabled={!acceptedCheckbox || loading}
                 onClick={handleFinalSubmit}
                 className="btn btn-primary btn-sm"
                 style={{
                   borderRadius: 'var(--radius-full)',
                   padding: '0.55rem 1.25rem',
                   fontWeight: 700,
-                  opacity: (!hasScrolledToBottom && !acceptedCheckbox) ? 0.5 : 1,
-                  cursor: (!hasScrolledToBottom && !acceptedCheckbox) ? 'not-allowed' : 'pointer'
+                  opacity: !acceptedCheckbox ? 0.5 : 1,
+                  cursor: !acceptedCheckbox ? 'not-allowed' : 'pointer'
                 }}
               >
                 {loading ? 'Creating Account...' : 'Accept Policy & Create Account \u2192'}

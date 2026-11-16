@@ -40,15 +40,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (storedToken && storedUser) {
         setToken(storedToken);
         setUser(JSON.parse(storedUser));
-      } else if (storedToken) {
-        setToken(storedToken);
-        setUser({
-          name: 'Alex Rivera',
-          username: 'alexrivera',
-          email: 'alex@pendingpush.dev',
-          role: (localStorage.getItem('user_role') as any) || 'author',
-          avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&q=80',
-        });
+      } else {
+        // Clear any orphan tokens without user identity
+        if (storedToken) {
+          localStorage.removeItem('token');
+          localStorage.removeItem('user_role');
+        }
+        setToken(null);
+        setUser(null);
       }
     } catch {
       // Ignore localStorage errors

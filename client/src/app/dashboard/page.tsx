@@ -1,10 +1,19 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useAuth } from '@/lib/auth-context';
 
 export default function DashboardPage() {
+  const { user } = useAuth();
   const [activeRole, setActiveRole] = useState<'author' | 'admin'>('author');
+
+  useEffect(() => {
+    if (user?.role) {
+      setActiveRole(user.role);
+    }
+  }, [user]);
+
   const [usersList, setUsersList] = useState([
     { id: 'u-1', name: 'Alex Rivera', username: 'alexrivera', email: 'alex@pendingpush.dev', role: 'admin', status: 'Active', postsCount: 28 },
     { id: 'u-2', name: 'Marcus Vance', username: 'marcusv', email: 'marcus@systems.io', role: 'user', status: 'Active', postsCount: 14 },
@@ -56,14 +65,14 @@ export default function DashboardPage() {
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>
             <img
-              src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&q=80"
-              alt="Alex"
+              src={user?.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&q=80"}
+              alt={user?.name || "Author"}
               style={{ width: '2.75rem', height: '2.75rem', borderRadius: 'var(--radius-full)', border: '2px solid var(--brand-terracotta)' }}
             />
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
-                <span style={{ fontWeight: 800, fontSize: '1.05rem', color: 'var(--text-main)' }}>Alex Rivera</span>
-                <span className="text-muted" style={{ fontSize: '0.85rem' }}>@alexrivera</span>
+                <span style={{ fontWeight: 800, fontSize: '1.05rem', color: 'var(--text-main)' }}>{user?.name || 'Alex Rivera'}</span>
+                <span className="text-muted" style={{ fontSize: '0.85rem' }}>@{user?.username || 'alexrivera'}</span>
                 {activeRole === 'author' ? (
                   <span className="badge badge-dev" style={{ fontSize: '0.75rem' }}>
                     Specified Role: Author / Contributor
