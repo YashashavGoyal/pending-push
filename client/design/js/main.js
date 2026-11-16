@@ -1,79 +1,79 @@
 /**
- * BLOGSPHERE - MAIN APPLICATION SCRIPT
- * Handles theme switching, mobile drawer navigation, dropdowns, and global UX
+ * PENDING PUSH - MAIN CONTROLLER
+ * Theme state, mobile drawer, dropdown menus, and icon SVG rendering
  */
 
 (function () {
   'use strict';
 
-  // 1. THEME MANAGEMENT (Dark / Light Mode)
-  const THEME_KEY = 'blogsphere-theme';
-  
-  function getPreferredTheme() {
-    const savedTheme = localStorage.getItem(THEME_KEY);
-    if (savedTheme) return savedTheme;
+  // SVG Icons Definition (Zero emojis)
+  const ICONS = {
+    sun: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>`,
+    moon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>`,
+    check: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`
+  };
+
+  const THEME_KEY = 'pending-push-theme';
+
+  function getSavedTheme() {
+    const saved = localStorage.getItem(THEME_KEY);
+    if (saved) return saved;
     return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   }
 
-  function applyTheme(theme) {
+  function setTheme(theme) {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem(THEME_KEY, theme);
-    
-    // Update theme toggle button icon if present
+
     const toggleBtns = document.querySelectorAll('.theme-toggle-btn');
     toggleBtns.forEach(btn => {
-      btn.innerHTML = theme === 'dark' ? '☀️' : '🌙';
-      btn.setAttribute('aria-label', `Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`);
+      btn.innerHTML = `<span class="icon">${theme === 'dark' ? ICONS.sun : ICONS.moon}</span>`;
+      btn.setAttribute('title', `Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`);
     });
   }
 
-  // Initialize theme immediately
-  const initialTheme = getPreferredTheme();
-  applyTheme(initialTheme);
+  // Initialize early
+  setTheme(getSavedTheme());
 
-  // 2. DOM CONTENT LOADED EVENT LISTENERS
   document.addEventListener('DOMContentLoaded', () => {
-    // Theme toggle buttons click
+    // Theme toggle listener
     const toggleBtns = document.querySelectorAll('.theme-toggle-btn');
     toggleBtns.forEach(btn => {
       btn.addEventListener('click', () => {
-        const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
-        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-        applyTheme(newTheme);
+        const current = document.documentElement.getAttribute('data-theme') || 'light';
+        setTheme(current === 'dark' ? 'light' : 'dark');
       });
     });
 
-    // Mobile Navigation Drawer Toggle
-    const mobileToggleBtn = document.querySelector('.mobile-nav-toggle');
+    // Mobile nav toggle
+    const mobileBtn = document.querySelector('.mobile-nav-toggle');
     const mobileDrawer = document.querySelector('.mobile-drawer');
-
-    if (mobileToggleBtn && mobileDrawer) {
-      mobileToggleBtn.addEventListener('click', () => {
+    if (mobileBtn && mobileDrawer) {
+      mobileBtn.addEventListener('click', () => {
         const isOpen = mobileDrawer.classList.toggle('open');
-        mobileToggleBtn.innerHTML = isOpen ? '✕' : '☰';
+        mobileBtn.setAttribute('aria-expanded', isOpen);
       });
     }
 
-    // User Avatar Dropdown Menu
-    const userMenuBtn = document.querySelector('.user-avatar-btn');
-    const userDropdown = document.querySelector('.dropdown-menu');
-
-    if (userMenuBtn && userDropdown) {
-      userMenuBtn.addEventListener('click', (e) => {
+    // User dropdown toggle
+    const userBtn = document.querySelector('.user-avatar-btn');
+    const userMenu = document.querySelector('.dropdown-menu');
+    if (userBtn && userMenu) {
+      userBtn.addEventListener('click', (e) => {
         e.stopPropagation();
-        userDropdown.classList.toggle('show');
+        userMenu.classList.toggle('show');
       });
 
       document.addEventListener('click', (e) => {
-        if (!userMenuBtn.contains(e.target) && !userDropdown.contains(e.target)) {
-          userDropdown.classList.remove('show');
+        if (!userBtn.contains(e.target) && !userMenu.contains(e.target)) {
+          userMenu.classList.remove('show');
         }
       });
     }
 
-    // Highlight current active link in navigation
+    // Active path highlighter
     const currentPath = window.location.pathname.split('/').pop() || 'index.html';
-    const navLinks = document.querySelectorAll('.nav-links a, .mobile-drawer a');
+    const navLinks = document.querySelectorAll('.spaces-nav a, .mobile-drawer a');
     navLinks.forEach(link => {
       const href = link.getAttribute('href');
       if (href && (href === currentPath || (currentPath === '' && href === 'index.html'))) {
@@ -81,15 +81,14 @@
       }
     });
 
-    // Reading Progress Bar (if present on the page)
+    // Reading progress line
     const progressBar = document.querySelector('.reading-progress-bar');
     if (progressBar) {
       window.addEventListener('scroll', () => {
-        const docElem = document.documentElement;
-        const totalHeight = docElem.scrollHeight - docElem.clientHeight;
-        if (totalHeight > 0) {
-          const scrollPercent = (docElem.scrollTop / totalHeight) * 100;
-          progressBar.style.width = `${scrollPercent}%`;
+        const total = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        if (total > 0) {
+          const pct = (document.documentElement.scrollTop / total) * 100;
+          progressBar.style.width = `${pct}%`;
         }
       }, { passive: true });
     }

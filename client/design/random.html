@@ -3,11 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Surprise Me (Random Post) - BlogSphere</title>
+  <title>Surprise Me — Pending Push</title>
   <link rel="stylesheet" href="css/design-system.css">
   <link rel="stylesheet" href="css/navbar-footer.css">
   <link rel="stylesheet" href="css/pages.css">
-  <link rel="stylesheet" href="css/syntax-theme.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -17,138 +16,93 @@
   <!-- NAVBAR -->
   <header class="site-header">
     <div class="container navbar">
-      <a href="index.html" class="brand-logo">
-        <span class="brand-icon">✦</span>
-        <span>Blog<span class="text-gradient">Sphere</span></span>
+      <a href="index.html" class="brand-link">
+        <span class="brand-icon">
+          <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg>
+        </span>
+        <span>Pending Push</span>
       </a>
 
       <nav>
-        <ul class="nav-links">
-          <li class="nav-item"><a href="index.html">Home</a></li>
-          <li class="nav-item"><a href="feed.html">Explore Feed</a></li>
-          <li class="nav-item"><a href="post-dev.html">Devs Hub</a></li>
-          <li class="nav-item"><a href="tutorial.html">Tutorials</a></li>
-          <li class="nav-item"><a href="confessions.html">Confessions</a></li>
-          <li class="nav-item"><a href="random.html" class="active">🎲 Surprise Me</a></li>
+        <ul class="spaces-nav">
+          <li class="spaces-nav-item"><a href="articles.html"><span class="icon icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg></span><span>Articles</span></a></li>
+          <li class="spaces-nav-item"><a href="dev-logs.html"><span class="icon icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></span><span>Dev Logs</span></a></li>
+          <li class="spaces-nav-item"><a href="tutorials.html"><span class="icon icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span><span>Tutorials</span></a></li>
+          <li class="spaces-nav-item"><a href="confessions.html"><span class="icon icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span><span>Confessions</span></a></li>
         </ul>
       </nav>
 
       <div class="nav-actions">
-        <button class="theme-toggle-btn" title="Toggle Theme">🌙</button>
-        <a href="post-dev.html" class="btn btn-primary btn-sm">✍️ Write Post</a>
-
+        <button class="theme-toggle-btn nav-icon-btn"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg></span></button>
+        <a href="post-dev.html" class="btn btn-primary btn-sm"><span class="icon icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span><span>New Push</span></a>
         <div class="user-menu-wrapper">
-          <button class="user-avatar-btn">
-            <img class="user-avatar-img" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&q=80" alt="Alex">
-            <span style="font-size: 0.85rem; font-weight: 600; padding: 0 0.25rem;">Alex</span>
-            <span style="font-size: 0.65rem; color: var(--text-muted);">▼</span>
-          </button>
+          <button class="user-avatar-btn"><img class="user-avatar-img" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&q=80" alt="Alex"></button>
           <div class="dropdown-menu">
-            <div class="dropdown-header">
-              <div class="dropdown-user-name">Alex Rivera</div>
-              <div class="dropdown-user-handle">@alexrivera • Author</div>
-            </div>
-            <a href="dashboard.html" class="dropdown-link">📊 Author Dashboard</a>
-            <a href="profile.html" class="dropdown-link">👤 Public Profile & Insights</a>
-            <a href="settings.html" class="dropdown-link">⚙️ Account Settings</a>
-            <a href="preferences.html" class="dropdown-link">🎨 Reader Preferences</a>
-            <div class="dropdown-divider"></div>
-            <a href="#" class="dropdown-link danger">🚪 Sign Out</a>
+            <a href="dashboard.html" class="dropdown-link">Author Dashboard</a>
+            <a href="profile.html" class="dropdown-link">Public Profile & Insights</a>
+            <a href="settings.html" class="dropdown-link">Settings</a>
+            <a href="preferences.html" class="dropdown-link">Preferences</a>
           </div>
         </div>
-        <button class="mobile-nav-toggle">☰</button>
       </div>
     </div>
   </header>
 
-  <!-- Progress bar -->
-  <div class="reading-progress-bar"></div>
-
-  <!-- MAIN WRAPPER -->
+  <!-- MAIN -->
   <main class="page-wrapper">
     <div class="container-narrow">
 
-      <!-- Random Post Interactive Bar -->
-      <section class="random-post-banner">
+      <!-- Serendipity Bar -->
+      <section class="card" style="margin-bottom: var(--space-8); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--space-4);">
         <div>
-          <span class="badge badge-primary">🎲 Serendipity Mode</span>
-          <h2 style="font-size: 1.25rem; font-weight: 700; margin-top: 0.35rem;">You are reading a randomized community article!</h2>
-          <p class="text-secondary" style="font-size: 0.875rem;">
-            Discover hidden gems, unexpected perspectives, and rare tutorials.
-          </p>
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <span class="badge badge-dev">random push discovery</span>
+            <span class="text-muted" style="font-size: 0.775rem; font-family: var(--font-mono);">serendipity mode</span>
+          </div>
+          <h2 style="font-size: 1.15rem; font-weight: 700; margin-top: 0.25rem;">Reading a randomized community submission</h2>
         </div>
-        <button id="shuffleRandomBtn" class="random-dice-btn">
-          🎲 Shuffle Another
+
+        <button id="randomShuffleBtn" class="btn btn-primary btn-sm">
+          <span class="icon icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg></span>
+          <span>Shuffle Another Push</span>
         </button>
       </section>
 
-      <!-- Article Presentation -->
-      <article class="reader-article">
-        <header class="reader-header">
-          <div style="display: flex; gap: 0.5rem; margin-bottom: var(--space-3);">
-            <span class="badge badge-dev">💻 Devs Blog</span>
-            <span class="badge badge-neutral">#Architecture</span>
+      <!-- Article Reader -->
+      <article>
+        <header style="margin-bottom: var(--space-6);">
+          <div style="display: flex; gap: var(--space-2); margin-bottom: var(--space-3);">
+            <span class="badge badge-dev">dev-log</span>
+            <span class="badge badge-neutral">Next.js 15</span>
           </div>
 
-          <h1 class="title-page" style="line-height: 1.2;">
+          <h1 class="title-page">
             Building High-Throughput Web Applications with Fastify and Next.js 15
           </h1>
 
-          <div class="reader-meta">
-            <div class="author-chip">
-              <img style="width: 2.25rem; height: 2.25rem; border-radius: 999px;" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="Alex">
-              <div>
-                <a href="profile.html" style="font-weight: 600; color: var(--text-primary);">Alex Rivera</a>
-                <div style="font-size: 0.775rem; color: var(--text-muted);">Published Nov 15, 2026 • 7 min read</div>
-              </div>
-            </div>
-            <div style="margin-left: auto; display: flex; gap: var(--space-2);">
-              <button class="btn btn-secondary btn-sm">🔖 Bookmark</button>
-              <button class="btn btn-secondary btn-sm">🔗 Share</button>
-            </div>
+          <div style="display: flex; align-items: center; gap: var(--space-3); margin-top: var(--space-3); font-size: 0.825rem; color: var(--text-muted);">
+            <img style="width: 1.75rem; height: 1.75rem; border-radius: 999px;" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&q=80" alt="Alex">
+            <span style="color: var(--text-main); font-weight: 600;">Alex Rivera</span>
+            <span>•</span>
+            <span>7 min read</span>
+            <span>•</span>
+            <span>Nov 15, 2026</span>
           </div>
         </header>
 
-        <img class="reader-cover" src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80" alt="Article Cover">
-
-        <!-- Prose Content -->
-        <div class="prose">
-          <p>
+        <div style="font-size: 1.05rem; line-height: 1.8; color: var(--text-main);">
+          <p style="margin-bottom: 1.25rem;">
             When architecting modern web applications, developers frequently face a dilemma: do you compromise backend throughput for full-stack developer ergonomics, or maintain a distinct micro-architecture that adds deployment complexity?
           </p>
 
-          <blockquote>
-            "Fastify's low-overhead HTTP engine combined with Next.js 15 Server Components gives you the ultimate hybrid: instant API responses with seamless frontend streaming."
-          </blockquote>
-
-          <h2>The 4-Tier Layered Architecture</h2>
-          <p>
-            To keep your backend maintainable as it scales to millions of requests, separating concerns between HTTP transport, domain business logic, and database persistence is non-negotiable.
-          </p>
-
-          <div class="code-block">
-            <div class="code-header">
-              <span>src/routes/post.routes.ts</span>
-              <button class="code-copy-btn">📋 Copy Code</button>
-            </div>
-            <pre class="code-content"><code><span class="token-keyword">import</span> { FastifyInstance } <span class="token-keyword">from</span> <span class="token-string">'fastify'</span>;
-<span class="token-keyword">import</span> { PostController } <span class="token-keyword">from</span> <span class="token-string">'../controllers/post.controller'</span>;
-
-<span class="token-keyword">export</span> <span class="token-keyword">const</span> <span class="token-function">registerPostRoutes</span> = (fastify: FastifyInstance): <span class="token-keyword">void</span> => {
-  fastify.<span class="token-function">get</span>(<span class="token-string">'/feed'</span>, PostController.getFeed);
-  fastify.<span class="token-function">post</span>(<span class="token-string">'/new'</span>, PostController.create);
-};</code></pre>
-          </div>
-
-          <p>
-            With this pattern, testing your business services without running a live MongoDB or PostgreSQL container becomes trivial through interface mocks.
+          <p style="margin-bottom: 1.25rem;">
+            Fastify's low-overhead HTTP engine combined with Next.js 15 Server Components gives you the ultimate hybrid: instant API responses with seamless frontend streaming.
           </p>
         </div>
 
-        <!-- Article Reactions & Author Banner -->
-        <div style="margin-top: var(--space-10); padding-top: var(--space-6); border-top: 1px solid var(--border-subtle); display: flex; align-items: center; justify-content: space-between;">
-          <button class="btn btn-primary">❤️ Clap / Like (642)</button>
-          <button id="shuffleBottomBtn" class="btn btn-secondary" onclick="document.getElementById('shuffleRandomBtn').click()">🎲 Roll Another Random Story →</button>
+        <div style="margin-top: var(--space-8); padding-top: var(--space-5); border-top: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center;">
+          <a href="post-dev.html" class="btn btn-secondary btn-sm">Read Full Dev Log →</a>
+          <button onclick="document.getElementById('randomShuffleBtn').click()" class="btn btn-primary btn-sm">Roll Next Random Push →</button>
         </div>
       </article>
 
@@ -157,11 +111,9 @@
 
   <!-- FOOTER -->
   <footer class="site-footer">
-    <div class="container">
-      <div class="footer-bottom">
-        <div>© 2026 BlogSphere Serendipity Engine.</div>
-        <div><a href="feed.html" class="text-muted">Return to Feed</a></div>
-      </div>
+    <div class="container footer-inner">
+      <div>Pending Push • Random Discovery Engine</div>
+      <div><a href="index.html">Back to Overview</a></div>
     </div>
   </footer>
 

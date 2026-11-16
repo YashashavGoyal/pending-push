@@ -1,82 +1,69 @@
-# BlogSphere Modern Design System & Layout Prototypes
+# Pending Push — Design System & Layout Prototypes
 
-Welcome to the new working design prototype for **BlogSphere**, built with accessible HTML5, modular CSS design tokens, and vanilla JavaScript interactions.
-
-This prototype solves all bugs and missing features in the legacy client, providing a battle-tested blueprint ready for seamless migration to **Next.js 15 App Router** and modern React components.
+Welcome to the new working design suite for **Pending Push**, engineered with a high-craft developer aesthetic, crisp 1px borders, precision typography, zero cheesy emojis, and native vector SVGs.
 
 ---
 
-## 📁 Directory Structure
+## 🗂️ Distinct Spaces Architecture
+
+Instead of clustering different post formats into tabs on a single feed, **Pending Push** organizes developer content into **four dedicated spaces**, each with its own focused atmosphere and layout:
 
 ```text
 Blogs-frontend/client/design/
-├── index.html               # Modern Home page (Hero, Curated Highlights, Quick Use-Case Switcher, CTA)
-├── feed.html                # Multi-Tab Community Feed (Tabs, Realtime Search, Topic Pills, Clean Pagination)
-├── random.html              # Surprise Me / Serendipity Reader (Interactive shuffle dice button & full article reader)
-├── post-simple.html         # Use-Case 1: Editorial Simple Blog (Serif typography, claps counter, author card, comments)
-├── post-dev.html            # Use-Case 2: Devs Blog (Markdown layouts, syntax highlighting, diffs, copy code, sticky ToC)
-├── confessions.html         # Use-Case 3: Anonymous Confessions Wall (Mood tags, relate reactions, anonymity modal)
-├── tutorial.html            # Use-Case 4: Interactive Step-by-Step Tutorial (Prerequisites, checklist progress bar, code runners)
-├── dashboard.html           # Author & User Dashboard (KPI cards, reads/views trends, article management table)
-├── profile.html             # User Profile with Public Insights (KPI cards, 52-week activity heatmap, tabs, verified author badge)
-├── settings.html            # User Settings (Profile details, avatar upload, public insights visibility toggle, social links)
-├── preferences.html         # Reader Preferences (Dark/Light mode, typography sizing, code snippet styling, confessions filter)
+├── index.html            # Main Overview: Entry gateway highlighting the 4 distinct spaces
+│
+├── articles.html         # 01 / Articles Space: Long-form engineering essays and leadership
+├── dev-logs.html         # 02 / Dev Logs Space: Architecture RFCs, code logs, and git diffs
+├── tutorials.html        # 03 / Tutorials Space: Curated learning tracks with progress badges
+├── tutorial.html         # Tutorial Runner: Sticky step checklist, progress %, and code runners
+├── confessions.html      # 04 / Confessions Space ("The Uncommitted"): 100% anonymous stream
+│
+├── random.html           # Surprise Me: Serendipitous random push explorer
+├── post-simple.html      # Editorial Reader: Clean serif typography with claps & responses
+├── post-dev.html         # Dev Reader: Code blocks with copy actions, diffs, and sticky ToC
+│
+├── dashboard.html        # Author Dashboard: Reads/views analytics and push management
+├── profile.html          # Public Profile & Insights: 52-week activity heatmap and metrics
+├── settings.html         # Account Settings: Profile, security, and public insights toggle
+├── preferences.html      # Display Preferences: Theme, font scales, code ligatures, curation
+│
 ├── css/
-│   ├── design-system.css    # Global CSS custom properties (colors, typography, spacing, shadows, badges, cards, buttons)
-│   ├── navbar-footer.css    # Responsive navigation bar, dropdown menu, mobile drawer, and footer
-│   ├── pages.css            # Page-specific components, grids, KPI cards, heatmaps, and sliders
-│   └── syntax-theme.css     # Dark/Light code highlighting, line diffs, callout boxes, and prose typography
+│   ├── design-system.css # Clean color tokens, typography scales, buttons, badges, cards
+│   ├── navbar-footer.css # Unclustered top navigation, mobile drawer, and minimal footer
+│   ├── pages.css         # Space-specific streams, heatmap grids, and tutorial runners
+│   └── syntax-theme.css  # Dark/Light code highlighting, diffs, and callout blocks
 └── js/
-    ├── main.js              # Theme switcher (Dark/Light toggle), mobile navigation, dropdowns, reading progress bar
-    ├── interactions.js      # Tab switching, copy code to clipboard, tutorial checklist tracking, confession relates & modal
-    └── mock-data.js         # Realistic datasets matching Fastify backend schemas (Post, User, Confession, Insights)
+    ├── main.js           # Theme controller, mobile drawer, dropdown menus
+    ├── interactions.js   # Copy actions, tutorial checklist progress, and relate toggles
+    └── mock-data.js      # Datasets aligned with Fastify backend schemas
 ```
 
 ---
 
-## 🚀 Key Highlights & Design Innovations
+## 💎 Design Highlights
 
-### 1. Unified Design Tokens (`css/design-system.css`)
-- **Dual Theme Support**: Native Light and Dark themes with zero flash, persisting automatically in `localStorage`.
-- **Accessible Palette**: Built using accessible color contrasts (Indigo `#6366f1`, Emerald `#10b981`, Rose `#f43f5e`, Cyan `#06b6d4`, Deep Slate `#0f172a`).
-- **Responsive Layout**: Designed mobile-first, scaling fluidly across mobile, tablet, and ultra-wide desktops.
-
-### 2. Comprehensive Use-Cases Covered
-- **Use-Case 1 (Simple Blog)**: Clean editorial reading mode with serif typography (`Merriweather`), read time estimate, claps counter, and author cards.
-- **Use-Case 2 (Devs Blog)**: Markdown article reader with sticky Table of Contents, syntax-highlighted code blocks with 1-click clipboard copy, git migration diffs, performance benchmark tables, and tech tags.
-- **Use-Case 3 (Confessions Tab)**: Anonymous thought sharing wall with avatar aliases (e.g. *Midnight Fox*, *Shadow Architect*), "I Relate" counter toggles, and modal submission with anonymity guarantees.
-- **Use-Case 4 (Interactive Tutorials)**: Step-by-step technical guides with interactive completion checkboxes that dynamically update the visual completion percentage bar.
-- **Public Profile Insights**: Transparent author analytics including total reads, upvotes, audience retention %, and a GitHub-style 52-week activity heatmap.
-
----
-
-## 🌐 Next.js 15 App Router Migration Blueprint
-
-When migrating to Next.js 15, these pages map directly into the following App Router directory structure:
-
-| HTML Prototype | Next.js 15 Target Route | Component Type |
-|---|---|---|
-| `index.html` | `app/page.tsx` | Server Component |
-| `feed.html` | `app/feed/page.tsx` | Server Component with Client Filter Tabs |
-| `random.html` | `app/random/page.tsx` | Client Component (Shuffling) |
-| `post-simple.html` | `app/post/[slug]/page.tsx` | Server Component (Editorial layout) |
-| `post-dev.html` | `app/dev/[slug]/page.tsx` | Server Component with Syntax Highlighting |
-| `confessions.html` | `app/confessions/page.tsx` | Server Component + Client Relate & Modal |
-| `tutorial.html` | `app/tutorial/[slug]/page.tsx` | Client Component (Checklist State) |
-| `dashboard.html` | `app/dashboard/page.tsx` | Protected Server Component |
-| `profile.html` | `app/[username]/page.tsx` | Server Component (Public Insights) |
-| `settings.html` | `app/settings/page.tsx` | Protected Client Component |
-| `preferences.html` | `app/preferences/page.tsx` | Client Component (Theme & Fonts) |
+1. **Brand Identity: Pending Push**:
+   - Clean git branch/commit node SVG logo.
+   - Minimalist aesthetic inspired by modern tools like Linear, GitHub, and Vercel.
+2. **Zero Emojis**:
+   - Replaced all emojis with crisp, lightweight, accessible inline SVGs.
+3. **Four Dedicated Spaces**:
+   - **Articles**: Focused reading layout for essays and culture.
+   - **Dev Logs**: High-density technical feed with code diffs and latency benchmarks.
+   - **Tutorials**: Interactive learning tracks with step counts and completion statistics.
+   - **Confessions**: Ephemeral, anonymous thoughts with privacy disclaimers and relate counters.
+4. **Public Developer Insights**:
+   - If a developer profile is public, it displays an authentic 52-week activity heatmap (CSS Grid) alongside read time and audience retention metrics.
+5. **Theme Support**:
+   - Pure Clean Light mode and Midnight Slate dark mode, fully persisted in `localStorage`.
 
 ---
 
 ## 💻 How to Preview
-Double-click any `.html` file inside `Blogs-frontend/client/design/` to open it directly in any modern browser, or run a local static server from the terminal:
 
-```bash
-# Using Python
-cd Blogs-frontend/client/design && python -m http.server 3000
+Open any `.html` file directly in your browser or run:
 
-# Or using npx
-cd Blogs-frontend/client/design && npx serve .
+```powershell
+cd Blogs-frontend\client\design
+python -m http.server 3000
 ```

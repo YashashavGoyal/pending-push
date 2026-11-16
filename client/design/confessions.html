@@ -3,19 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Anonymous Confessions Wall - BlogSphere</title>
+  <title>Confessions — Pending Push</title>
   <link rel="stylesheet" href="css/design-system.css">
   <link rel="stylesheet" href="css/navbar-footer.css">
   <link rel="stylesheet" href="css/pages.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
-    /* Modal styles */
-    .modal-backdrop {
+    /* Modal Backdrop & Box */
+    .modal-overlay {
       position: fixed;
-      top: 0; left: 0; width: 100vw; height: 100vh;
-      background: rgba(0, 0, 0, 0.65);
+      inset: 0;
+      background-color: rgba(0, 0, 0, 0.75);
       backdrop-filter: blur(4px);
       display: none;
       align-items: center;
@@ -23,19 +23,14 @@
       z-index: 2000;
       padding: var(--space-4);
     }
-    .modal-box {
+    .modal-content {
       background-color: var(--bg-card);
       border: 1px solid var(--border-card);
       border-radius: var(--radius-xl);
-      max-width: 540px;
+      max-width: 520px;
       width: 100%;
       padding: var(--space-6);
-      box-shadow: var(--shadow-xl);
-      animation: modalPop 200ms cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    @keyframes modalPop {
-      from { opacity: 0; transform: scale(0.95); }
-      to { opacity: 1; transform: scale(1); }
+      box-shadow: var(--shadow-card);
     }
   </style>
 </head>
@@ -44,40 +39,40 @@
   <!-- NAVBAR -->
   <header class="site-header">
     <div class="container navbar">
-      <a href="index.html" class="brand-logo">
-        <span class="brand-icon">✦</span>
-        <span>Blog<span class="text-gradient">Sphere</span></span>
+      <a href="index.html" class="brand-link">
+        <span class="brand-icon">
+          <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg>
+        </span>
+        <span>Pending Push</span>
       </a>
 
       <nav>
-        <ul class="nav-links">
-          <li class="nav-item"><a href="index.html">Home</a></li>
-          <li class="nav-item"><a href="feed.html">Explore Feed</a></li>
-          <li class="nav-item"><a href="post-dev.html">Devs Hub</a></li>
-          <li class="nav-item"><a href="tutorial.html">Tutorials</a></li>
-          <li class="nav-item"><a href="confessions.html" class="active">Confessions</a></li>
-          <li class="nav-item"><a href="random.html">🎲 Surprise Me</a></li>
+        <ul class="spaces-nav">
+          <li class="spaces-nav-item"><a href="articles.html"><span class="icon icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg></span><span>Articles</span></a></li>
+          <li class="spaces-nav-item"><a href="dev-logs.html"><span class="icon icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></span><span>Dev Logs</span></a></li>
+          <li class="spaces-nav-item"><a href="tutorials.html"><span class="icon icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span><span>Tutorials</span></a></li>
+          <li class="spaces-nav-item"><a href="confessions.html" class="active"><span class="icon icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span><span>Confessions</span></a></li>
         </ul>
       </nav>
 
       <div class="nav-actions">
-        <button class="theme-toggle-btn" title="Toggle Theme">🌙</button>
-        <button class="btn btn-primary btn-sm" data-open-confession-modal>🤫 Post Confession</button>
-
+        <a href="random.html" class="nav-icon-btn" title="Surprise Me"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg></span></a>
+        <button class="theme-toggle-btn nav-icon-btn"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg></span></button>
+        <button class="btn btn-primary btn-sm" data-open-confession>
+          <span class="icon icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+          <span>Post Confession</span>
+        </button>
         <div class="user-menu-wrapper">
-          <button class="user-avatar-btn">
-            <img class="user-avatar-img" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&q=80" alt="Alex">
-            <span style="font-size: 0.85rem; font-weight: 600; padding: 0 0.25rem;">Alex</span>
-            <span style="font-size: 0.65rem; color: var(--text-muted);">▼</span>
-          </button>
+          <button class="user-avatar-btn"><img class="user-avatar-img" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&q=80" alt="Alex"></button>
           <div class="dropdown-menu">
-            <a href="dashboard.html" class="dropdown-link">📊 Author Dashboard</a>
-            <a href="profile.html" class="dropdown-link">👤 Public Profile & Insights</a>
-            <a href="settings.html" class="dropdown-link">⚙️ Account Settings</a>
-            <a href="preferences.html" class="dropdown-link">🎨 Reader Preferences</a>
+            <div class="dropdown-header"><div class="dropdown-user-name">Alex Rivera</div><div class="dropdown-user-handle">@alexrivera</div></div>
+            <a href="dashboard.html" class="dropdown-link"><span class="icon icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg></span><span>Author Dashboard</span></a>
+            <a href="profile.html" class="dropdown-link"><span class="icon icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span><span>Public Profile & Insights</span></a>
+            <a href="settings.html" class="dropdown-link"><span class="icon icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span><span>Account Settings</span></a>
+            <a href="preferences.html" class="dropdown-link"><span class="icon icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="4" x1="21" y1="12" y2="12"/><line x1="4" x1="21" y1="6" y2="6"/><line x1="4" x1="21" y1="18" y2="18"/></svg></span><span>Display Preferences</span></a>
           </div>
         </div>
-        <button class="mobile-nav-toggle">☰</button>
+        <button class="mobile-nav-toggle"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="18" x2="20" y2="18"/></svg></span></button>
       </div>
     </div>
   </header>
@@ -86,117 +81,113 @@
   <main class="page-wrapper">
     <div class="container-narrow">
 
-      <!-- Header & Intro -->
-      <section class="confessions-banner">
-        <div>
-          <span class="badge badge-confession">🤫 100% Anonymous & Ephemeral</span>
-          <h1 class="title-page" style="margin-top: 0.35rem; font-size: 1.85rem;">
-            The Engineering Confessions Wall
-          </h1>
-          <p class="text-secondary" style="font-size: 0.95rem; margin-top: 0.25rem;">
-            A judgment-free haven to share real tech burnout, imposter syndrome, production mishaps, and unspoken truths. No tracking, no user handles.
+      <!-- Dedicated Space Header -->
+      <section class="space-header">
+        <div class="space-title-group">
+          <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.35rem;">
+            <span class="badge badge-confession">the uncommitted</span>
+            <span class="text-muted" style="font-size: 0.775rem; font-family: var(--font-mono);">100% anonymous & unindexed</span>
+          </div>
+          <h1>Confessions</h1>
+          <p>
+            An honest, uncommitted stream for production mistakes, silent team struggles, imposter moments, and uncensored engineering perspectives.
           </p>
         </div>
-        <button class="btn btn-primary" data-open-confession-modal>
-          ✍️ Share Anonymous Confession
-        </button>
+
+        <div class="space-actions">
+          <button class="btn btn-primary btn-sm" data-open-confession>
+            <span class="icon icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></span>
+            <span>Write Confession</span>
+          </button>
+        </div>
       </section>
 
-      <!-- Category Filter Chips -->
+      <!-- Filter Tags -->
       <div style="display: flex; gap: var(--space-2); margin-bottom: var(--space-6); flex-wrap: wrap;">
-        <button class="badge badge-confession" style="cursor: pointer;">All Confessions</button>
-        <button class="badge badge-neutral" style="cursor: pointer;">💼 Career & Work</button>
-        <button class="badge badge-neutral" style="cursor: pointer;">🔥 Production Incidents</button>
-        <button class="badge badge-neutral" style="cursor: pointer;">🤖 Imposter Syndrome</button>
-        <button class="badge badge-neutral" style="cursor: pointer;">☕ Coffee & Late Nights</button>
+        <button class="badge badge-confession" style="cursor: pointer;">All</button>
+        <button class="badge badge-neutral" style="cursor: pointer;">Incidents & Outages</button>
+        <button class="badge badge-neutral" style="cursor: pointer;">Imposter Syndrome</button>
+        <button class="badge badge-neutral" style="cursor: pointer;">Career & Culture</button>
+        <button class="badge badge-neutral" style="cursor: pointer;">Late Nights</button>
       </div>
 
-      <!-- Confessions List -->
-      <div style="display: flex; flex-direction: column; gap: var(--space-6);">
-
+      <!-- Confessions Stream -->
+      <div class="confession-stream">
+        
         <!-- Confession 1 -->
-        <article class="confession-card">
-          <div class="confession-header">
-            <div class="anon-avatar">
-              <div class="anon-icon">🦊</div>
-              <div>
-                <div>Midnight Fox</div>
-                <div class="text-muted" style="font-size: 0.75rem;">15 minutes ago • Imposter Syndrome</div>
-              </div>
+        <article class="confession-box">
+          <div class="confession-top">
+            <div class="confession-alias">
+              <span class="icon icon-sm" style="color: var(--status-rose);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="m9 9 6 6"/><path d="m15 9-6 6"/></svg></span>
+              <span>Anonymous Fox</span>
             </div>
-            <span class="badge badge-neutral">Verified Dev</span>
+            <span>15m ago • Imposter Syndrome</span>
           </div>
 
-          <p class="confession-text">
-            "I've been a Senior Software Engineer for 6 years, leading architectural reviews at a unicorn. I still look up how to center a div with flexbox vs grid every single Friday afternoon. Never gets old, and honestly? No regrets."
+          <p class="confession-body">
+            "I've been a Staff Software Engineer for 6 years leading cross-team architectural reviews. I still look up how to center a div with flexbox vs grid every single Friday afternoon. Never gets old, and honestly? No regrets."
           </p>
 
-          <div class="confession-actions">
-            <button class="relate-btn">
-              <span>❤️ Relate</span>
+          <div class="confession-bottom">
+            <button class="relate-button">
+              <span class="icon icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg></span>
+              <span>Relate</span>
               <span class="relate-count">382</span>
             </button>
-            <div style="display: flex; gap: var(--space-3); color: var(--text-muted); font-size: 0.85rem;">
-              <span>💬 24 Anonymous replies</span>
-              <span>🔗 Share</span>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">
+              24 responses
             </div>
           </div>
         </article>
 
         <!-- Confession 2 -->
-        <article class="confession-card">
-          <div class="confession-header">
-            <div class="anon-avatar">
-              <div class="anon-icon" style="background: linear-gradient(135deg, #8b5cf6, #3b82f6);">🦇</div>
-              <div>
-                <div>Shadow Architect</div>
-                <div class="text-muted" style="font-size: 0.75rem;">2 hours ago • Production Incidents</div>
-              </div>
+        <article class="confession-box">
+          <div class="confession-top">
+            <div class="confession-alias">
+              <span class="icon icon-sm" style="color: var(--status-rose);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg></span>
+              <span>Shadow Architect</span>
             </div>
-            <span class="badge badge-confession">🔥 Hot Take</span>
+            <span>2h ago • Incidents</span>
           </div>
 
-          <p class="confession-text">
+          <p class="confession-body">
             "We spent 9 months migrating our monolithic app into 24 microservices. Yesterday our team quietly merged 18 of them back into a single modular repo. Deploy times plummeted from 42 mins to 90 seconds. Nobody dares to tell the VP of Product."
           </p>
 
-          <div class="confession-actions">
-            <button class="relate-btn" style="background-color: var(--accent-rose); color: #ffffff;">
-              <span>❤️ Relate</span>
+          <div class="confession-bottom">
+            <button class="relate-button active">
+              <span class="icon icon-sm"><svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg></span>
+              <span>Relate</span>
               <span class="relate-count">895</span>
             </button>
-            <div style="display: flex; gap: var(--space-3); color: var(--text-muted); font-size: 0.85rem;">
-              <span>💬 67 Anonymous replies</span>
-              <span>🔗 Share</span>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">
+              67 responses
             </div>
           </div>
         </article>
 
         <!-- Confession 3 -->
-        <article class="confession-card">
-          <div class="confession-header">
-            <div class="anon-avatar">
-              <div class="anon-icon" style="background: linear-gradient(135deg, #10b981, #06b6d4);">☕</div>
-              <div>
-                <div>Caffeine Gremlin</div>
-                <div class="text-muted" style="font-size: 0.75rem;">5 hours ago • Late Nights</div>
-              </div>
+        <article class="confession-box">
+          <div class="confession-top">
+            <div class="confession-alias">
+              <span class="icon icon-sm" style="color: var(--status-rose);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></span>
+              <span>Night Owl</span>
             </div>
-            <span class="badge badge-neutral">Night Owl</span>
+            <span>5h ago • Late Nights</span>
           </div>
 
-          <p class="confession-text">
-            "I write my highest velocity code at 1:30 AM with synthwave cranked to 100%. In the morning 10 AM standup, I act exhausted and pretend I spent 8 disciplined hours solving it in Jira."
+          <p class="confession-body">
+            "I write my highest velocity code at 1:30 AM with ambient noise on repeat. In the morning 10 AM standup, I act exhausted and pretend I spent 8 disciplined hours solving it in Jira."
           </p>
 
-          <div class="confession-actions">
-            <button class="relate-btn">
-              <span>❤️ Relate</span>
+          <div class="confession-bottom">
+            <button class="relate-button">
+              <span class="icon icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg></span>
+              <span>Relate</span>
               <span class="relate-count">512</span>
             </button>
-            <div style="display: flex; gap: var(--space-3); color: var(--text-muted); font-size: 0.85rem;">
-              <span>💬 19 Anonymous replies</span>
-              <span>🔗 Share</span>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">
+              19 responses
             </div>
           </div>
         </article>
@@ -206,50 +197,47 @@
     </div>
   </main>
 
-  <!-- MODAL: POST CONFESSION -->
-  <div id="confessionModal" class="modal-backdrop">
-    <div class="modal-box">
+  <!-- CONFESSION COMPOSE MODAL -->
+  <div id="confessionModal" class="modal-overlay">
+    <div class="modal-content">
       <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-4);">
-        <h3 style="font-size: 1.25rem; font-weight: 700;">Post Anonymous Confession</h3>
-        <button data-close-confession-modal style="background: transparent; border: none; font-size: 1.25rem; cursor: pointer; color: var(--text-muted);">✕</button>
+        <h3 style="font-size: 1.15rem; font-weight: 700;">Submit Anonymous Confession</h3>
+        <button data-close-confession style="background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.1rem;">
+          <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>
+        </button>
       </div>
 
-      <div class="callout callout-warning" style="margin-bottom: var(--space-4); font-size: 0.825rem;">
-        <span>🔒</span>
-        <div>
-          <strong>Strict Anonymity:</strong> Your confession will be assigned a random animal alias. IP addresses and user accounts are never tied to confessions.
-        </div>
+      <div style="padding: 0.65rem 0.85rem; background-color: var(--bg-subtle); border-radius: var(--radius-md); font-size: 0.8rem; color: var(--text-secondary); margin-bottom: var(--space-4); border: 1px solid var(--border-subtle);">
+        Zero IP addresses, cookies, or user identifiers are stored. A random alias is assigned upon submission.
       </div>
 
       <div class="form-group">
         <label class="form-label">Category</label>
         <select class="form-select">
-          <option>💼 Career & Work</option>
-          <option>🔥 Production Incidents</option>
-          <option>🤖 Imposter Syndrome</option>
-          <option>☕ Coffee & Late Nights</option>
+          <option>Incidents & Outages</option>
+          <option>Imposter Syndrome</option>
+          <option>Career & Culture</option>
+          <option>Late Nights</option>
         </select>
       </div>
 
       <div class="form-group">
-        <label class="form-label">Your Confession</label>
-        <textarea class="form-textarea" rows="4" placeholder="Speak your mind freely..."></textarea>
+        <label class="form-label">Confession Text</label>
+        <textarea class="form-textarea" rows="4" placeholder="Share your uncommitted thoughts..."></textarea>
       </div>
 
-      <div style="display: flex; justify-content: flex-end; gap: var(--space-3); margin-top: var(--space-4);">
-        <button class="btn btn-secondary" data-close-confession-modal>Cancel</button>
-        <button class="btn btn-primary" onclick="alert('Confession posted anonymously!'); document.getElementById('confessionModal').style.display='none';">Publish Anonymously</button>
+      <div style="display: flex; justify-content: flex-end; gap: var(--space-3); margin-top: var(--space-5);">
+        <button class="btn btn-secondary btn-sm" data-close-confession>Cancel</button>
+        <button class="btn btn-primary btn-sm" onclick="alert('Confession published anonymously.'); document.getElementById('confessionModal').style.display='none';">Publish Anonymously</button>
       </div>
     </div>
   </div>
 
   <!-- FOOTER -->
   <footer class="site-footer">
-    <div class="container">
-      <div class="footer-bottom">
-        <div>© 2026 BlogSphere Anonymous Wall.</div>
-        <div><a href="feed.html" class="text-muted">Return to Feed</a></div>
-      </div>
+    <div class="container footer-inner">
+      <div>Pending Push • Confessions Space</div>
+      <div><a href="index.html">Back to Overview</a></div>
     </div>
   </footer>
 

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BlogSphere - Modern Developer & Editorial Community</title>
+  <title>Pending Push — Developer Knowledge, Tutorials & Uncommitted Thoughts</title>
   <link rel="stylesheet" href="css/design-system.css">
   <link rel="stylesheet" href="css/navbar-footer.css">
   <link rel="stylesheet" href="css/pages.css">
@@ -14,242 +14,335 @@
 <body>
 
   <!-- =========================================================================
-       NAVIGATION BAR
+       PENDING PUSH - UNCLUTTERED TOP NAVIGATION
        ========================================================================= -->
   <header class="site-header">
     <div class="container navbar">
-      <a href="index.html" class="brand-logo">
-        <span class="brand-icon">✦</span>
-        <span>Blog<span class="text-gradient">Sphere</span></span>
+      <!-- Brand -->
+      <a href="index.html" class="brand-link">
+        <span class="brand-icon">
+          <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="6" y1="3" x2="6" y2="15"></line>
+            <circle cx="18" cy="6" r="3"></circle>
+            <circle cx="6" cy="18" r="3"></circle>
+            <path d="M18 9a9 9 0 0 1-9 9"></path>
+          </svg>
+        </span>
+        <span>Pending Push</span>
       </a>
 
-      <!-- Desktop Links -->
+      <!-- Dedicated Spaces Navigation -->
       <nav>
-        <ul class="nav-links">
-          <li class="nav-item"><a href="index.html" class="active">Home</a></li>
-          <li class="nav-item"><a href="feed.html">Explore Feed</a></li>
-          <li class="nav-item"><a href="post-dev.html">Devs Hub</a></li>
-          <li class="nav-item"><a href="tutorial.html">Tutorials</a></li>
-          <li class="nav-item"><a href="confessions.html">Confessions</a></li>
-          <li class="nav-item"><a href="random.html">🎲 Surprise Me</a></li>
+        <ul class="spaces-nav">
+          <li class="spaces-nav-item">
+            <a href="articles.html">
+              <span class="icon icon-sm">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg>
+              </span>
+              <span>Articles</span>
+            </a>
+          </li>
+          <li class="spaces-nav-item">
+            <a href="dev-logs.html">
+              <span class="icon icon-sm">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+              </span>
+              <span>Dev Logs</span>
+            </a>
+          </li>
+          <li class="spaces-nav-item">
+            <a href="tutorials.html">
+              <span class="icon icon-sm">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+              </span>
+              <span>Tutorials</span>
+            </a>
+          </li>
+          <li class="spaces-nav-item">
+            <a href="confessions.html">
+              <span class="icon icon-sm">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              </span>
+              <span>Confessions</span>
+            </a>
+          </li>
         </ul>
       </nav>
 
-      <!-- Nav Actions -->
+      <!-- Utility Actions -->
       <div class="nav-actions">
-        <button class="theme-toggle-btn" title="Toggle Theme">🌙</button>
-        <a href="post-dev.html" class="btn btn-primary btn-sm">✍️ Write Post</a>
+        <!-- Random Post Explorer -->
+        <a href="random.html" class="nav-icon-btn" title="Surprise Me (Random Push)">
+          <span class="icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
+          </span>
+        </a>
 
-        <!-- User Menu Dropdown -->
+        <!-- Theme Toggle -->
+        <button class="theme-toggle-btn nav-icon-btn" aria-label="Toggle Theme">
+          <span class="icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+          </span>
+        </button>
+
+        <!-- New Push Action Button -->
+        <a href="post-dev.html" class="btn btn-primary btn-sm">
+          <span class="icon icon-sm">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </span>
+          <span>New Push</span>
+        </a>
+
+        <!-- User Menu -->
         <div class="user-menu-wrapper">
-          <button class="user-avatar-btn" aria-label="Open User Menu">
+          <button class="user-avatar-btn" aria-label="User Menu">
             <img class="user-avatar-img" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&q=80" alt="Alex Rivera">
-            <span style="font-size: 0.85rem; font-weight: 600; padding: 0 0.25rem;">Alex</span>
-            <span style="font-size: 0.65rem; color: var(--text-muted);">▼</span>
           </button>
           <div class="dropdown-menu">
             <div class="dropdown-header">
               <div class="dropdown-user-name">Alex Rivera</div>
-              <div class="dropdown-user-handle">@alexrivera • Author</div>
+              <div class="dropdown-user-handle">@alexrivera</div>
             </div>
-            <a href="dashboard.html" class="dropdown-link">📊 Author Dashboard</a>
-            <a href="profile.html" class="dropdown-link">👤 Public Profile & Insights</a>
-            <a href="settings.html" class="dropdown-link">⚙️ Account Settings</a>
-            <a href="preferences.html" class="dropdown-link">🎨 Reader Preferences</a>
+            <a href="dashboard.html" class="dropdown-link">
+              <span class="icon icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg></span>
+              <span>Author Dashboard</span>
+            </a>
+            <a href="profile.html" class="dropdown-link">
+              <span class="icon icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+              <span>Public Profile & Insights</span>
+            </a>
+            <a href="settings.html" class="dropdown-link">
+              <span class="icon icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></span>
+              <span>Account Settings</span>
+            </a>
+            <a href="preferences.html" class="dropdown-link">
+              <span class="icon icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="4" x1="21" y1="12" y2="12"/><line x1="4" x1="21" y1="6" y2="6"/><line x1="4" x1="21" y1="18" y2="18"/></svg></span>
+              <span>Display Preferences</span>
+            </a>
             <div class="dropdown-divider"></div>
-            <a href="#" class="dropdown-link danger">🚪 Sign Out</a>
+            <a href="#" class="dropdown-link" style="color: var(--status-rose);">
+              <span class="icon icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></span>
+              <span>Sign Out</span>
+            </a>
           </div>
         </div>
 
-        <!-- Mobile Drawer Hamburger -->
-        <button class="mobile-nav-toggle" aria-label="Toggle navigation">☰</button>
+        <button class="mobile-nav-toggle" aria-label="Toggle Menu">
+          <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="18" x2="20" y2="18"/></svg></span>
+        </button>
       </div>
     </div>
 
     <!-- Mobile Drawer -->
     <div class="mobile-drawer">
-      <a href="index.html" class="dropdown-link active">🏠 Home</a>
-      <a href="feed.html" class="dropdown-link">📰 Explore Feed</a>
-      <a href="post-dev.html" class="dropdown-link">💻 Devs Blog</a>
-      <a href="tutorial.html" class="dropdown-link">📚 Step-by-Step Tutorials</a>
-      <a href="confessions.html" class="dropdown-link">🤫 Anonymous Confessions</a>
-      <a href="random.html" class="dropdown-link">🎲 Surprise Me</a>
+      <a href="articles.html" class="dropdown-link">Articles</a>
+      <a href="dev-logs.html" class="dropdown-link">Dev Logs</a>
+      <a href="tutorials.html" class="dropdown-link">Tutorials</a>
+      <a href="confessions.html" class="dropdown-link">Confessions</a>
+      <a href="random.html" class="dropdown-link">Surprise Me</a>
       <div class="dropdown-divider"></div>
-      <a href="dashboard.html" class="dropdown-link">📊 Dashboard</a>
-      <a href="profile.html" class="dropdown-link">👤 Profile & Public Insights</a>
-      <a href="settings.html" class="dropdown-link">⚙️ Settings</a>
-      <a href="preferences.html" class="dropdown-link">🎨 Preferences</a>
+      <a href="dashboard.html" class="dropdown-link">Dashboard</a>
+      <a href="profile.html" class="dropdown-link">Public Profile</a>
+      <a href="settings.html" class="dropdown-link">Settings</a>
+      <a href="preferences.html" class="dropdown-link">Preferences</a>
     </div>
   </header>
 
   <!-- =========================================================================
-       HERO SECTION
+       HERO & FOUR DISTINCT SPACES OVERVIEW
        ========================================================================= -->
   <main class="page-wrapper">
     <div class="container">
       
-      <section class="hero-section">
-        <div class="hero-badge">
-          <span>✨</span> Discover, Learn & Share with 50,000+ Creators
-        </div>
-        <h1 class="title-hero">
-          Where Engineering Meets <br>
-          <span class="text-gradient">Thoughtful Storytelling</span>
-        </h1>
-        <p class="hero-subtitle">
-          From in-depth technical breakdowns and interactive tutorials to heartfelt engineering confessions and daily life musings. Welcome to your all-in-one publishing platform.
-        </p>
-
-        <div class="hero-actions">
-          <a href="feed.html" class="btn btn-primary btn-lg">Explore All Posts →</a>
-          <a href="random.html" class="btn btn-secondary btn-lg">🎲 Read Random Post</a>
-        </div>
-
-        <!-- Use-case quick switchers -->
-        <div class="category-pills">
-          <a href="feed.html" class="cat-pill active">🔥 Trending</a>
-          <a href="post-dev.html" class="cat-pill">💻 Devs & Markdown</a>
-          <a href="tutorial.html" class="cat-pill">📚 Step-by-Step Tutorials</a>
-          <a href="confessions.html" class="cat-pill">🤫 Anonymous Confessions</a>
-          <a href="post-simple.html" class="cat-pill">✍️ Editorial & Essays</a>
-          <a href="profile.html" class="cat-pill">📈 Author Insights</a>
+      <!-- Clean, Developer-First Slogan -->
+      <section style="padding: var(--space-8) 0 var(--space-10); border-bottom: 1px solid var(--border-subtle); margin-bottom: var(--space-10);">
+        <div style="max-width: 720px;">
+          <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: var(--space-3);">
+            <span class="badge badge-neutral">v2.4.0 • fastify-ready</span>
+            <span class="text-muted" style="font-size: 0.8rem; font-family: var(--font-mono);">git-status: clean</span>
+          </div>
+          <h1 class="title-hero">
+            Pending Push.
+          </h1>
+          <p style="font-size: 1.15rem; color: var(--text-secondary); margin-top: var(--space-3); line-height: 1.6;">
+            A dedicated publishing workspace built around developer workflows. Explore long-form articles, code logs with syntax diffs, interactive step-by-step tutorials, and raw uncommitted confessions.
+          </p>
         </div>
       </section>
 
-      <!-- =====================================================================
-           FEATURED ARTICLES (DIVERSE USE-CASES)
-           ===================================================================== -->
-      <section style="margin-top: var(--space-12);">
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-4);">
-          <div>
-            <h2 class="title-section">Featured Reads across Formats</h2>
-            <p class="text-muted" style="font-size: 0.9rem;">Curated highlights spanning dev deep-dives, guides, and stories</p>
-          </div>
-          <a href="feed.html" class="btn btn-ghost btn-sm">View Feed →</a>
+      <!-- THE 4 SEPARATE SPACES (Spacious Cards, Not Clustered Tabs) -->
+      <section style="margin-bottom: var(--space-12);">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-5);">
+          <h2 class="title-section">Explore Spaces</h2>
+          <span class="text-muted" style="font-size: 0.825rem; font-family: var(--font-mono);">4 spaces available</span>
         </div>
 
-        <div class="posts-grid">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: var(--space-5);">
           
-          <!-- Card 1: Dev Post with Code Badge -->
-          <article class="post-card">
-            <img class="post-card-cover" src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=600&q=80" alt="Code Cover">
-            <div class="post-card-body">
-              <div class="post-card-meta">
-                <span class="badge badge-dev">💻 Devs Blog</span>
-                <span>7 min read</span>
-              </div>
-              <h3 class="post-card-title">
-                <a href="post-dev.html">Building High-Throughput Web Applications with Fastify and Next.js 15</a>
-              </h3>
-              <p class="post-card-excerpt">
-                A deep dive into combining Fastify's schema-driven backend with Next.js Server Components, featuring live syntax highlighting, copyable code, and architecture diffs.
-              </p>
-              <div class="post-card-footer">
-                <div class="author-chip">
-                  <div class="author-chip-avatar">AR</div>
-                  <span>Alex Rivera</span>
-                </div>
-                <div class="post-stats">
-                  <span>❤️ 642</span>
-                  <span>💬 38</span>
-                </div>
-              </div>
+          <!-- Space 1: Articles -->
+          <a href="articles.html" class="card card-hover" style="display: flex; flex-direction: column;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-4);">
+              <span class="badge badge-neutral">01 / Writing</span>
+              <span class="icon" style="color: var(--text-muted);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="9 18 15 12 9 6"/></svg></span>
             </div>
-          </article>
-
-          <!-- Card 2: Interactive Tutorial -->
-          <article class="post-card">
-            <img class="post-card-cover" src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=600&q=80" alt="Tutorial Cover">
-            <div class="post-card-body">
-              <div class="post-card-meta">
-                <span class="badge badge-tutorial">📚 Interactive Tutorial</span>
-                <span>14 min • 4 Steps</span>
-              </div>
-              <h3 class="post-card-title">
-                <a href="tutorial.html">Hands-on Masterclass: Building an Analytics Heatmap Dashboard from Scratch</a>
-              </h3>
-              <p class="post-card-excerpt">
-                Interactive step-by-step tutorial with checklists, prerequisites checklist, code runner snippets, and progress tracker.
-              </p>
-              <div class="post-card-footer">
-                <div class="author-chip">
-                  <div class="author-chip-avatar">AR</div>
-                  <span>Alex Rivera</span>
-                </div>
-                <div class="post-stats">
-                  <span>❤️ 1.3K</span>
-                  <span>💬 92</span>
-                </div>
-              </div>
-            </div>
-          </article>
-
-          <!-- Card 3: Simple Editorial Blog -->
-          <article class="post-card">
-            <img class="post-card-cover" src="https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=600&q=80" alt="Editorial Cover">
-            <div class="post-card-body">
-              <div class="post-card-meta">
-                <span class="badge badge-primary">✍️ Simple Blog</span>
-                <span>5 min read</span>
-              </div>
-              <h3 class="post-card-title">
-                <a href="post-simple.html">The Subtle Art of Protecting Your Cognitive Bandwidth as an Engineer</a>
-              </h3>
-              <p class="post-card-excerpt">
-                Why endless context switching ruins engineering teams, and how structured asynchronous communication unlocks effortless 4-hour deep focus blocks.
-              </p>
-              <div class="post-card-footer">
-                <div class="author-chip">
-                  <div class="author-chip-avatar" style="background-color: var(--accent-rose);">ER</div>
-                  <span>Elena Rostova</span>
-                </div>
-                <div class="post-stats">
-                  <span>❤️ 819</span>
-                  <span>💬 54</span>
-                </div>
-              </div>
-            </div>
-          </article>
-
-        </div>
-      </section>
-
-      <!-- =====================================================================
-           CONFESSIONS SPOTLIGHT BANNER
-           ===================================================================== -->
-      <section style="margin-top: var(--space-12);">
-        <div class="confessions-banner">
-          <div>
-            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.35rem;">
-              <span class="badge badge-confession">🤫 Confessions Corner</span>
-              <span class="text-muted" style="font-size: 0.8rem;">100% Anonymous</span>
-            </div>
-            <h3 style="font-size: 1.25rem; font-weight: 700;">Anonymous Musings, Hot Takes & Engineering Vulnerability</h3>
-            <p class="text-secondary" style="font-size: 0.9rem; margin-top: 0.25rem;">
-              "We spent 9 months migrating to 24 microservices, then quietly merged 18 back into a monolith..."
+            <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-main); margin-bottom: var(--space-2);">
+              Articles
+            </h3>
+            <p class="text-secondary" style="font-size: 0.875rem; line-height: 1.5; flex: 1;">
+              Essays on software engineering culture, productivity patterns, and technical leadership.
             </p>
-          </div>
-          <div style="display: flex; gap: var(--space-3);">
-            <a href="confessions.html" class="btn btn-primary btn-sm">Explore Confessions Wall →</a>
-          </div>
+            <div style="margin-top: var(--space-4); font-size: 0.775rem; color: var(--text-muted); font-family: var(--font-mono);">
+              42 published essays
+            </div>
+          </a>
+
+          <!-- Space 2: Dev Logs -->
+          <a href="dev-logs.html" class="card card-hover" style="display: flex; flex-direction: column;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-4);">
+              <span class="badge badge-dev">02 / Code</span>
+              <span class="icon" style="color: var(--brand-accent);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="9 18 15 12 9 6"/></svg></span>
+            </div>
+            <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-main); margin-bottom: var(--space-2);">
+              Dev Logs
+            </h3>
+            <p class="text-secondary" style="font-size: 0.875rem; line-height: 1.5; flex: 1;">
+              Architecture RFCs, benchmarks, Fastify and Next.js integration logs with live code diffs.
+            </p>
+            <div style="margin-top: var(--space-4); font-size: 0.775rem; color: var(--brand-accent); font-family: var(--font-mono);">
+              28 technical logs
+            </div>
+          </a>
+
+          <!-- Space 3: Tutorials -->
+          <a href="tutorials.html" class="card card-hover" style="display: flex; flex-direction: column;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-4);">
+              <span class="badge badge-tutorial">03 / Learning</span>
+              <span class="icon" style="color: var(--status-emerald);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="9 18 15 12 9 6"/></svg></span>
+            </div>
+            <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-main); margin-bottom: var(--space-2);">
+              Tutorials
+            </h3>
+            <p class="text-secondary" style="font-size: 0.875rem; line-height: 1.5; flex: 1;">
+              Step-by-step masterclasses with sticky checklists, progress tracking, and code runners.
+            </p>
+            <div style="margin-top: var(--space-4); font-size: 0.775rem; color: var(--status-emerald); font-family: var(--font-mono);">
+              6 interactive tracks
+            </div>
+          </a>
+
+          <!-- Space 4: Confessions -->
+          <a href="confessions.html" class="card card-hover" style="display: flex; flex-direction: column;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-4);">
+              <span class="badge badge-confession">04 / Anonymous</span>
+              <span class="icon" style="color: var(--status-rose);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="9 18 15 12 9 6"/></svg></span>
+            </div>
+            <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-main); margin-bottom: var(--space-2);">
+              Confessions
+            </h3>
+            <p class="text-secondary" style="font-size: 0.875rem; line-height: 1.5; flex: 1;">
+              The uncommitted stream: unfiltered production incidents, burnout, and honest dev takes.
+            </p>
+            <div style="margin-top: var(--space-4); font-size: 0.775rem; color: var(--status-rose); font-family: var(--font-mono);">
+              100% anonymous
+            </div>
+          </a>
+
         </div>
       </section>
 
-      <!-- =====================================================================
-           PUBLIC AUTHOR INSIGHTS PREVIEW
-           ===================================================================== -->
-      <section style="margin-top: var(--space-12);">
-        <div class="card" style="background: linear-gradient(135deg, var(--bg-card), var(--bg-tertiary));">
-          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--space-4);">
-            <div>
-              <span class="badge badge-neutral">📈 Transparent Analytics</span>
-              <h3 class="title-section" style="margin-top: 0.5rem;">Public Author Insights & Impact Metrics</h3>
-              <p class="text-secondary" style="font-size: 0.9rem; max-width: 580px; margin-top: 0.25rem;">
-                Authors can make their engagement analytics public: monthly read volume, reader retention, and activity heatmaps are transparently visible to readers.
-              </p>
-            </div>
-            <a href="profile.html" class="btn btn-secondary">View Sample Public Profile & Insights →</a>
+      <!-- RECENT COMMITS & ACTIVITY STREAM -->
+      <section>
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-5);">
+          <div>
+            <h2 class="title-section">Latest Activity</h2>
+            <p class="text-muted" style="font-size: 0.825rem;">Real-time feed across all four spaces</p>
           </div>
+          <a href="articles.html" class="btn btn-secondary btn-sm">
+            <span>View All</span>
+            <span class="icon icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+          </a>
+        </div>
+
+        <div class="feed-stream">
+          
+          <!-- Item 1: Dev Log -->
+          <div class="article-item">
+            <div class="article-meta-top">
+              <span class="badge badge-dev">dev-log</span>
+              <span>Fastify / Next.js 15</span>
+              <span>•</span>
+              <span>7 min read</span>
+              <span style="margin-left: auto;">Nov 15, 2026</span>
+            </div>
+            <h3 class="article-title">
+              <a href="post-dev.html">Building High-Throughput Web Applications with Fastify and Next.js 15</a>
+            </h3>
+            <p class="article-summary">
+              A deep dive into schema compilation, eliminating JSON serialization overhead, and running Next.js Server Components against low-overhead Fastify 5.x backends.
+            </p>
+            <div class="article-footer">
+              <div class="article-author-info">
+                <img class="article-author-avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=60&q=80" alt="Alex Rivera">
+                <span>Alex Rivera</span>
+              </div>
+              <div style="display: flex; gap: var(--space-4);">
+                <span>642 upvotes</span>
+                <span>38 comments</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Item 2: Tutorial -->
+          <div class="article-item">
+            <div class="article-meta-top">
+              <span class="badge badge-tutorial">tutorial</span>
+              <span>Frontend / CSS Grid</span>
+              <span>•</span>
+              <span>4 steps</span>
+              <span style="margin-left: auto;">Nov 12, 2026</span>
+            </div>
+            <h3 class="article-title">
+              <a href="tutorial.html">Hands-on Masterclass: Building an Analytics Heatmap Dashboard from Scratch</a>
+            </h3>
+            <p class="article-summary">
+              Follow this step-by-step interactive blueprint to design, architect, and deploy a responsive public insights dashboard with live event streams.
+            </p>
+            <div class="article-footer">
+              <div class="article-author-info">
+                <img class="article-author-avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=60&q=80" alt="Alex Rivera">
+                <span>Alex Rivera</span>
+              </div>
+              <div style="display: flex; gap: var(--space-4);">
+                <span>1,320 completed</span>
+                <span>92 comments</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Item 3: Confession -->
+          <div class="article-item" style="border-left: 3px solid var(--status-rose);">
+            <div class="article-meta-top">
+              <span class="badge badge-confession">uncommitted confession</span>
+              <span>Incidents</span>
+              <span style="margin-left: auto;">2 hours ago</span>
+            </div>
+            <h3 class="article-title">
+              <a href="confessions.html">"We spent 9 months migrating to 24 microservices, then quietly merged 18 back into a modular monolith..."</a>
+            </h3>
+            <p class="article-summary">
+              Deploy times plummeted from 42 minutes to 90 seconds. Nobody dares to tell the VP of Product, but our on-call rotations are finally peaceful again.
+            </p>
+            <div class="article-footer">
+              <div class="article-author-info">
+                <span class="icon icon-sm" style="color: var(--status-rose);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span>
+                <span class="text-muted" style="font-family: var(--font-mono); font-size: 0.775rem;">Shadow Architect (Verified Dev)</span>
+              </div>
+              <div style="color: var(--status-rose); font-weight: 600;">
+                895 relates
+              </div>
+            </div>
+          </div>
+
         </div>
       </section>
 
@@ -257,64 +350,30 @@
   </main>
 
   <!-- =========================================================================
-       FOOTER
+       MINIMALIST DEVELOPER FOOTER
        ========================================================================= -->
   <footer class="site-footer">
-    <div class="container">
-      <div class="footer-grid">
-        <div class="footer-brand">
-          <a href="index.html" class="brand-logo">
-            <span class="brand-icon">✦</span>
-            <span>Blog<span class="text-gradient">Sphere</span></span>
-          </a>
-          <p>
-            A modern, developer-first blogging and knowledge-sharing platform built for clean code, deep tutorials, and transparent creator insights.
-          </p>
-        </div>
-
-        <div class="footer-col">
-          <h4>Explore</h4>
-          <ul class="footer-links">
-            <li><a href="feed.html">Latest Feed</a></li>
-            <li><a href="post-dev.html">Devs & Code</a></li>
-            <li><a href="tutorial.html">Step-by-Step Tutorials</a></li>
-            <li><a href="confessions.html">Anonymous Confessions</a></li>
-            <li><a href="random.html">🎲 Surprise Post</a></li>
-          </ul>
-        </div>
-
-        <div class="footer-col">
-          <h4>Account</h4>
-          <ul class="footer-links">
-            <li><a href="dashboard.html">Author Dashboard</a></li>
-            <li><a href="profile.html">Public Profile</a></li>
-            <li><a href="settings.html">Account Settings</a></li>
-            <li><a href="preferences.html">Reader Preferences</a></li>
-          </ul>
-        </div>
-
-        <div class="footer-col">
-          <h4>Stack</h4>
-          <ul class="footer-links">
-            <li><span class="text-muted">Fastify 5.x Backend</span></li>
-            <li><span class="text-muted">Next.js 15 Ready</span></li>
-            <li><span class="text-muted">TypeScript Schemas</span></li>
-            <li><span class="text-muted">CSS Design Tokens</span></li>
-          </ul>
-        </div>
+    <div class="container footer-inner">
+      <div style="display: flex; align-items: center; gap: 0.65rem;">
+        <span class="brand-icon" style="width: 1.4rem; height: 1.4rem;">
+          <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg>
+        </span>
+        <span style="font-weight: 600; color: var(--text-main);">Pending Push</span>
+        <span>•</span>
+        <span>Developer Knowledge Engine</span>
       </div>
 
-      <div class="footer-bottom">
-        <div>© 2026 BlogSphere. Crafted for seamless Next.js migration.</div>
-        <div>
-          <a href="privacy.html" class="text-muted" style="margin-right: 1rem;">Privacy</a>
-          <a href="terms.html" class="text-muted">Terms</a>
-        </div>
-      </div>
+      <ul class="footer-nav">
+        <li><a href="articles.html">Articles</a></li>
+        <li><a href="dev-logs.html">Dev Logs</a></li>
+        <li><a href="tutorials.html">Tutorials</a></li>
+        <li><a href="confessions.html">Confessions</a></li>
+        <li><a href="random.html">Surprise Me</a></li>
+        <li><a href="profile.html">Insights</a></li>
+      </ul>
     </div>
   </footer>
 
-  <!-- Scripts -->
   <script src="js/mock-data.js"></script>
   <script src="js/main.js"></script>
   <script src="js/interactions.js"></script>

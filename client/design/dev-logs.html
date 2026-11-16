@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dev Logs — Pending Push</title>
+  <link rel="stylesheet" href="css/design-system.css">
+  <link rel="stylesheet" href="css/navbar-footer.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header class="site-header">
+    <div class="container navbar">
+      <a href="index.html" class="brand-link">
+        <span class="brand-icon">
+          <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg>
+        </span>
+        <span>Pending Push</span>
+      </a>
+
+      <nav>
+        <ul class="spaces-nav">
+          <li class="spaces-nav-item"><a href="articles.html"><span class="icon icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg></span><span>Articles</span></a></li>
+          <li class="spaces-nav-item"><a href="dev-logs.html" class="active"><span class="icon icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></span><span>Dev Logs</span></a></li>
+          <li class="spaces-nav-item"><a href="tutorials.html"><span class="icon icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span><span>Tutorials</span></a></li>
+          <li class="spaces-nav-item"><a href="confessions.html"><span class="icon icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span><span>Confessions</span></a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="random.html" class="nav-icon-btn" title="Surprise Me"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg></span></a>
+        <button class="theme-toggle-btn nav-icon-btn"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg></span></button>
+        <a href="post-dev.html" class="btn btn-primary btn-sm"><span class="icon icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span><span>New Push</span></a>
+        <div class="user-menu-wrapper">
+          <button class="user-avatar-btn"><img class="user-avatar-img" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&q=80" alt="Alex"></button>
+          <div class="dropdown-menu">
+            <div class="dropdown-header"><div class="dropdown-user-name">Alex Rivera</div><div class="dropdown-user-handle">@alexrivera</div></div>
+            <a href="dashboard.html" class="dropdown-link"><span class="icon icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg></span><span>Author Dashboard</span></a>
+            <a href="profile.html" class="dropdown-link"><span class="icon icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span><span>Public Profile & Insights</span></a>
+            <a href="settings.html" class="dropdown-link"><span class="icon icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span><span>Account Settings</span></a>
+            <a href="preferences.html" class="dropdown-link"><span class="icon icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="4" x1="21" y1="12" y2="12"/><line x1="4" x1="21" y1="6" y2="6"/><line x1="4" x1="21" y1="18" y2="18"/></svg></span><span>Display Preferences</span></a>
+          </div>
+        </div>
+        <button class="mobile-nav-toggle"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="18" x2="20" y2="18"/></svg></span></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="page-wrapper">
+    <div class="container">
+
+      <!-- Space Header -->
+      <section class="space-header">
+        <div class="space-title-group">
+          <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.35rem;">
+            <span class="badge badge-dev">dev-logs space</span>
+            <span class="text-muted" style="font-size: 0.775rem; font-family: var(--font-mono);">markdown & diff supported</span>
+          </div>
+          <h1>Dev Logs</h1>
+          <p>
+            Technical deep-dives, RFC proposals, latency benchmarks, and low-level Node.js, Fastify, and Next.js engineering logs.
+          </p>
+        </div>
+
+        <div class="space-actions">
+          <div style="position: relative; min-width: 240px;">
+            <input type="text" class="form-input" placeholder="Search dev logs..." style="padding-left: 2rem;">
+            <span class="icon icon-sm" style="position: absolute; left: 0.65rem; top: 50%; transform: translateY(-50%); color: var(--text-muted);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+          </div>
+          <a href="post-dev.html" class="btn btn-primary btn-sm">
+            <span class="icon icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+            <span>Push Log</span>
+          </a>
+        </div>
+      </section>
+
+      <!-- Tech Filter Tags -->
+      <div style="display: flex; gap: var(--space-2); margin-bottom: var(--space-6); flex-wrap: wrap; align-items: center;">
+        <span class="text-muted" style="font-size: 0.8rem; font-family: var(--font-mono);">Filter:</span>
+        <button class="badge badge-dev" style="cursor: pointer;">All</button>
+        <button class="badge badge-neutral" style="cursor: pointer;">Fastify</button>
+        <button class="badge badge-neutral" style="cursor: pointer;">Next.js 15</button>
+        <button class="badge badge-neutral" style="cursor: pointer;">TypeScript</button>
+        <button class="badge badge-neutral" style="cursor: pointer;">CSS Subgrid</button>
+        <button class="badge badge-neutral" style="cursor: pointer;">Benchmarks</button>
+      </div>
+
+      <!-- Dev Stream -->
+      <div class="feed-stream">
+        
+        <!-- Dev Post 1 -->
+        <article class="article-item">
+          <div class="article-meta-top">
+            <span class="badge badge-dev">benchmarks</span>
+            <span>fastify 5.x • next.js 15</span>
+            <span>•</span>
+            <span>7 min read</span>
+            <span style="margin-left: auto;">Nov 15, 2026</span>
+          </div>
+          <h2 class="article-title">
+            <a href="post-dev.html">Building High-Throughput Web Applications with Fastify and Next.js 15</a>
+          </h2>
+          <p class="article-summary">
+            A deep dive into schema compilation, eliminating JSON serialization overhead, and running Next.js Server Components against low-overhead Fastify 5.x backends with 3.8x throughput increase.
+          </p>
+          <div class="article-footer">
+            <div class="article-author-info">
+              <img class="article-author-avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=60&q=80" alt="Alex">
+              <span>Alex Rivera</span>
+            </div>
+            <div style="display: flex; gap: var(--space-4);">
+              <span>642 upvotes</span>
+              <span>38 comments</span>
+              <span class="badge badge-neutral">diff available</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Dev Post 2 -->
+        <article class="article-item">
+          <div class="article-meta-top">
+            <span class="badge badge-dev">architecture</span>
+            <span>layered 4-tier • node.js</span>
+            <span>•</span>
+            <span>9 min read</span>
+            <span style="margin-left: auto;">Nov 11, 2026</span>
+          </div>
+          <h2 class="article-title">
+            <a href="post-dev.html">Decoupling Business Logic with Repository Interfaces and In-Memory Memory Repos</a>
+          </h2>
+          <p class="article-summary">
+            How we decoupled Fastify route handlers from database queries using TypeScript repository contracts, cutting integration test runner duration from 45s to 800ms.
+          </p>
+          <div class="article-footer">
+            <div class="article-author-info">
+              <img class="article-author-avatar" src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=60&q=80" alt="Sarah">
+              <span>Sarah Chen</span>
+            </div>
+            <div style="display: flex; gap: var(--space-4);">
+              <span>510 upvotes</span>
+              <span>29 comments</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Dev Post 3 -->
+        <article class="article-item">
+          <div class="article-meta-top">
+            <span class="badge badge-dev">frontend</span>
+            <span>css container queries</span>
+            <span>•</span>
+            <span>6 min read</span>
+            <span style="margin-left: auto;">Nov 07, 2026</span>
+          </div>
+          <h2 class="article-title">
+            <a href="post-dev.html">CSS Subgrid and Container Queries: The Modern Layout Revolution</a>
+          </h2>
+          <p class="article-summary">
+            Ditch breakpoint-heavy media query hacks for modular component-driven responsive layouts that automatically adapt to any container width.
+          </p>
+          <div class="article-footer">
+            <div class="article-author-info">
+              <img class="article-author-avatar" src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=60&q=80" alt="Sarah">
+              <span>Sarah Chen</span>
+            </div>
+            <div style="display: flex; gap: var(--space-4);">
+              <span>380 upvotes</span>
+              <span>14 comments</span>
+            </div>
+          </div>
+        </article>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div>Pending Push • Dev Logs Space</div>
+      <div><a href="index.html">Back to Overview</a></div>
+    </div>
+  </footer>
+
+  <script src="js/mock-data.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/interactions.js"></script>
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Reader Preferences - BlogSphere</title>
+  <title>Display Preferences — Pending Push</title>
   <link rel="stylesheet" href="css/design-system.css">
   <link rel="stylesheet" href="css/navbar-footer.css">
   <link rel="stylesheet" href="css/pages.css">
@@ -16,40 +16,33 @@
   <!-- NAVBAR -->
   <header class="site-header">
     <div class="container navbar">
-      <a href="index.html" class="brand-logo">
-        <span class="brand-icon">✦</span>
-        <span>Blog<span class="text-gradient">Sphere</span></span>
+      <a href="index.html" class="brand-link">
+        <span class="brand-icon">
+          <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg>
+        </span>
+        <span>Pending Push</span>
       </a>
 
       <nav>
-        <ul class="nav-links">
-          <li class="nav-item"><a href="index.html">Home</a></li>
-          <li class="nav-item"><a href="feed.html">Explore Feed</a></li>
-          <li class="nav-item"><a href="post-dev.html">Devs Hub</a></li>
-          <li class="nav-item"><a href="tutorial.html">Tutorials</a></li>
-          <li class="nav-item"><a href="confessions.html">Confessions</a></li>
-          <li class="nav-item"><a href="random.html">🎲 Surprise Me</a></li>
+        <ul class="spaces-nav">
+          <li class="spaces-nav-item"><a href="articles.html"><span class="icon icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg></span><span>Articles</span></a></li>
+          <li class="spaces-nav-item"><a href="dev-logs.html"><span class="icon icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></span><span>Dev Logs</span></a></li>
+          <li class="spaces-nav-item"><a href="tutorials.html"><span class="icon icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span><span>Tutorials</span></a></li>
+          <li class="spaces-nav-item"><a href="confessions.html"><span class="icon icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span><span>Confessions</span></a></li>
         </ul>
       </nav>
 
       <div class="nav-actions">
-        <button class="theme-toggle-btn" title="Toggle Theme">🌙</button>
-        <a href="post-dev.html" class="btn btn-primary btn-sm">✍️ Write Post</a>
-
+        <button class="theme-toggle-btn nav-icon-btn"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg></span></button>
         <div class="user-menu-wrapper">
-          <button class="user-avatar-btn">
-            <img class="user-avatar-img" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&q=80" alt="Alex">
-            <span style="font-size: 0.85rem; font-weight: 600; padding: 0 0.25rem;">Alex</span>
-            <span style="font-size: 0.65rem; color: var(--text-muted);">▼</span>
-          </button>
+          <button class="user-avatar-btn"><img class="user-avatar-img" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&q=80" alt="Alex"></button>
           <div class="dropdown-menu">
-            <a href="dashboard.html" class="dropdown-link">📊 Author Dashboard</a>
-            <a href="profile.html" class="dropdown-link">👤 Public Profile & Insights</a>
-            <a href="settings.html" class="dropdown-link">⚙️ Account Settings</a>
-            <a href="preferences.html" class="dropdown-link active">🎨 Reader Preferences</a>
+            <a href="dashboard.html" class="dropdown-link">Author Dashboard</a>
+            <a href="profile.html" class="dropdown-link">Public Profile & Insights</a>
+            <a href="settings.html" class="dropdown-link">Settings</a>
+            <a href="preferences.html" class="dropdown-link active">Preferences</a>
           </div>
         </div>
-        <button class="mobile-nav-toggle">☰</button>
       </div>
     </div>
   </header>
@@ -58,141 +51,81 @@
   <main class="page-wrapper">
     <div class="container">
 
-      <div style="margin-bottom: var(--space-8);">
-        <h1 class="title-page">Reading & Display Preferences</h1>
-        <p class="text-secondary" style="font-size: 0.95rem; margin-top: 0.25rem;">
-          Tailor typography, code snippet styling, theme palettes, and feed curations to your personal workflow.
-        </p>
-      </div>
-
-      <div class="settings-container">
+      <div class="settings-layout">
         
-        <!-- Left Nav -->
-        <aside class="dashboard-nav">
-          <a href="#appearance" class="dashboard-nav-item active">🎨 Theme & Colors</a>
-          <a href="#typography" class="dashboard-nav-item">🔤 Typography & Font Sizing</a>
-          <a href="#dev-code" class="dashboard-nav-item">💻 Code Snippet Display</a>
-          <a href="#feed-curation" class="dashboard-nav-item">📰 Feed Curation</a>
-          <a href="settings.html" class="dashboard-nav-item">⚙️ Account Settings →</a>
+        <aside class="settings-sidebar">
+          <a href="settings.html" class="settings-tab-link">Profile & Credentials</a>
+          <a href="preferences.html" class="settings-tab-link active">Display Preferences</a>
+          <a href="profile.html" class="settings-tab-link">View Public Profile</a>
         </aside>
 
-        <!-- Right: Preferences Options -->
         <section style="display: flex; flex-direction: column; gap: var(--space-6);">
-
-          <!-- 1. Theme Palette -->
+          
+          <!-- Theme -->
           <div class="card">
-            <h2 style="font-size: 1.15rem; font-weight: 700; margin-bottom: var(--space-2);">
-              Theme Palette
-            </h2>
-            <p class="text-secondary" style="font-size: 0.85rem; margin-bottom: var(--space-4);">
-              Select your default color scheme. Switches automatically across all pages and persists locally.
-            </p>
+            <h2 class="title-section" style="font-size: 1.05rem; margin-bottom: 0.25rem;">Theme Palette</h2>
+            <p class="text-secondary" style="font-size: 0.85rem; margin-bottom: var(--space-4);">Select your default color scheme. Persists automatically in localStorage.</p>
 
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--space-4);">
-              
-              <!-- Light Option -->
-              <div class="card" style="cursor: pointer; text-align: center; border-color: var(--border-card);" onclick="localStorage.setItem('blogsphere-theme', 'light'); document.documentElement.setAttribute('data-theme', 'light');">
-                <div style="font-size: 2rem; margin-bottom: 0.5rem;">☀️</div>
-                <div style="font-weight: 700; font-size: 0.95rem;">Clean Light</div>
-                <div class="text-muted" style="font-size: 0.775rem;">Optimized for daytime reading</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4);">
+              <div class="card" style="cursor: pointer; text-align: center; border-color: var(--border-subtle);" onclick="localStorage.setItem('pending-push-theme', 'light'); document.documentElement.setAttribute('data-theme', 'light');">
+                <span class="icon icon-lg" style="margin-bottom: 0.5rem; color: var(--text-main);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg></span>
+                <div style="font-weight: 700; font-size: 0.9rem;">Clean Light</div>
               </div>
 
-              <!-- Dark Option -->
-              <div class="card" style="cursor: pointer; text-align: center; border-color: var(--accent-primary);" onclick="localStorage.setItem('blogsphere-theme', 'dark'); document.documentElement.setAttribute('data-theme', 'dark');">
-                <div style="font-size: 2rem; margin-bottom: 0.5rem;">🌙</div>
-                <div style="font-weight: 700; font-size: 0.95rem;">Midnight Dark</div>
-                <div class="text-muted" style="font-size: 0.775rem;">Deep slate high-contrast palette</div>
-              </div>
-
-            </div>
-          </div>
-
-          <!-- 2. Typography & Reading Width -->
-          <div class="card">
-            <h2 style="font-size: 1.15rem; font-weight: 700; margin-bottom: var(--space-2);">
-              Reading Typography & Spacing
-            </h2>
-            <p class="text-secondary" style="font-size: 0.85rem; margin-bottom: var(--space-4);">
-              Adjust the line height, font sizing, and container widths for long articles.
-            </p>
-
-            <div class="form-group">
-              <label class="form-label">Font Family for Articles</label>
-              <select class="form-select">
-                <option selected>Inter (Modern Clean Sans-Serif)</option>
-                <option>Merriweather (Classic Editorial Serif)</option>
-                <option>System UI (Native OS Font)</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label class="form-label">Body Font Scale</label>
-              <div style="display: flex; gap: var(--space-3);">
-                <button class="btn btn-secondary btn-sm">Compact (15px)</button>
-                <button class="btn btn-primary btn-sm">Standard (17px)</button>
-                <button class="btn btn-secondary btn-sm">Comfortable (19px)</button>
+              <div class="card" style="cursor: pointer; text-align: center; border-color: var(--brand-accent);" onclick="localStorage.setItem('pending-push-theme', 'dark'); document.documentElement.setAttribute('data-theme', 'dark');">
+                <span class="icon icon-lg" style="margin-bottom: 0.5rem; color: var(--brand-accent);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg></span>
+                <div style="font-weight: 700; font-size: 0.9rem;">Midnight Slate</div>
               </div>
             </div>
           </div>
 
-          <!-- 3. Dev Code Snippets -->
+          <!-- Code formatting -->
           <div class="card">
-            <h2 style="font-size: 1.15rem; font-weight: 700; margin-bottom: var(--space-2);">
-              Dev Code Snippet Preferences
-            </h2>
-            <p class="text-secondary" style="font-size: 0.85rem; margin-bottom: var(--space-4);">
-              Configure how code blocks in technical articles and tutorials are presented.
-            </p>
+            <h2 class="title-section" style="font-size: 1.05rem; margin-bottom: var(--space-4);">Dev Code Preferences</h2>
 
             <div style="display: flex; flex-direction: column; gap: var(--space-4);">
-              <div style="display: flex; align-items: center; justify-content: space-between;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div>
-                  <div style="font-weight: 600; font-size: 0.9rem;">Show Line Numbers in Code Snippets</div>
-                  <div class="text-muted" style="font-size: 0.775rem;">Useful for referencing code in comments</div>
+                  <div style="font-weight: 600; font-size: 0.85rem;">Enable Code Font Ligatures (=>, !==, ===)</div>
+                  <div class="text-muted" style="font-size: 0.775rem;">Uses JetBrains Mono ligatures</div>
                 </div>
-                <label class="toggle-switch">
+                <label class="switch-control">
                   <input type="checkbox" checked>
-                  <span class="toggle-slider"></span>
+                  <span class="switch-slider"></span>
                 </label>
               </div>
 
-              <div style="display: flex; align-items: center; justify-content: space-between;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div>
-                  <div style="font-weight: 600; font-size: 0.9rem;">Enable Code Font Ligatures (=>, !==, ===)</div>
-                  <div class="text-muted" style="font-size: 0.775rem;">Uses JetBrains Mono ligatures</div>
+                  <div style="font-weight: 600; font-size: 0.85rem;">Show Line Numbers in Code Snippets</div>
+                  <div class="text-muted" style="font-size: 0.775rem;">Useful for referencing code in comments</div>
                 </div>
-                <label class="toggle-switch">
+                <label class="switch-control">
                   <input type="checkbox" checked>
-                  <span class="toggle-slider"></span>
+                  <span class="switch-slider"></span>
                 </label>
               </div>
             </div>
           </div>
 
-          <!-- 4. Content Filters & Confessions -->
+          <!-- Confessions filter -->
           <div class="card">
-            <h2 style="font-size: 1.15rem; font-weight: 700; margin-bottom: var(--space-2);">
-              Feed & Confessions Curation
-            </h2>
-            <p class="text-secondary" style="font-size: 0.85rem; margin-bottom: var(--space-4);">
-              Control whether anonymous confessions appear in your main feed.
-            </p>
+            <h2 class="title-section" style="font-size: 1.05rem; margin-bottom: var(--space-4);">Spaces Feed Curation</h2>
 
-            <div style="display: flex; align-items: center; justify-content: space-between;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
               <div>
-                <div style="font-weight: 600; font-size: 0.9rem;">Include Anonymous Confessions in Main Feed</div>
-                <div class="text-muted" style="font-size: 0.775rem;">Turn off if you prefer only technical articles & tutorials</div>
+                <div style="font-weight: 600; font-size: 0.85rem;">Include Confessions in Overview Stream</div>
+                <div class="text-muted" style="font-size: 0.775rem;">Turn off if you only want technical logs & tutorials on the home stream</div>
               </div>
-              <label class="toggle-switch">
+              <label class="switch-control">
                 <input type="checkbox" checked>
-                <span class="toggle-slider"></span>
+                <span class="switch-slider"></span>
               </label>
             </div>
           </div>
 
-          <div style="display: flex; justify-content: flex-end; gap: var(--space-3);">
-            <button class="btn btn-secondary">Reset to Defaults</button>
-            <button class="btn btn-primary" onclick="alert('Preferences saved successfully!');">Save Preferences</button>
+          <div style="display: flex; justify-content: flex-end;">
+            <button class="btn btn-primary btn-sm" onclick="alert('Preferences saved.');">Save Preferences</button>
           </div>
 
         </section>
@@ -204,16 +137,13 @@
 
   <!-- FOOTER -->
   <footer class="site-footer">
-    <div class="container">
-      <div class="footer-bottom">
-        <div>© 2026 BlogSphere Reader Preferences.</div>
-        <div><a href="index.html" class="text-muted">Home</a></div>
-      </div>
+    <div class="container footer-inner">
+      <div>Pending Push • Preferences</div>
+      <div><a href="index.html">Back to Overview</a></div>
     </div>
   </footer>
 
   <script src="js/mock-data.js"></script>
   <script src="js/main.js"></script>
-  <script src="js/interactions.js"></script>
 </body>
 </html>
