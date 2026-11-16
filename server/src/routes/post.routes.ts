@@ -56,7 +56,6 @@ export const registerPostRoutes = (fastify: FastifyInstance, postController: Pos
   fastify.get(
     '/page/:num',
     {
-      preHandler: authPreHandler,
       schema: {
         description: 'Get paginated feed of posts',
         tags: ['Posts'],
@@ -68,13 +67,45 @@ export const registerPostRoutes = (fastify: FastifyInstance, postController: Pos
   fastify.get(
     '/feed',
     {
-      preHandler: authPreHandler,
       schema: {
-        description: 'Get blog post feed',
+        description: 'Get blog post feed (optional ?format=article|dev_log|tutorial|confession)',
         tags: ['Posts'],
       },
     },
     postController.getFeed
+  );
+
+  fastify.get(
+    '/',
+    {
+      schema: {
+        description: 'Get platform post feed with format filters',
+        tags: ['Posts'],
+      },
+    },
+    postController.getFeed
+  );
+
+  fastify.get(
+    '/spaces/:space',
+    {
+      schema: {
+        description: 'Get dedicated space feed (articles, dev-logs, tutorials, confessions)',
+        tags: ['Posts', 'Spaces'],
+      },
+    },
+    postController.getSpaceFeed
+  );
+
+  fastify.get(
+    '/random',
+    {
+      schema: {
+        description: 'Get a random post for the Surprise Me reader',
+        tags: ['Posts'],
+      },
+    },
+    postController.getRandom
   );
 
   fastify.get(

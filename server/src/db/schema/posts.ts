@@ -1,7 +1,8 @@
-import { pgTable, uuid, varchar, text, timestamp, integer, pgEnum, jsonb, index } from 'drizzle-orm/pg-core';
+import { pgTable, uuid, varchar, text, timestamp, integer, boolean, pgEnum, jsonb, index } from 'drizzle-orm/pg-core';
 import { users } from './users.js';
 
 export const postStatusEnum = pgEnum('post_status', ['draft', 'published', 'archived']);
+export const postFormatEnum = pgEnum('post_format', ['article', 'dev_log', 'tutorial', 'confession']);
 
 export const posts = pgTable(
   'posts',
@@ -16,6 +17,8 @@ export const posts = pgTable(
     content: jsonb('content').default({}).notNull(),
     contentText: text('content_text').default('').notNull(),
     coverImage: text('cover_image'),
+    format: postFormatEnum('format').default('article').notNull(),
+    isAnonymous: boolean('is_anonymous').default(false).notNull(),
     status: postStatusEnum('status').default('draft').notNull(),
     readingTimeMinutes: integer('reading_time_minutes').default(1).notNull(),
     viewsCount: integer('views_count').default(0).notNull(),
@@ -31,6 +34,7 @@ export const posts = pgTable(
     index('idx_posts_slug').on(table.slug),
     index('idx_posts_author_published').on(table.authorId, table.publishedAt),
     index('idx_posts_feed').on(table.status, table.publishedAt),
+    index('idx_posts_format_feed').on(table.format, table.status, table.publishedAt),
     index('idx_posts_deleted_at').on(table.deletedAt),
   ]
 );

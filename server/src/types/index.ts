@@ -14,6 +14,9 @@ export interface User {
 
 export type UserPublicProfile = Omit<User, 'passwordHash'>;
 
+export type PostFormat = 'article' | 'dev_log' | 'tutorial' | 'confession';
+export type PostStatus = 'draft' | 'published' | 'archived';
+
 export interface Post {
   id: string;
   title: string;
@@ -21,9 +24,16 @@ export interface Post {
   content: string; // Markdown or JSON stringified AST
   summary?: string | null;
   coverImage?: string | null;
+  format: PostFormat;
+  isAnonymous: boolean;
   published: boolean;
   readingTimeMinutes: number;
+  viewsCount: number;
+  clapsCount: number;
   authorId: string;
+  config?: Record<string, unknown>;
+  metadata?: Record<string, unknown>;
+  publishedAt?: Date | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -32,8 +42,9 @@ export interface PostWithAuthor extends Post {
   author: {
     id: string;
     username: string;
+    name?: string | null;
     avatarUrl?: string | null;
-  };
+  } | null;
 }
 
 export interface ContactMessage {

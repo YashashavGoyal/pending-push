@@ -76,19 +76,64 @@ export class PostController {
   };
 
   public getFeed = async (request: FastifyRequest, reply: FastifyReply): Promise<void> => {
-    const query = request.query as { limit?: string; cursor?: string };
+    const query = request.query as { limit?: string; cursor?: string; format?: string; authorId?: string };
     const params = request.params as { num?: string };
 
     const limit = parseInt(query.limit || params.num || '10', 10);
     const cursor = query.cursor;
+    const format = query.format as any;
+    const authorId = query.authorId;
 
-    const result = await this.postService.getFeed(limit, cursor);
+    const result = await this.postService.getFeed({ limit, cursor, format, authorId });
     reply.status(200).send({
       success: true,
       message: 'Posts Fetched Successfully',
       posts: result.items,
       hasMore: result.hasMore,
       nextCursor: result.nextCursor,
+    });
+  };
+
+  public getSpaceFeed = async (request: FastifyRequest, reply: FastifyReply): Promise<void> => {
+    const params = request.params as { space: string };
+    const query = request.query as { limit?: string; cursor?: string };
+
+    const spaceSlugToFormat: Record<string, 'article' | 'dev_log' | 'tutorial' | 'confession'> = {
+      articles: 'article',
+      article: 'article',
+      'dev-logs': 'dev_log',
+      dev_log: 'dev_log',
+      tutorials: 'tutorial',
+      tutorial: 'tutorial',
+      confessions: 'confession',
+      confession: 'confession',
+    };
+
+    const format = spaceSlugToFormat[params.space];
+    const limit = parseInt(query.limit || '10', 10);
+    const cursor = query.cursor;
+
+    const result = await this.postService.getSpaceFeed(format || 'article', limit, cursor);
+    reply.status(200).send({
+      success: true,
+      space: params.space,
+      format: format || 'article',
+      message: `Feed for ${params.space} fetched successfully`,
+      posts: result.items,
+      hasMore: result.hasMore,
+      nextCursor: result.nextCursor,
+    });
+  };
+
+  public getRandom = async (request: FastifyRequest, reply: FastifyReply): Promise<void> => {
+    const query = request.query as { format?: string };
+    const format = query.format as any;
+    const post = await this.postService.getRandomPost(format);
+
+    reply.status(200).send({
+      success: true,
+      message: 'Random post selected successfully',
+      post,
     });
   };
 

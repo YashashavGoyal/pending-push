@@ -1,12 +1,14 @@
-import { eq, desc, isNull, and } from 'drizzle-orm';
+import { eq, desc, isNull, and, sql } from 'drizzle-orm';
 import { db } from '../../db/index.js';
 import { posts, users } from '../../db/schema/index.js';
-import { IPostRepository, CreatePostData, UpdatePostData } from '../interfaces/post.repository.interface.js';
-import { Post, PostWithAuthor, PaginatedQuery, PaginatedResult } from '../../types/index.js';
+import { IPostRepository, CreatePostData, UpdatePostData, FeedFilterQuery } from '../interfaces/post.repository.interface.js';
+import { Post, PostWithAuthor, PostFormat, PaginatedQuery, PaginatedResult } from '../../types/index.js';
 
 export class PostDrizzleRepository implements IPostRepository {
   public async create(data: CreatePostData): Promise<Post> {
     const isPublished = data.published ?? true;
+    const format = data.format || 'article';
+    const isAnonymous = data.isAnonymous ?? false;
 
     const [created] = await db
       .insert(posts)
@@ -18,9 +20,13 @@ export class PostDrizzleRepository implements IPostRepository {
         content: { body: data.content },
         contentText: data.content,
         coverImage: data.coverImage,
+        format,
+        isAnonymous,
         status: isPublished ? 'published' : 'draft',
         readingTimeMinutes: data.readingTimeMinutes,
         publishedAt: isPublished ? new Date() : null,
+        config: data.config || {},
+        metadata: data.metadata || {},
       })
       .returning();
 
@@ -47,21 +53,29 @@ export class PostDrizzleRepository implements IPostRepository {
 
     if (!row) return null;
 
+    const author = row.isAnonymous
+      ? { id: 'anonymous', username: 'Anonymous Developer', name: 'Anonymous', avatarUrl: null }
+      : { id: row.author.id, username: row.author.username, name: row.author.name, avatarUrl: row.author.avatarUrl };
+
     return {
       ...this.mapToDomain(row),
-      author: {
-        id: row.author.id,
-        username: row.author.username,
-        avatarUrl: row.author.avatarUrl,
-      },
+      author,
     };
   }
 
-  public async findFeed(pagination: PaginatedQuery): Promise<PaginatedResult<PostWithAuthor>> {
-    const limit = pagination.limit || 10;
+  public async findFeed(query?: FeedFilterQuery): Promise<PaginatedResult<PostWithAuthor>> {
+    const limit = query?.limit || 10;
+    const conditions = [eq(posts.status, 'published'), isNull(posts.deletedAt)];
+
+    if (query?.format) {
+      conditions.push(eq(posts.format, query.format));
+    }
+    if (query?.authorId) {
+      conditions.push(eq(posts.authorId, query.authorId));
+    }
 
     const rows = await db.query.posts.findMany({
-      where: and(eq(posts.status, 'published'), isNull(posts.deletedAt)),
+      where: and(...conditions),
       orderBy: [desc(posts.publishedAt)],
       limit: limit + 1,
       with: {
@@ -72,14 +86,16 @@ export class PostDrizzleRepository implements IPostRepository {
     const hasMore = rows.length > limit;
     const items = hasMore ? rows.slice(0, limit) : rows;
 
-    const mapped: PostWithAuthor[] = items.map((r) => ({
-      ...this.mapToDomain(r),
-      author: {
-        id: r.author.id,
-        username: r.author.username,
-        avatarUrl: r.author.avatarUrl,
-      },
-    }));
+    const mapped: PostWithAuthor[] = items.map((r) => {
+      const author = r.isAnonymous
+        ? { id: 'anonymous', username: 'Anonymous Developer', name: 'Anonymous', avatarUrl: null }
+        : { id: r.author.id, username: r.author.username, name: r.author.name, avatarUrl: r.author.avatarUrl };
+
+      return {
+        ...this.mapToDomain(r),
+        author,
+      };
+    });
 
     return {
       items: mapped,
@@ -109,6 +125,40 @@ export class PostDrizzleRepository implements IPostRepository {
     };
   }
 
+  public async getRandomPost(format?: PostFormat): Promise<PostWithAuthor | null> {
+    const conditions = [eq(posts.status, 'published'), isNull(posts.deletedAt)];
+    if (format) {
+      conditions.push(eq(posts.format, format));
+    }
+
+    const rows = await db.query.posts.findMany({
+      where: and(...conditions),
+      orderBy: [sql`RANDOM()`],
+      limit: 1,
+      with: {
+        author: true,
+      },
+    });
+
+    if (rows.length === 0) return null;
+    const r = rows[0];
+    const author = r.isAnonymous
+      ? { id: 'anonymous', username: 'Anonymous Developer', name: 'Anonymous', avatarUrl: null }
+      : { id: r.author.id, username: r.author.username, name: r.author.name, avatarUrl: r.author.avatarUrl };
+
+    return {
+      ...this.mapToDomain(r),
+      author,
+    };
+  }
+
+  public async incrementViews(id: string): Promise<void> {
+    await db
+      .update(posts)
+      .set({ viewsCount: sql`${posts.viewsCount} + 1` })
+      .where(eq(posts.id, id));
+  }
+
   public async update(id: string, data: UpdatePostData): Promise<Post | null> {
     const updateValues: Partial<typeof posts.$inferInsert> = {
       updatedAt: new Date(),
@@ -118,7 +168,11 @@ export class PostDrizzleRepository implements IPostRepository {
     if (data.slug !== undefined) updateValues.slug = data.slug;
     if (data.summary !== undefined) updateValues.summary = data.summary;
     if (data.coverImage !== undefined) updateValues.coverImage = data.coverImage;
+    if (data.format !== undefined) updateValues.format = data.format;
+    if (data.isAnonymous !== undefined) updateValues.isAnonymous = data.isAnonymous;
     if (data.readingTimeMinutes !== undefined) updateValues.readingTimeMinutes = data.readingTimeMinutes;
+    if (data.config !== undefined) updateValues.config = data.config;
+    if (data.metadata !== undefined) updateValues.metadata = data.metadata;
     if (data.content !== undefined) {
       updateValues.content = { body: data.content };
       updateValues.contentText = data.content;
@@ -165,9 +219,16 @@ export class PostDrizzleRepository implements IPostRepository {
       content: contentString,
       summary: row.summary,
       coverImage: row.coverImage,
+      format: row.format as PostFormat,
+      isAnonymous: row.isAnonymous,
       published: row.status === 'published',
       readingTimeMinutes: row.readingTimeMinutes,
+      viewsCount: row.viewsCount,
+      clapsCount: row.clapsCount,
       authorId: row.authorId,
+      config: (row.config as Record<string, unknown>) || {},
+      metadata: (row.metadata as Record<string, unknown>) || {},
+      publishedAt: row.publishedAt,
       createdAt: row.createdAt,
       updatedAt: row.updatedAt,
     };

@@ -1,7 +1,7 @@
-import { IPostRepository } from '../repositories/interfaces/post.repository.interface.js';
+import { IPostRepository, FeedFilterQuery } from '../repositories/interfaces/post.repository.interface.js';
 import { CreatePostInput, UpdatePostInput } from '../validators/post.validator.js';
 import { ForbiddenError, NotFoundError } from '../errors/app-error.js';
-import { Post, PostWithAuthor, PaginatedResult } from '../types/index.js';
+import { Post, PostWithAuthor, PostFormat, PaginatedResult } from '../types/index.js';
 
 export class PostService {
   constructor(private readonly postRepository: IPostRepository) {}
@@ -9,6 +9,9 @@ export class PostService {
   public async createPost(authorId: string, input: CreatePostInput): Promise<Post> {
     const slug = this.generateSlug(input.title);
     const readingTimeMinutes = this.calculateReadingTime(input.content);
+    const format = input.format || 'article';
+    // Confessions are anonymous by default
+    const isAnonymous = format === 'confession' ? true : (input.isAnonymous ?? false);
 
     return this.postRepository.create({
       title: input.title,
@@ -16,9 +19,13 @@ export class PostService {
       content: input.content,
       summary: input.summary || this.generateSummary(input.content),
       coverImage: input.coverImage || null,
+      format,
+      isAnonymous,
       published: input.published ?? true,
       readingTimeMinutes,
       authorId,
+      config: input.config,
+      metadata: input.metadata,
     });
   }
 
@@ -78,6 +85,12 @@ export class PostService {
     if (!post) {
       throw new NotFoundError('Post not found');
     }
+
+    // Increment views asynchronously in the background
+    this.postRepository.incrementViews(post.id).catch((err) => {
+      console.error('Failed to increment post views:', err);
+    });
+
     return post;
   }
 
@@ -93,8 +106,20 @@ export class PostService {
     return this.postRepository.findByAuthorId(authorId, { limit, cursor });
   }
 
-  public async getFeed(limit = 10, cursor?: string): Promise<PaginatedResult<PostWithAuthor>> {
-    return this.postRepository.findFeed({ limit, cursor });
+  public async getFeed(query?: FeedFilterQuery): Promise<PaginatedResult<PostWithAuthor>> {
+    return this.postRepository.findFeed(query);
+  }
+
+  public async getSpaceFeed(format: PostFormat, limit = 10, cursor?: string): Promise<PaginatedResult<PostWithAuthor>> {
+    return this.postRepository.findFeed({ format, limit, cursor });
+  }
+
+  public async getRandomPost(format?: PostFormat): Promise<PostWithAuthor> {
+    const post = await this.postRepository.getRandomPost(format);
+    if (!post) {
+      throw new NotFoundError('No posts available to recommend');
+    }
+    return post;
   }
 
   private calculateReadingTime(text: string): number {
