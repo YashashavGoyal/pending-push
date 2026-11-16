@@ -1,11 +1,13 @@
 import Fastify, { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 import cors from '@fastify/cors';
+import cookie from '@fastify/cookie';
 import swagger from '@fastify/swagger';
 import swaggerUi from '@fastify/swagger-ui';
 import { config } from './config/env.js';
 import { errorHandler } from './middleware/error.middleware.js';
 import { setupRoutes } from './routes/index.js';
 import { UserDrizzleRepository } from './repositories/drizzle/user.drizzle.repository.js';
+import { SessionDrizzleRepository } from './repositories/drizzle/session.drizzle.repository.js';
 import { PostDrizzleRepository } from './repositories/drizzle/post.drizzle.repository.js';
 import { ContactDrizzleRepository } from './repositories/drizzle/contact.drizzle.repository.js';
 import { AuthService } from './services/auth.service.js';
@@ -32,6 +34,12 @@ export const createApp = async (): Promise<FastifyInstance> => {
     origin: [config.clientUrl, 'http://localhost:5173', 'http://localhost:3000'],
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     credentials: true,
+  });
+
+  // Cookies (HttpOnly session tokens)
+  await fastify.register(cookie, {
+    secret: config.jwtSecret,
+    hook: 'onRequest',
   });
 
   // OpenAPI / Swagger Documentation
@@ -89,10 +97,11 @@ export const createApp = async (): Promise<FastifyInstance> => {
 
   // Dependency Injection Wiring (PostgreSQL via Drizzle ORM)
   const userRepository = new UserDrizzleRepository();
+  const sessionRepository = new SessionDrizzleRepository();
   const postRepository = new PostDrizzleRepository();
   const contactRepository = new ContactDrizzleRepository();
 
-  const authService = new AuthService(userRepository);
+  const authService = new AuthService(userRepository, sessionRepository);
   const postService = new PostService(postRepository);
   const contactService = new ContactService(contactRepository);
   const adminService = new AdminService(userRepository, postRepository, contactRepository);

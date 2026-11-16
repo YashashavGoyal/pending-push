@@ -69,3 +69,39 @@ export interface ApiResponse<T = unknown> {
     details?: unknown;
   };
 }
+
+export interface UserSession {
+  id: string;
+  userId: string;
+  tokenHash: string;
+  deviceName?: string | null;
+  ipAddress?: string | null;
+  userAgent?: string | null;
+  metadata: Record<string, unknown>;
+  isRevoked: boolean;
+  expiresAt: Date;
+  lastActiveAt: Date;
+  createdAt: Date;
+}
+
+export interface SessionPublicInfo {
+  id: string;
+  deviceName?: string | null;
+  ipAddress?: string | null;
+  metadata: Record<string, unknown>;
+  lastActiveAt: Date;
+  createdAt: Date;
+  isCurrent?: boolean;
+}
+
+export interface ClientDeviceInfo {
+  deviceName: string;
+  ipAddress: string;
+  userAgent: string;
+  metadata: {
+    browser?: string;
+    os?: string;
+    device?: string;
+    [key: string]: unknown;
+  };
+}

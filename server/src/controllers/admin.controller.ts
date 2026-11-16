@@ -2,6 +2,7 @@ import { FastifyRequest, FastifyReply } from 'fastify';
 import { AuthService } from '../services/auth.service.js';
 import { AdminService } from '../services/admin.service.js';
 import { AdminLoginInput } from '../validators/auth.validator.js';
+import { parseClientDeviceInfo } from '../utils/device-parser.js';
 
 export class AdminController {
   constructor(
@@ -11,11 +12,22 @@ export class AdminController {
 
   public login = async (request: FastifyRequest, reply: FastifyReply): Promise<void> => {
     const body = request.body as AdminLoginInput;
-    const result = await this.authService.adminLogin(body);
+    const clientInfo = parseClientDeviceInfo(request);
+    const result = await this.authService.adminLogin(body, clientInfo);
+
+    reply.setCookie('refreshToken', result.refreshToken, {
+      path: '/',
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 30 * 24 * 60 * 60,
+    });
+
     reply.status(200).send({
       success: true,
       message: 'Logged In',
-      token: result.token,
+      token: result.accessToken,
+      accessToken: result.accessToken,
       userId: result.userId,
       user: result.user,
     });
