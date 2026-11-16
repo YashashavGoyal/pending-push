@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="css/pages.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Lora:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
 
@@ -18,7 +18,7 @@
     <div class="container navbar">
       <a href="index.html" class="brand-link">
         <span class="brand-icon">
-          <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg>
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg>
         </span>
         <span>Pending Push</span>
       </a>
@@ -37,9 +37,8 @@
         <button class="theme-toggle-btn nav-icon-btn"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg></span></button>
         <a href="post-dev.html" class="btn btn-primary btn-sm"><span class="icon icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span><span>New Push</span></a>
         <div class="user-menu-wrapper">
-          <button class="user-avatar-btn"><img class="user-avatar-img" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&q=80" alt="Alex"></button>
+          <button class="user-avatar-btn"><img class="user-avatar-img" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&q=80" alt="Alex"><span style="font-size: 0.825rem; font-weight: 600; color: var(--text-main);">Alex</span></button>
           <div class="dropdown-menu">
-            <div class="dropdown-header"><div class="dropdown-user-name">Alex Rivera</div><div class="dropdown-user-handle">@alexrivera</div></div>
             <a href="dashboard.html" class="dropdown-link"><span class="icon icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg></span><span>Author Dashboard</span></a>
             <a href="profile.html" class="dropdown-link"><span class="icon icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span><span>Public Profile & Insights</span></a>
             <a href="settings.html" class="dropdown-link"><span class="icon icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span><span>Account Settings</span></a>
@@ -59,18 +58,18 @@
       <section class="space-header">
         <div class="space-title-group">
           <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.35rem;">
-            <span class="badge badge-tutorial">tutorials space</span>
-            <span class="text-muted" style="font-size: 0.775rem; font-family: var(--font-mono);">interactive learning tracks</span>
+            <span class="badge badge-tutorial">03 / Interactive Learning Tracks</span>
+            <span class="text-muted" style="font-size: 0.8rem;">Step-by-step masterclasses</span>
           </div>
           <h1>Tutorials Hub</h1>
           <p>
-            Structured hands-on guides with interactive step checklists, real-time code runners, and completion analytics.
+            Friendly, structured engineering masterclasses with sticky progress checklists, live code runners, and completion badges.
           </p>
         </div>
 
         <div class="space-actions">
-          <button class="btn btn-secondary btn-sm">Filter: Intermediate</button>
-          <button class="btn btn-secondary btn-sm">Sort: Popular</button>
+          <button class="btn btn-secondary btn-sm" style="border-radius: var(--radius-full);">Filter: All Levels</button>
+          <button class="btn btn-secondary btn-sm" style="border-radius: var(--radius-full);">Sort: Most Completed</button>
         </div>
       </section>
 
@@ -79,16 +78,16 @@
         
         <!-- Track 1 -->
         <article class="tutorial-card">
-          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-3);">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-4);">
             <span class="badge badge-tutorial">4 Steps • 25 mins</span>
             <span class="badge badge-neutral">Intermediate</span>
           </div>
 
-          <h2 style="font-size: 1.25rem; font-weight: 700; color: var(--text-main); margin-bottom: var(--space-2);">
+          <h2 style="font-size: 1.35rem; font-weight: 700; color: var(--text-main); margin-bottom: var(--space-2); line-height: 1.35;">
             <a href="tutorial.html">Building a High-Performance Public Insights Heatmap from Scratch</a>
           </h2>
 
-          <p class="text-secondary" style="font-size: 0.875rem; line-height: 1.5; flex: 1;">
+          <p class="text-secondary" style="font-size: 0.925rem; line-height: 1.6; flex: 1;">
             Learn how to visualize readership activity grids using pure CSS Grid, minimal DOM memory overhead, and Fastify aggregation endpoints.
           </p>
 
@@ -96,9 +95,9 @@
             <div class="tutorial-progress-mini-bar" style="width: 50%;"></div>
           </div>
 
-          <div style="display: flex; align-items: center; justify-content: space-between; padding-top: var(--space-3); border-top: 1px solid var(--border-subtle); font-size: 0.8rem; color: var(--text-muted);">
+          <div style="display: flex; align-items: center; justify-content: space-between; padding-top: var(--space-4); border-top: 1px solid var(--border-subtle); font-size: 0.825rem; color: var(--text-muted);">
             <span>1,450 completed</span>
-            <a href="tutorial.html" class="btn btn-secondary btn-sm">
+            <a href="tutorial.html" class="btn btn-primary btn-sm">
               <span>Start Guide</span>
               <span class="icon icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
             </a>
@@ -107,16 +106,16 @@
 
         <!-- Track 2 -->
         <article class="tutorial-card">
-          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-3);">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-4);">
             <span class="badge badge-tutorial">5 Steps • 40 mins</span>
             <span class="badge badge-neutral">Advanced</span>
           </div>
 
-          <h2 style="font-size: 1.25rem; font-weight: 700; color: var(--text-main); margin-bottom: var(--space-2);">
+          <h2 style="font-size: 1.35rem; font-weight: 700; color: var(--text-main); margin-bottom: var(--space-2); line-height: 1.35;">
             <a href="tutorial.html">Architecting 4-Tier Node.js Apps with Fastify & TypeScript</a>
           </h2>
 
-          <p class="text-secondary" style="font-size: 0.875rem; line-height: 1.5; flex: 1;">
+          <p class="text-secondary" style="font-size: 0.925rem; line-height: 1.6; flex: 1;">
             Decouple Fastify HTTP routes from controllers, services, and repositories for clean unit test mocking and contract-driven API schemas.
           </p>
 
@@ -124,38 +123,10 @@
             <div class="tutorial-progress-mini-bar" style="width: 0%;"></div>
           </div>
 
-          <div style="display: flex; align-items: center; justify-content: space-between; padding-top: var(--space-3); border-top: 1px solid var(--border-subtle); font-size: 0.8rem; color: var(--text-muted);">
+          <div style="display: flex; align-items: center; justify-content: space-between; padding-top: var(--space-4); border-top: 1px solid var(--border-subtle); font-size: 0.825rem; color: var(--text-muted);">
             <span>980 completed</span>
             <a href="tutorial.html" class="btn btn-secondary btn-sm">
               <span>Start Guide</span>
-              <span class="icon icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
-            </a>
-          </div>
-        </article>
-
-        <!-- Track 3 -->
-        <article class="tutorial-card">
-          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-3);">
-            <span class="badge badge-tutorial">3 Steps • 15 mins</span>
-            <span class="badge badge-neutral">Beginner</span>
-          </div>
-
-          <h2 style="font-size: 1.25rem; font-weight: 700; color: var(--text-main); margin-bottom: var(--space-2);">
-            <a href="tutorial.html">Zero-Bundle Responsive Layouts with CSS Subgrid</a>
-          </h2>
-
-          <p class="text-secondary" style="font-size: 0.875rem; line-height: 1.5; flex: 1;">
-            Stop fighting nested grid alignments across disparate card components. Master the subgrid value in 15 minutes.
-          </p>
-
-          <div class="tutorial-progress-mini">
-            <div class="tutorial-progress-mini-bar" style="width: 100%;"></div>
-          </div>
-
-          <div style="display: flex; align-items: center; justify-content: space-between; padding-top: var(--space-3); border-top: 1px solid var(--border-subtle); font-size: 0.8rem; color: var(--text-muted);">
-            <span>2,140 completed</span>
-            <a href="tutorial.html" class="btn btn-secondary btn-sm">
-              <span>Review</span>
               <span class="icon icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
             </a>
           </div>
@@ -170,7 +141,7 @@
   <footer class="site-footer">
     <div class="container footer-inner">
       <div>Pending Push • Tutorials Space</div>
-      <div><a href="index.html">Back to Overview</a></div>
+      <div><a href="index.html">Back to Home</a></div>
     </div>
   </footer>
 
