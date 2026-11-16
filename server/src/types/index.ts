@@ -1,13 +1,59 @@
 export type UserRole = 'user' | 'admin';
 
+export interface UserPrivacyConfig {
+  isPrivate: boolean;
+  showActivityHeatmap: boolean;
+  showFollowersList: boolean;
+  showReadingList: boolean;
+}
+
+export interface UserAppearanceConfig {
+  theme: 'system' | 'light' | 'dark';
+  fontFamily: 'sans' | 'serif' | 'mono';
+  codeLigatures: boolean;
+}
+
+export interface UserNotificationConfig {
+  emailDigest: boolean;
+  newFollower: boolean;
+  newComment: boolean;
+}
+
+export interface UserConfig {
+  privacy: UserPrivacyConfig;
+  appearance: UserAppearanceConfig;
+  notifications: UserNotificationConfig;
+}
+
+export const DEFAULT_USER_CONFIG: UserConfig = {
+  privacy: {
+    isPrivate: false,
+    showActivityHeatmap: true,
+    showFollowersList: true,
+    showReadingList: false,
+  },
+  appearance: {
+    theme: 'system',
+    fontFamily: 'sans',
+    codeLigatures: true,
+  },
+  notifications: {
+    emailDigest: true,
+    newFollower: true,
+    newComment: true,
+  },
+};
+
 export interface User {
   id: string;
   username: string;
   email: string;
   passwordHash: string;
+  name: string;
   role: UserRole;
   bio?: string | null;
   avatarUrl?: string | null;
+  config: UserConfig;
   createdAt: Date;
   updatedAt: Date;
 }

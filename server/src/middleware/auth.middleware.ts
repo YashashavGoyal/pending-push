@@ -33,3 +33,24 @@ export const authPreHandler = async (request: FastifyRequest, _reply: FastifyRep
     throw new UnauthorizedError('Invalid or expired authentication token', error);
   }
 };
+
+export const optionalAuthPreHandler = async (request: FastifyRequest, _reply: FastifyReply): Promise<void> => {
+  const authHeader = request.headers.authorization;
+  if (!authHeader) return;
+
+  const token = authHeader.replace(/^Bearer\s+/i, '').trim();
+  if (!token) return;
+
+  try {
+    const decoded = jwt.verify(token, config.jwtSecret) as AuthPayload & { id?: string; email?: string; isAdmin?: boolean };
+    const userId = decoded.userId || decoded.id;
+    if (userId) {
+      const role = decoded.role || (decoded.isAdmin ? 'admin' : 'user');
+      request.user = { userId, role };
+      request.userId = userId;
+      request.token = token;
+    }
+  } catch {
+    // Ignore token errors on optional auth routes
+  }
+};

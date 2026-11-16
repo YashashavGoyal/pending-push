@@ -20,10 +20,12 @@ import { AuthService } from './services/auth.service.js';
 import { PostService } from './services/post.service.js';
 import { ContactService } from './services/contact.service.js';
 import { AdminService } from './services/admin.service.js';
+import { UserService } from './services/user.service.js';
 import { AuthController } from './controllers/auth.controller.js';
 import { PostController } from './controllers/post.controller.js';
 import { ContactController } from './controllers/contact.controller.js';
 import { AdminController } from './controllers/admin.controller.js';
+import { UserController } from './controllers/user.controller.js';
 
 export interface AppDependencies {
   userRepository?: IUserRepository;
@@ -132,17 +134,20 @@ export const createApp = async (dependencies?: AppDependencies): Promise<Fastify
   const postService = new PostService(postRepository);
   const contactService = new ContactService(contactRepository);
   const adminService = new AdminService(userRepository, postRepository, contactRepository);
+  const userService = new UserService(userRepository);
 
   const authController = new AuthController(authService);
   const postController = new PostController(postService);
   const contactController = new ContactController(contactService);
   const adminController = new AdminController(authService, adminService);
+  const userController = new UserController(userService);
 
   await setupRoutes(fastify, {
     authController,
     postController,
     contactController,
     adminController,
+    userController,
   });
 
   return fastify;
