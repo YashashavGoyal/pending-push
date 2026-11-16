@@ -1,5 +1,4 @@
-import dotenv from 'dotenv';
-dotenv.config();
+import 'dotenv/config';
 
 export const config = {
   port: parseInt(process.env.PORT || '2024', 10),

@@ -1,11 +1,19 @@
 import Fastify, { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 import cors from '@fastify/cors';
+import cookie from '@fastify/cookie';
+import helmet from '@fastify/helmet';
+import rateLimit from '@fastify/rate-limit';
 import swagger from '@fastify/swagger';
 import swaggerUi from '@fastify/swagger-ui';
 import { config } from './config/env.js';
 import { errorHandler } from './middleware/error.middleware.js';
 import { setupRoutes } from './routes/index.js';
+import { IUserRepository } from './repositories/interfaces/user.repository.interface.js';
+import { ISessionRepository } from './repositories/interfaces/session.repository.interface.js';
+import { IPostRepository } from './repositories/interfaces/post.repository.interface.js';
+import { IContactRepository } from './repositories/interfaces/contact.repository.interface.js';
 import { UserDrizzleRepository } from './repositories/drizzle/user.drizzle.repository.js';
+import { SessionDrizzleRepository } from './repositories/drizzle/session.drizzle.repository.js';
 import { PostDrizzleRepository } from './repositories/drizzle/post.drizzle.repository.js';
 import { ContactDrizzleRepository } from './repositories/drizzle/contact.drizzle.repository.js';
 import { AuthService } from './services/auth.service.js';
@@ -17,7 +25,14 @@ import { PostController } from './controllers/post.controller.js';
 import { ContactController } from './controllers/contact.controller.js';
 import { AdminController } from './controllers/admin.controller.js';
 
-export const createApp = async (): Promise<FastifyInstance> => {
+export interface AppDependencies {
+  userRepository?: IUserRepository;
+  sessionRepository?: ISessionRepository;
+  postRepository?: IPostRepository;
+  contactRepository?: IContactRepository;
+}
+
+export const createApp = async (dependencies?: AppDependencies): Promise<FastifyInstance> => {
   const fastify = Fastify({
     logger: {
       level: config.nodeEnv === 'development' ? 'info' : 'warn',
@@ -27,11 +42,31 @@ export const createApp = async (): Promise<FastifyInstance> => {
   // Global Error Handler
   fastify.setErrorHandler(errorHandler);
 
+  // Security Headers (OWASP Recommended)
+  await fastify.register(helmet, {
+    contentSecurityPolicy: false, // Prevents breaking Swagger UI inline scripts & external assets
+    crossOriginResourcePolicy: false,
+  });
+
   // CORS
   await fastify.register(cors, {
     origin: [config.clientUrl, 'http://localhost:5173', 'http://localhost:3000'],
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     credentials: true,
+  });
+
+  // Rate Limiting (Anti-abuse & Credential Stuffing Protection)
+  await fastify.register(rateLimit, {
+    global: true,
+    max: 100, // 100 req/min general limit
+    timeWindow: '1 minute',
+    allowList: () => config.nodeEnv === 'test',
+  });
+
+  // Cookies (HttpOnly session tokens)
+  await fastify.register(cookie, {
+    secret: config.jwtSecret,
+    hook: 'onRequest',
   });
 
   // OpenAPI / Swagger Documentation
@@ -87,12 +122,13 @@ export const createApp = async (): Promise<FastifyInstance> => {
     });
   });
 
-  // Dependency Injection Wiring (PostgreSQL via Drizzle ORM)
-  const userRepository = new UserDrizzleRepository();
-  const postRepository = new PostDrizzleRepository();
-  const contactRepository = new ContactDrizzleRepository();
+  // Dependency Injection Wiring
+  const userRepository = dependencies?.userRepository || new UserDrizzleRepository();
+  const sessionRepository = dependencies?.sessionRepository || new SessionDrizzleRepository();
+  const postRepository = dependencies?.postRepository || new PostDrizzleRepository();
+  const contactRepository = dependencies?.contactRepository || new ContactDrizzleRepository();
 
-  const authService = new AuthService(userRepository);
+  const authService = new AuthService(userRepository, sessionRepository);
   const postService = new PostService(postRepository);
   const contactService = new ContactService(contactRepository);
   const adminService = new AdminService(userRepository, postRepository, contactRepository);
