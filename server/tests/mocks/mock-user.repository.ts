@@ -1,5 +1,5 @@
-import { IUserRepository, CreateUserData } from '../../src/repositories/interfaces/user.repository.interface.js';
-import { User, PaginatedQuery, PaginatedResult } from '../../src/types/index.js';
+import { IUserRepository, CreateUserData, UpdateUserData } from '../../src/repositories/interfaces/user.repository.interface.js';
+import { User, DEFAULT_USER_CONFIG, PaginatedQuery, PaginatedResult } from '../../src/types/index.js';
 
 export class MockUserRepository implements IUserRepository {
   public users: Map<string, User> = new Map();
@@ -12,8 +12,10 @@ export class MockUserRepository implements IUserRepository {
       id,
       username: data.username,
       email: data.email,
+      name: data.name || data.username,
       passwordHash: data.passwordHash,
       role: data.role || 'user',
+      config: data.config || DEFAULT_USER_CONFIG,
       createdAt: now,
       updatedAt: now,
     };
@@ -51,6 +53,21 @@ export class MockUserRepository implements IUserRepository {
       hasMore: false,
       nextCursor: null,
     };
+  }
+
+  public async update(id: string, data: UpdateUserData): Promise<User | null> {
+    const user = this.users.get(id);
+    if (!user) return null;
+
+    const updated: User = {
+      ...user,
+      ...data,
+      config: data.config || user.config,
+      updatedAt: new Date(),
+    };
+
+    this.users.set(id, updated);
+    return updated;
   }
 
   public async deleteById(id: string): Promise<boolean> {
