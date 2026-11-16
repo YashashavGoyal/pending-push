@@ -192,4 +192,17 @@ describe('Auth & Session HTTP Endpoints', () => {
       expect(logoutCookie?.value).toBe('');
     });
   });
+
+  describe('Security Headers & Hardening', () => {
+    it('should include OWASP security headers on responses', async () => {
+      const response = await app.inject({
+        method: 'GET',
+        url: '/health',
+      });
+
+      expect(response.statusCode).toBe(200);
+      expect(response.headers['x-frame-options']).toBe('SAMEORIGIN');
+      expect(response.headers['x-content-type-options']).toBe('nosniff');
+    });
+  });
 });

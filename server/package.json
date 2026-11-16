@@ -21,6 +21,8 @@
   "dependencies": {
     "@fastify/cookie": "^11.1.5",
     "@fastify/cors": "^11.4.3",
+    "@fastify/helmet": "^13.2.0",
+    "@fastify/rate-limit": "^11.2.2",
     "@fastify/swagger": "^9.9.4",
     "@fastify/swagger-ui": "^6.1.4",
     "@types/ua-parser-js": "^0.7.39",

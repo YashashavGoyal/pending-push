@@ -20,6 +20,7 @@ export class AdminController {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
+      signed: true,
       maxAge: 30 * 24 * 60 * 60,
     });
 
@@ -88,6 +89,15 @@ export class AdminController {
     reply.status(200).send({
       success: true,
       message: 'Message Deleted',
+    });
+  };
+
+  public cleanupSessions = async (_request: FastifyRequest, reply: FastifyReply): Promise<void> => {
+    const deletedCount = await this.authService.purgeExpiredSessions();
+    reply.status(200).send({
+      success: true,
+      message: `Pruned ${deletedCount} expired or revoked sessions`,
+      deletedCount,
     });
   };
 }

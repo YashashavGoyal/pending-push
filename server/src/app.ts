@@ -1,6 +1,8 @@
 import Fastify, { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 import cors from '@fastify/cors';
 import cookie from '@fastify/cookie';
+import helmet from '@fastify/helmet';
+import rateLimit from '@fastify/rate-limit';
 import swagger from '@fastify/swagger';
 import swaggerUi from '@fastify/swagger-ui';
 import { config } from './config/env.js';
@@ -40,11 +42,25 @@ export const createApp = async (dependencies?: AppDependencies): Promise<Fastify
   // Global Error Handler
   fastify.setErrorHandler(errorHandler);
 
+  // Security Headers (OWASP Recommended)
+  await fastify.register(helmet, {
+    contentSecurityPolicy: false, // Prevents breaking Swagger UI inline scripts & external assets
+    crossOriginResourcePolicy: false,
+  });
+
   // CORS
   await fastify.register(cors, {
     origin: [config.clientUrl, 'http://localhost:5173', 'http://localhost:3000'],
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     credentials: true,
+  });
+
+  // Rate Limiting (Anti-abuse & Credential Stuffing Protection)
+  await fastify.register(rateLimit, {
+    global: true,
+    max: 100, // 100 req/min general limit
+    timeWindow: '1 minute',
+    allowList: () => config.nodeEnv === 'test',
   });
 
   // Cookies (HttpOnly session tokens)

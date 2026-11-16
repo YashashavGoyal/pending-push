@@ -89,4 +89,16 @@ export const registerAdminRoutes = (fastify: FastifyInstance, adminController: A
     },
     adminController.deleteContact
   );
+
+  fastify.post(
+    '/maintenance/cleanup-sessions',
+    {
+      preHandler: [authPreHandler, adminPreHandler],
+      schema: {
+        description: 'Prune expired and old revoked sessions',
+        tags: ['Admin', 'Maintenance'],
+      },
+    },
+    adminController.cleanupSessions
+  );
 };

@@ -8,6 +8,12 @@ export const registerAuthRoutes = (fastify: FastifyInstance, authController: Aut
   fastify.post(
     '/register',
     {
+      config: {
+        rateLimit: {
+          max: 10,
+          timeWindow: '1 minute',
+        },
+      },
       preHandler: validateBody(registerSchema),
       schema: {
         description: 'Register a new user account with initial session',
@@ -20,6 +26,12 @@ export const registerAuthRoutes = (fastify: FastifyInstance, authController: Aut
   fastify.post(
     '/login',
     {
+      config: {
+        rateLimit: {
+          max: 5,
+          timeWindow: '1 minute',
+        },
+      },
       preHandler: validateBody(loginSchema),
       schema: {
         description: 'Login with email and password, establishing an active session',

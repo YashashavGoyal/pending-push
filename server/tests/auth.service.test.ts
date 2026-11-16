@@ -247,5 +247,40 @@ describe('AuthService & Session Management', () => {
       expect(remainingSessions).toHaveLength(1);
       expect(remainingSessions[0].deviceName).toBe('Current Work PC');
     });
+
+    it('should purge expired and old revoked sessions while keeping active ones', async () => {
+      const auth = await authService.register(
+        {
+          username: 'dave',
+          email: 'dave@example.com',
+          password: 'password123',
+        },
+        mockClientInfo
+      );
+
+      // Manually add an expired session
+      await mockSessionRepo.create({
+        userId: auth.userId,
+        tokenHash: 'expired_hash',
+        expiresAt: new Date(Date.now() - 1000 * 60 * 60 * 24), // 1 day ago
+      });
+
+      // Manually add an old revoked session
+      const oldRevokedSession = await mockSessionRepo.create({
+        userId: auth.userId,
+        tokenHash: 'revoked_hash',
+        expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
+      });
+      oldRevokedSession.isRevoked = true;
+      oldRevokedSession.lastActiveAt = new Date(Date.now() - 1000 * 60 * 60 * 24 * 40); // 40 days ago
+      mockSessionRepo.sessions.set(oldRevokedSession.id, oldRevokedSession);
+
+      const pruned = await authService.purgeExpiredSessions(30);
+      expect(pruned).toBe(2);
+
+      // Valid session still exists
+      const remaining = await mockSessionRepo.findByUserId(auth.userId);
+      expect(remaining).toHaveLength(1);
+    });
   });
 });

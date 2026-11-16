@@ -139,6 +139,7 @@ export class AuthController {
       httpOnly: true,
       secure: config.nodeEnv === 'production',
       sameSite: 'lax',
+      signed: true,
       maxAge: 30 * 24 * 60 * 60, // 30 days in seconds
     });
   }
@@ -148,8 +149,17 @@ export class AuthController {
   }
 
   private getRefreshToken(request: FastifyRequest): string | undefined {
-    const cookies = request.cookies as Record<string, string | undefined> | undefined;
+    const rawCookie = request.cookies?.refreshToken;
+    if (rawCookie) {
+      if (typeof request.unsignCookie === 'function') {
+        const unsigned = request.unsignCookie(rawCookie);
+        if (unsigned.valid && unsigned.value) {
+          return unsigned.value;
+        }
+      }
+      return rawCookie;
+    }
     const body = request.body as Record<string, unknown> | undefined;
-    return cookies?.refreshToken || (body?.refreshToken as string | undefined);
+    return body?.refreshToken as string | undefined;
   }
 }

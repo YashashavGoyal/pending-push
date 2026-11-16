@@ -236,6 +236,10 @@ export class AuthService {
     return publicProfile;
   }
 
+  public async purgeExpiredSessions(olderThanDays = 30): Promise<number> {
+    return this.sessionRepository.deleteExpiredSessions(olderThanDays);
+  }
+
   private async createSession(
     userId: string,
     role: 'user' | 'admin',

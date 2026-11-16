@@ -1,4 +1,4 @@
-import { eq, and, desc, ne } from 'drizzle-orm';
+import { eq, and, desc, ne, lt, or } from 'drizzle-orm';
 import { db } from '../../db/index.js';
 import { userSessions } from '../../db/schema/index.js';
 import { ISessionRepository, CreateSessionData } from '../interfaces/session.repository.interface.js';
@@ -98,6 +98,23 @@ export class SessionDrizzleRepository implements ISessionRepository {
       .returning();
 
     return updated.length;
+  }
+
+  public async deleteExpiredSessions(olderThanDays = 30): Promise<number> {
+    const cutoffDate = new Date();
+    cutoffDate.setDate(cutoffDate.getDate() - olderThanDays);
+
+    const deleted = await db
+      .delete(userSessions)
+      .where(
+        or(
+          lt(userSessions.expiresAt, new Date()),
+          and(eq(userSessions.isRevoked, true), lt(userSessions.lastActiveAt, cutoffDate))
+        )
+      )
+      .returning();
+
+    return deleted.length;
   }
 
   private mapToDomain(row: typeof userSessions.$inferSelect): UserSession {

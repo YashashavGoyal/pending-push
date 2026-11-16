@@ -18,4 +18,5 @@ export interface ISessionRepository {
   rotateToken(sessionId: string, newTokenHash: string, newExpiresAt: Date, ipAddress?: string): Promise<void>;
   revokeById(sessionId: string): Promise<boolean>;
   revokeAllForUser(userId: string, exceptSessionId?: string): Promise<number>;
+  deleteExpiredSessions(olderThanDays?: number): Promise<number>;
 }

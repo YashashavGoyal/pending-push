@@ -88,4 +88,21 @@ export class MockSessionRepository implements ISessionRepository {
     }
     return count;
   }
+
+  public async deleteExpiredSessions(olderThanDays = 30): Promise<number> {
+    const cutoffDate = new Date();
+    cutoffDate.setDate(cutoffDate.getDate() - olderThanDays);
+    const now = new Date();
+
+    let count = 0;
+    for (const [id, s] of this.sessions.entries()) {
+      const isExpired = s.expiresAt < now;
+      const isRevokedAndOld = s.isRevoked && s.lastActiveAt < cutoffDate;
+      if (isExpired || isRevokedAndOld) {
+        this.sessions.delete(id);
+        count++;
+      }
+    }
+    return count;
+  }
 }
