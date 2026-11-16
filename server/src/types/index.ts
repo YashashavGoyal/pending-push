@@ -162,3 +162,27 @@ export interface ClientDeviceInfo {
     [key: string]: unknown;
   };
 }
+
+export interface ClapResult {
+  userClaps: number;
+  totalClaps: number;
+}
+
+export interface CommentAuthor {
+  id: string;
+  username: string;
+  name?: string | null;
+  avatarUrl?: string | null;
+}
+
+export interface CommentItem {
+  id: string;
+  postId: string;
+  authorId: string;
+  parentId?: string | null;
+  content: string;
+  author?: CommentAuthor;
+  replies?: CommentItem[];
+  createdAt: Date;
+  updatedAt: Date;
+}
