@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import StoryInteractions from '@/Components/StoryInteractions';
+import StoryComments from '@/Components/StoryComments';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -195,6 +196,9 @@ export const registerPostRoutes = (fastify: FastifyInstance, controller: PostCon
                 <Link href="/dev-logs" className="btn btn-secondary btn-sm" style={{ borderRadius: 'var(--radius-full)' }}>← Back to Dev Logs</Link>
               </div>
             </div>
+
+            {/* Threaded Discussion Section */}
+            <StoryComments postId="devlog-fastify5-nextjs15" />
           </article>
 
           {/* Right: Sticky Table of Contents & Metadata */}

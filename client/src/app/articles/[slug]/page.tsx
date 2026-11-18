@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { fetchPostBySlug } from '@/lib/api';
 import StoryInteractions from '@/Components/StoryInteractions';
+import StoryComments from '@/Components/StoryComments';
 
 interface ArticlePageProps {
   params: Promise<{ slug: string }>;
@@ -120,6 +121,10 @@ export default async function ArticleReaderPage({ params }: ArticlePageProps) {
               <Link href="/articles" className="btn btn-secondary btn-sm" style={{ borderRadius: 'var(--radius-full)' }}>← Back to Articles</Link>
             </div>
           </div>
+
+          {/* Threaded Discussion Section */}
+          <StoryComments postId={post.id} />
+
         </article>
 
       </div>
