@@ -13,23 +13,27 @@ import { ISessionRepository } from './repositories/interfaces/session.repository
 import { IPostRepository } from './repositories/interfaces/post.repository.interface.js';
 import { IContactRepository } from './repositories/interfaces/contact.repository.interface.js';
 import { IInteractionRepository } from './repositories/interfaces/interaction.repository.interface.js';
+import { IAnalyticsRepository } from './repositories/interfaces/analytics.repository.interface.js';
 import { UserDrizzleRepository } from './repositories/drizzle/user.drizzle.repository.js';
 import { SessionDrizzleRepository } from './repositories/drizzle/session.drizzle.repository.js';
 import { PostDrizzleRepository } from './repositories/drizzle/post.drizzle.repository.js';
 import { ContactDrizzleRepository } from './repositories/drizzle/contact.drizzle.repository.js';
 import { InteractionDrizzleRepository } from './repositories/drizzle/interaction.drizzle.repository.js';
+import { AnalyticsDrizzleRepository } from './repositories/drizzle/analytics.drizzle.repository.js';
 import { AuthService } from './services/auth.service.js';
 import { PostService } from './services/post.service.js';
 import { ContactService } from './services/contact.service.js';
 import { AdminService } from './services/admin.service.js';
 import { UserService } from './services/user.service.js';
 import { InteractionService } from './services/interaction.service.js';
+import { AnalyticsService } from './services/analytics.service.js';
 import { AuthController } from './controllers/auth.controller.js';
 import { PostController } from './controllers/post.controller.js';
 import { ContactController } from './controllers/contact.controller.js';
 import { AdminController } from './controllers/admin.controller.js';
 import { UserController } from './controllers/user.controller.js';
 import { InteractionController } from './controllers/interaction.controller.js';
+import { AnalyticsController } from './controllers/analytics.controller.js';
 
 export interface AppDependencies {
   userRepository?: IUserRepository;
@@ -37,6 +41,7 @@ export interface AppDependencies {
   postRepository?: IPostRepository;
   contactRepository?: IContactRepository;
   interactionRepository?: IInteractionRepository;
+  analyticsRepository?: IAnalyticsRepository;
 }
 
 export const createApp = async (dependencies?: AppDependencies): Promise<FastifyInstance> => {
@@ -135,6 +140,7 @@ export const createApp = async (dependencies?: AppDependencies): Promise<Fastify
   const postRepository = dependencies?.postRepository || new PostDrizzleRepository();
   const contactRepository = dependencies?.contactRepository || new ContactDrizzleRepository();
   const interactionRepository = dependencies?.interactionRepository || new InteractionDrizzleRepository();
+  const analyticsRepository = dependencies?.analyticsRepository || new AnalyticsDrizzleRepository();
 
   const authService = new AuthService(userRepository, sessionRepository);
   const postService = new PostService(postRepository);
@@ -142,6 +148,7 @@ export const createApp = async (dependencies?: AppDependencies): Promise<Fastify
   const adminService = new AdminService(userRepository, postRepository, contactRepository);
   const userService = new UserService(userRepository);
   const interactionService = new InteractionService(interactionRepository, postRepository, userRepository);
+  const analyticsService = new AnalyticsService(analyticsRepository, userRepository);
 
   const authController = new AuthController(authService);
   const postController = new PostController(postService);
@@ -149,6 +156,7 @@ export const createApp = async (dependencies?: AppDependencies): Promise<Fastify
   const adminController = new AdminController(authService, adminService);
   const userController = new UserController(userService);
   const interactionController = new InteractionController(interactionService);
+  const analyticsController = new AnalyticsController(analyticsService);
 
   await setupRoutes(fastify, {
     authController,
@@ -157,6 +165,7 @@ export const createApp = async (dependencies?: AppDependencies): Promise<Fastify
     adminController,
     userController,
     interactionController,
+    analyticsController,
   });
 
   return fastify;

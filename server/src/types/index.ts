@@ -186,3 +186,62 @@ export interface CommentItem {
   createdAt: Date;
   updatedAt: Date;
 }
+
+// ================= ACTIVITY & HEATMAP =================
+export interface ActivityDay {
+  date: string; // 'YYYY-MM-DD'
+  count: number;
+  level: 0 | 1 | 2 | 3 | 4;
+}
+
+export interface ActivityHeatmap {
+  days: ActivityDay[];
+  totalContributions: number;
+  currentStreak: number;
+  longestStreak: number;
+}
+
+// ================= AUTHOR TELEMETRY =================
+export interface StoryMetric {
+  id: string;
+  title: string;
+  slug: string;
+  format: PostFormat;
+  status: PostStatus;
+  viewsCount: number;
+  clapsCount: number;
+  publishedAt?: Date | null;
+  createdAt: Date;
+}
+
+export interface AuthorTelemetry {
+  totalViews: number;
+  totalClaps: number;
+  totalFollowers: number;
+  publishedPushesCount: number;
+  draftsCount: number;
+  avgRetentionRate: number;
+  recentStories: StoryMetric[];
+}
+
+// ================= PLATFORM ADMIN TELEMETRY =================
+export interface PlatformStats {
+  totalUsers: number;
+  totalPosts: number;
+  totalPublishedPosts: number;
+  totalDrafts: number;
+  totalConfessions: number;
+  totalComments: number;
+  totalClaps: number;
+}
+
+export interface AdminUserItem {
+  id: string;
+  name: string;
+  username: string;
+  email: string;
+  role: UserRole;
+  status: 'Active' | 'Suspended';
+  postsCount: number;
+  createdAt: Date;
+}
