@@ -16,3 +16,18 @@ export const validateBody = (schema: ZodSchema) => {
     }
   };
 };
+
+export const validateParams = (schema: ZodSchema) => {
+  return async (request: FastifyRequest, _reply: FastifyReply): Promise<void> => {
+    try {
+      request.params = await schema.parseAsync(request.params);
+    } catch (error) {
+      if (error instanceof ZodError) {
+        const firstIssue = error.issues[0];
+        const errorMessage = firstIssue ? `${firstIssue.path.join('.') || 'param'}: ${firstIssue.message}` : 'Validation error';
+        throw new ValidationError(errorMessage, error.flatten().fieldErrors);
+      }
+      throw error;
+    }
+  };
+};

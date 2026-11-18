@@ -34,13 +34,16 @@ export class AdminController {
     });
   };
 
-  public getUsers = async (_request: FastifyRequest, reply: FastifyReply): Promise<void> => {
-    const result = await this.adminService.getAllUsers();
+  public getUsers = async (request: FastifyRequest, reply: FastifyReply): Promise<void> => {
+    const query = request.query as { limit?: string; cursor?: string };
+    const limit = parseInt(query.limit || '50', 10);
+    const result = await this.adminService.getAllUsers(limit, query.cursor);
     reply.status(200).send({
       success: true,
       message: 'Successfully Fetched Users',
       users: result.items,
       hasMore: result.hasMore,
+      nextCursor: result.nextCursor,
     });
   };
 
