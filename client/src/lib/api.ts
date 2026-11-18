@@ -48,7 +48,7 @@ export async function fetchPostBySlug(slug: string): Promise<Post | null> {
 }
 
 export async function createPost(
-  input: { title: string; content: string; summary?: string; format?: string; coverImage?: string },
+  input: { title: string; content: string; summary?: string; format?: string; coverImage?: string; isAnonymous?: boolean },
   token?: string | null
 ): Promise<{ success: boolean; post?: Post; message?: string }> {
   try {

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { CONFESSIONS_DATA } from '@/lib/mock-data';
 import { Confession } from '@/lib/types';
+import { createPost } from '@/lib/api';
 
 export default function ConfessionsPage() {
   const [confessions, setConfessions] = useState<Confession[]>(CONFESSIONS_DATA);
@@ -56,6 +57,15 @@ export default function ConfessionsPage() {
     setNewAlias('');
     setNewMessage('');
     setModalOpen(false);
+
+    // Persist anonymous confession to backend
+    createPost({
+      title: `Confession: ${newMessage.trim().slice(0, 40)}...`,
+      content: newMessage.trim(),
+      format: 'confession',
+      isAnonymous: true,
+      summary: newMessage.trim().slice(0, 140)
+    }).catch(() => {});
   };
 
   const filteredConfessions = confessions.filter(c => {

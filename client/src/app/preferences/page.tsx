@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useTheme } from '@/components/ThemeProvider';
+import { useTheme } from '@/Components/ThemeProvider';
 import { useState } from 'react';
 
 export default function PreferencesPage() {
