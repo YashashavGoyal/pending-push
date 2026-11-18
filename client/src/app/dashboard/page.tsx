@@ -3,16 +3,25 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/lib/auth-context';
+import { fetchBookmarks, toggleBookmark } from '@/lib/api';
+import { Post } from '@/lib/types';
 
 export default function DashboardPage() {
   const { user } = useAuth();
   const [activeRole, setActiveRole] = useState<'author' | 'admin'>('author');
+  const [savedBookmarks, setSavedBookmarks] = useState<Post[]>([]);
 
   useEffect(() => {
     if (user?.role) {
       setActiveRole(user.role);
     }
+    fetchBookmarks().then(setSavedBookmarks);
   }, [user]);
+
+  const handleRemoveBookmark = async (id: string, slug: string) => {
+    await toggleBookmark(id);
+    setSavedBookmarks(prev => prev.filter(b => b.id !== id && b.slug !== slug));
+  };
 
   const [usersList, setUsersList] = useState([
     { id: 'u-1', name: 'Alex Rivera', username: 'alexrivera', email: 'alex@pendingpush.dev', role: 'admin', status: 'Active', postsCount: 28 },
@@ -249,6 +258,72 @@ export default function DashboardPage() {
                 </table>
               </div>
             </div>
+
+            {/* Saved Bookmarks / Reading List */}
+            <div className="card" style={{ padding: 'var(--space-6)', marginTop: 'var(--space-6)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-4)' }}>
+                <div>
+                  <h2 className="title-section" style={{ fontSize: '1.15rem', margin: 0 }}>Saved Reading List (Bookmarks)</h2>
+                  <p className="text-secondary" style={{ fontSize: '0.8rem', margin: '0.2rem 0 0' }}>Stories and RFCs bookmarked for offline deep reading.</p>
+                </div>
+                <span className="badge badge-dev">{savedBookmarks.length} saved</span>
+              </div>
+
+              {savedBookmarks.length === 0 ? (
+                <div style={{ padding: 'var(--space-6)', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.875rem' }}>
+                  No saved bookmarks yet. Explore <Link href="/articles" style={{ color: 'var(--brand-terracotta)', fontWeight: 600 }}>Articles</Link> or <Link href="/dev-logs" style={{ color: 'var(--brand-terracotta)', fontWeight: 600 }}>Dev Logs</Link> and click &quot;Bookmark&quot; to save for later.
+                </div>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
+                  {savedBookmarks.map(story => (
+                    <div
+                      key={story.id}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        padding: 'var(--space-3) var(--space-4)',
+                        backgroundColor: 'var(--bg-subtle)',
+                        borderRadius: 'var(--radius-md)',
+                        gap: 'var(--space-4)'
+                      }}
+                    >
+                      <div>
+                        <Link
+                          href={story.category === 'dev-log' ? `/dev-logs/${story.slug}` : `/articles/${story.slug}`}
+                          style={{ fontWeight: 600, fontSize: '0.925rem', color: 'var(--text-main)', textDecoration: 'none' }}
+                        >
+                          {story.title}
+                        </Link>
+                        <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.2rem' }}>
+                          By {story.author.name} • {story.readTime} • {story.category}
+                        </div>
+                      </div>
+
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+                        <Link
+                          href={story.category === 'dev-log' ? `/dev-logs/${story.slug}` : `/articles/${story.slug}`}
+                          className="btn btn-secondary btn-sm"
+                          style={{ padding: '0.25rem 0.65rem', borderRadius: 'var(--radius-full)' }}
+                        >
+                          Read
+                        </Link>
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveBookmark(story.id, story.slug)}
+                          className="btn btn-ghost btn-sm"
+                          style={{ color: 'var(--accent-rose)', padding: '0.25rem 0.5rem' }}
+                          title="Remove bookmark"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
           </div>
         )}
 
