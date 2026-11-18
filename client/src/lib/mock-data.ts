@@ -1,4 +1,4 @@
-import { Post, TutorialTrack, Confession } from './types';
+import type { Post, TutorialTrack, Confession } from './types.ts';
 
 export const FEATURED_STORY: Post = {
   id: 'featured-1',
