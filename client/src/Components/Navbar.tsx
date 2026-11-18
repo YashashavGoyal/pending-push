@@ -18,8 +18,8 @@ export default function Navbar() {
     setMounted(true);
   }, []);
 
-  // 1. Completely hide navbar on focused auth pages (/login & /register)
-  if (pathname === '/login' || pathname === '/register') {
+  // 1. Completely hide navbar on focused auth and studio pages (/login, /register, /studio)
+  if (pathname === '/login' || pathname === '/register' || pathname === '/studio') {
     return null;
   }
 

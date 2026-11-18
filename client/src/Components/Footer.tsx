@@ -7,8 +7,8 @@ import { usePathname } from 'next/navigation';
 export default function Footer() {
   const pathname = usePathname();
 
-  // Hide footer completely on focused authentication pages
-  if (pathname === '/login' || pathname === '/register') {
+  // Hide footer completely on focused authentication and studio pages
+  if (pathname === '/login' || pathname === '/register' || pathname === '/studio') {
     return null;
   }
 
