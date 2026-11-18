@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { fetchFeed } from '@/lib/api';
+import HomeFeedTabs from '@/Components/HomeFeedTabs';
 
 export default async function HomePage() {
   const { featured, stories } = await fetchFeed();
@@ -52,81 +53,8 @@ export default async function HomePage() {
               </div>
             </article>
 
-            {/* 2. PUBLICATION CHANNEL TABS & STREAM HEADER */}
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              borderBottom: '1px solid var(--border-subtle)',
-              paddingBottom: 'var(--space-4)',
-              marginBottom: 'var(--space-6)',
-              flexWrap: 'wrap',
-              gap: 'var(--space-3)'
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', flexWrap: 'wrap' }}>
-                <span style={{ fontWeight: 700, fontSize: '1.1rem', color: 'var(--text-main)', marginRight: 'var(--space-2)' }}>Latest Pushes</span>
-                <Link href="/articles" className="topic-chip" style={{ fontWeight: 600 }}>Articles</Link>
-                <Link href="/dev-logs" className="topic-chip" style={{ fontWeight: 600 }}>Dev Logs</Link>
-                <Link href="/tutorials" className="topic-chip" style={{ fontWeight: 600 }}>Tutorials</Link>
-                <Link href="/confessions" className="topic-chip" style={{ fontWeight: 600 }}>Confessions</Link>
-              </div>
-
-              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                4 Dedicated Spaces
-              </div>
-            </div>
-
-            {/* 3. STORIES FEED */}
-            <div className="feed-stream">
-              {stories.map((story) => (
-                <article key={story.id} className="story-card">
-                  <div>
-                    <div className="story-kicker">
-                      {story.category.toUpperCase()} • {story.tags.join(' & ')}
-                    </div>
-                    <h2 className="story-title">
-                      <Link href={
-                        story.category === 'dev-log' ? `/dev-logs/${story.slug}` :
-                        story.category === 'tutorial' ? `/tutorials/${story.slug}` :
-                        story.category === 'confession' ? `/confessions` :
-                        `/articles/${story.slug}`
-                      }>
-                        {story.title}
-                      </Link>
-                    </h2>
-                    <p className="story-excerpt">
-                      {story.summary}
-                    </p>
-                    <div className="story-meta-row">
-                      <Link href={`/profile/${story.author.username}`} className="story-author-chip">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img className="story-author-avatar" src={story.author.avatar} alt={story.author.name} />
-                        <span>{story.author.name}</span>
-                      </Link>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
-                        <span>{story.readTime}</span>
-                        <span>•</span>
-                        <span style={{ color: 'var(--brand-terracotta)', fontWeight: 600 }}>{story.relates} relates</span>
-                        <span>•</span>
-                        <span className="icon icon-sm" style={{ color: 'var(--text-muted)', cursor: 'pointer' }}>
-                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                            <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" />
-                          </svg>
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {story.thumbnail && (
-                    <div className="story-thumbnail">
-                      <span style={{ fontWeight: 700, color: 'var(--brand-terracotta)' }}>{story.thumbnail.kicker}</span>
-                      <span style={{ fontSize: '0.7rem', margin: '4px 0' }}>{story.thumbnail.subtext}</span>
-                      <span>{story.thumbnail.badge}</span>
-                    </div>
-                  )}
-                </article>
-              ))}
-            </div>
+            {/* 2. FEED TABS & STORIES STREAM */}
+            <HomeFeedTabs initialStories={stories} />
 
           </div>
 

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import FollowButton from '@/Components/FollowButton';
 
 interface ProfileProps {
   params: Promise<{ username: string }>;
@@ -51,8 +52,8 @@ export default async function ProfilePage({ params }: ProfileProps) {
               </div>
             </div>
 
-            <div style={{ display: 'flex', gap: 'var(--space-3)' }}>
-              <button className="btn btn-primary btn-sm" style={{ borderRadius: 'var(--radius-full)' }}>Follow</button>
+            <div style={{ display: 'flex', gap: 'var(--space-3)', alignItems: 'center' }}>
+              <FollowButton authorId={username || 'alexrivera'} initialFollowers={1240} />
               <Link href="/settings" className="btn btn-secondary btn-sm" style={{ borderRadius: 'var(--radius-full)' }}>Edit Profile</Link>
             </div>
 
