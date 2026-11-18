@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Developer Studio — Pending Push</title>
+  <link rel="stylesheet" href="css/design-system.css">
+  <link rel="stylesheet" href="css/navbar-footer.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <link rel="stylesheet" href="css/syntax-theme.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    .studio-wrapper {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      height: calc(100vh - 4.15rem);
+      overflow: hidden;
+    }
+    @media (max-width: 900px) {
+      .studio-wrapper { grid-template-columns: 1fr; height: auto; }
+      .studio-preview { display: none; }
+    }
+    .studio-pane {
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+    .studio-editor {
+      border-right: 1px solid var(--border-subtle);
+      background-color: var(--bg-app);
+    }
+    .studio-preview {
+      background-color: var(--bg-surface);
+      padding: var(--space-8);
+    }
+    .studio-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.5rem var(--space-6);
+      background-color: var(--bg-surface);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .toolbar-tool-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.3rem 0.55rem;
+      border-radius: var(--radius-xs);
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-subtle);
+      color: var(--text-secondary);
+      font-size: 0.775rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: var(--font-mono);
+    }
+    .toolbar-tool-btn:hover {
+      color: var(--text-main);
+      border-color: var(--border-strong);
+    }
+    .editor-textarea {
+      flex: 1;
+      width: 100%;
+      min-height: 480px;
+      padding: var(--space-6);
+      background: transparent;
+      border: none;
+      outline: none;
+      resize: none;
+      font-family: var(--font-mono);
+      font-size: 0.925rem;
+      line-height: 1.7;
+      color: var(--text-main);
+    }
+    .status-strip {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.4rem var(--space-6);
+      background-color: var(--bg-subtle);
+      border-top: 1px solid var(--border-subtle);
+      font-family: var(--font-mono);
+      font-size: 0.725rem;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body style="height: 100vh; overflow: hidden; display: flex; flex-direction: column;">
+
+  <!-- NAVBAR -->
+  <header class="site-header">
+    <div class="container navbar">
+      <a href="index.html" class="brand-link">
+        <span class="brand-icon">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg>
+        </span>
+        <span>Pending Push</span>
+      </a>
+
+      <!-- Space Selector -->
+      <div style="display: flex; align-items: center; gap: 0.6rem;">
+        <span class="badge badge-neutral">Publishing to</span>
+        <select class="form-select" id="spaceSelect" style="width: auto; padding: 0.3rem 0.65rem; font-size: 0.8rem; font-weight: 600;">
+          <option value="dev-logs" selected>02 / Dev Logs Space</option>
+          <option value="articles">01 / Articles Space</option>
+          <option value="tutorials">03 / Tutorials Space</option>
+          <option value="confessions">04 / Confessions Space</option>
+        </select>
+      </div>
+
+      <!-- Actions -->
+      <div class="nav-actions">
+        <span class="text-muted" style="font-size: 0.8rem; font-family: var(--font-mono);" id="saveStatus">● Saved to draft</span>
+        <button class="theme-toggle-btn nav-icon-btn" aria-label="Toggle Theme">
+          <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg></span>
+        </button>
+        <button class="btn btn-primary btn-sm" onclick="alert('Commit & Push staged successfully to Fastify backend!')">
+          <span class="icon icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg></span>
+          <span>Commit & Push</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Markdown Toolbar -->
+  <div class="studio-toolbar">
+    <button class="toolbar-tool-btn" data-tool="bold" title="Bold">B</button>
+    <button class="toolbar-tool-btn" data-tool="italic" title="Italic"><em>I</em></button>
+    <button class="toolbar-tool-btn" data-tool="h2" title="Heading 2">H2</button>
+    <span style="width: 1px; height: 1.2rem; background: var(--border-subtle); margin: 0 0.35rem;"></span>
+    <button class="toolbar-tool-btn" data-tool="code" title="Inline Code">`code`</button>
+    <button class="toolbar-tool-btn" data-tool="codeblock" title="Code Block">&lt;/&gt;</button>
+    <button class="toolbar-tool-btn" data-tool="diff" title="Insert Git Diff" style="color: var(--accent-sage);">+diff-</button>
+    <button class="toolbar-tool-btn" data-tool="quote" title="Blockquote">❝</button>
+  </div>
+
+  <!-- Split Screen Studio -->
+  <div class="studio-wrapper">
+    
+    <!-- Left: Source Editor -->
+    <div class="studio-pane studio-editor">
+      <!-- Frontmatter -->
+      <div style="padding: var(--space-4) var(--space-6); border-bottom: 1px solid var(--border-subtle); background-color: var(--bg-surface);">
+        <input type="text" id="postTitleInput" class="form-input" style="font-size: 1.25rem; font-weight: 700; border: none; padding: 0.25rem 0; background: transparent;" value="Zero-Copy Serialization in Fastify v5 with Avro">
+        <div style="display: flex; gap: var(--space-4); margin-top: 0.35rem; font-family: var(--font-mono); font-size: 0.725rem; color: var(--text-muted);">
+          <span>slug: /dev-logs/zero-copy-fastify-avro</span>
+          <span>tags: [fastify, rust, serialization, latency]</span>
+        </div>
+      </div>
+
+      <!-- Textarea -->
+      <textarea id="markdownSource" class="editor-textarea" spellcheck="false">## 1. Motivation & GC Pressure
+
+When scaling our event telemetry ingestion pipeline to handle 100k requests/sec, heap snapshots exposed a critical bottleneck: standard `JSON.stringify()` was triggering frequent V8 minor GC pauses, accumulating over 420ms of stop-the-world latency every 30 seconds.
+
+### The Problem With Native JSON Serialization
+In high-throughput microservices, serializing large payloads repeatedly produces thousands of micro-allocations.
+
+```typescript
+// Legacy allocation path
+export async function handlePayload(req: FastifyRequest, reply: FastifyReply) {
+  const data = await fetchDataset();
+  return reply.send(JSON.stringify(data)); // High GC strain
+}
+```
+
+### Static Avro Buffer Migration
+By compiling our payload schema ahead-of-time using Avro and serializing directly into pre-allocated Node.js `Buffer` segments, throughput jumped from 41k req/sec to 128k req/sec.
+
+```diff
+- const jsonOutput = JSON.stringify(metrics);
++ const avroBuffer = avroSchema.toBuffer(metrics);
++ return reply.header('Content-Type', 'application/octet-stream').send(avroBuffer);
+```
+
+### Production Rollout Checklist
+- [x] Canary deploy across Europe-West clusters
+- [x] Verify p99 latency drop under autocannon load
+- [ ] Merge upstream to main branch
+</textarea>
+    </div>
+
+    <!-- Right: Live Rendered Preview -->
+    <div class="studio-pane studio-preview">
+      <div style="max-width: 680px; margin: 0 auto; width: 100%;">
+        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: var(--space-4);">
+          <span class="badge badge-dev" id="previewBadge">Dev Logs Preview</span>
+          <span class="text-muted" style="font-family: var(--font-mono); font-size: 0.75rem;" id="previewReadTime">3 min read</span>
+        </div>
+        <h1 id="previewTitle" style="font-size: 1.85rem; font-weight: 800; letter-spacing: -0.025em; margin-bottom: var(--space-6); color: var(--text-main);">
+          Zero-Copy Serialization in Fastify v5 with Avro
+        </h1>
+        <div id="previewBody" class="prose" style="color: var(--text-secondary); line-height: 1.75; font-size: 0.95rem;">
+          <!-- Dynamically updated -->
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bottom Telemetry Status Strip -->
+  <div class="status-strip">
+    <div style="display: flex; gap: var(--space-5);">
+      <span id="wordCount">142 words</span>
+      <span>branch: <strong>feat/zero-copy</strong></span>
+      <span>commit: <strong>8f4c20b</strong></span>
+    </div>
+    <div style="display: flex; gap: var(--space-4);">
+      <span>UTF-8</span>
+      <span>Markdown Engine v2</span>
+      <span style="color: var(--accent-sage);">● Fastify Sync Active</span>
+    </div>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script>
+    // Live Markdown Previewer
+    const src = document.getElementById('markdownSource');
+    const preview = document.getElementById('previewBody');
+    const titleIn = document.getElementById('postTitleInput');
+    const titleOut = document.getElementById('previewTitle');
+    const wordCount = document.getElementById('wordCount');
+    const readTime = document.getElementById('previewReadTime');
+
+    function renderMarkdown() {
+      const text = src.value;
+      const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+      const mins = Math.max(1, Math.ceil(words / 200));
+
+      wordCount.innerText = `${words} words`;
+      readTime.innerText = `${mins} min read`;
+      titleOut.innerText = titleIn.value || 'Untitled Push';
+
+      let html = text
+        .replace(/^### (.*$)/gim, '<h3 style="font-size: 1.2rem; font-weight: 700; color: var(--text-main); margin: 1.25rem 0 0.5rem;">$1</h3>')
+        .replace(/^## (.*$)/gim, '<h2 style="font-size: 1.45rem; font-weight: 700; color: var(--text-main); margin: 1.5rem 0 0.5rem; border-bottom: 1px solid var(--border-subtle); padding-bottom: 0.35rem;">$1</h2>')
+        .replace(/\*\*(.*)\*\*/gim, '<strong>$1</strong>')
+        .replace(/\*(.*)\*/gim, '<em>$1</em>')
+        .replace(/`([^`]+)`/gim, '<code style="font-family: var(--font-mono); background: var(--bg-subtle); padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.85em; color: var(--brand-terracotta);">$1</code>')
+        .replace(/\n\n/gim, '</p><p style="margin-bottom: 1rem;">')
+        .replace(/\n/gim, '<br />');
+
+      preview.innerHTML = `<p style="margin-bottom: 1rem;">${html}</p>`;
+    }
+
+    src.addEventListener('input', renderMarkdown);
+    titleIn.addEventListener('input', renderMarkdown);
+    renderMarkdown();
+
+    // Toolbar buttons
+    document.querySelectorAll('[data-tool]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const action = btn.getAttribute('data-tool');
+        const start = src.selectionStart;
+        const end = src.selectionEnd;
+        const selected = src.value.substring(start, end);
+        let ins = '';
+        switch (action) {
+          case 'bold': ins = `**${selected || 'bold text'}**`; break;
+          case 'italic': ins = `*${selected || 'italic text'}*`; break;
+          case 'h2': ins = `\n## ${selected || 'Section Title'}\n`; break;
+          case 'code': ins = `\`${selected || 'code'}\``; break;
+          case 'codeblock': ins = `\n\`\`\`typescript\n${selected || '// code'}\n\`\`\`\n`; break;
+          case 'diff': ins = `\n\`\`\`diff\n- old code\n+ new code\n\`\`\`\n`; break;
+          case 'quote': ins = `\n> ${selected || 'Quote'}\n`; break;
+        }
+        src.setRangeText(ins, start, end, 'end');
+        src.focus();
+        renderMarkdown();
+      });
+    });
+  </script>
+</body>
+</html>

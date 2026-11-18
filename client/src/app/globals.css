@@ -1,0 +1,9 @@
+/* ==========================================================================
+   PENDING PUSH — GLOBAL STYLES FOR NEXT.JS APP ROUTER
+   Bundled from design-system.css, navbar-footer.css, pages.css, syntax-theme.css
+   ========================================================================== */
+
+@import "../../design/css/design-system.css";
+@import "../../design/css/navbar-footer.css";
+@import "../../design/css/pages.css";
+@import "../../design/css/syntax-theme.css";

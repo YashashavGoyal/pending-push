@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Building a Public Insights Heatmap — Pending Push Tutorial</title>
+  <link rel="stylesheet" href="css/design-system.css">
+  <link rel="stylesheet" href="css/navbar-footer.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Lora:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header class="site-header">
+    <div class="container navbar">
+      <a href="index.html" class="brand-link">
+        <span class="brand-icon">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg>
+        </span>
+        <span>Pending Push</span>
+      </a>
+
+      <nav>
+        <ul class="spaces-nav">
+          <li class="spaces-nav-item"><a href="articles.html"><span class="icon icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg></span><span>Articles</span></a></li>
+          <li class="spaces-nav-item"><a href="dev-logs.html"><span class="icon icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></span><span>Dev Logs</span></a></li>
+          <li class="spaces-nav-item"><a href="tutorials.html" class="active"><span class="icon icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span><span>Tutorials</span></a></li>
+          <li class="spaces-nav-item"><a href="confessions.html"><span class="icon icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span><span>Confessions</span></a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="random.html" class="nav-icon-btn" title="Surprise Me"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg></span></a>
+        <button class="theme-toggle-btn nav-icon-btn"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg></span></button>
+        <div class="user-menu-wrapper">
+          <button class="user-avatar-btn"><img class="user-avatar-img" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&q=80" alt="Alex"><span style="font-size: 0.825rem; font-weight: 600; color: var(--text-main);">Alex</span></button>
+          <div class="dropdown-menu">
+            <a href="editor.html" class="dropdown-link"><span class="icon icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></span><span>Markdown Studio</span></a>
+            <a href="dashboard.html" class="dropdown-link">Author Dashboard</a>
+            <a href="profile.html" class="dropdown-link">Public Profile & Insights</a>
+            <a href="settings.html" class="dropdown-link">Settings</a>
+            <a href="preferences.html" class="dropdown-link">Preferences</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="page-wrapper">
+    <div class="container">
+
+      <!-- Breadcrumbs -->
+      <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: var(--space-4); font-size: 0.85rem; color: var(--text-muted);">
+        <a href="tutorials.html">Tutorials Hub</a>
+        <span>/</span>
+        <span style="color: var(--text-main); font-weight: 600;">Building a Heatmap</span>
+      </div>
+
+      <div class="tutorial-runner-layout">
+        
+        <!-- Left Sidebar: Steps Checklist -->
+        <aside class="tutorial-sidebar-nav">
+          <div style="margin-bottom: var(--space-4); padding-bottom: var(--space-4); border-bottom: 1px solid var(--border-subtle);">
+            <div style="font-size: 0.775rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Your Progress</div>
+            <div class="tutorial-progress-text" style="font-size: 0.885rem; font-weight: 700; color: var(--accent-sage); margin: 0.35rem 0;">
+              0 of 4 steps completed (0%)
+            </div>
+            <div class="tutorial-progress-mini">
+              <div class="tutorial-progress-fill" style="width: 0%; height: 100%; background: linear-gradient(90deg, var(--accent-sage), #10b981); border-radius: var(--radius-full);"></div>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 0.35rem;">
+            <a href="#step-1" class="tutorial-step-item active">
+              <span class="icon icon-sm check-indicator" style="border: 1.5px solid var(--border-strong); border-radius: 4px; width: 1.15rem; height: 1.15rem;"></span>
+              <span>1. CSS Grid Layout</span>
+            </a>
+            <a href="#step-2" class="tutorial-step-item">
+              <span class="icon icon-sm check-indicator" style="border: 1.5px solid var(--border-strong); border-radius: 4px; width: 1.15rem; height: 1.15rem;"></span>
+              <span>2. Quantile Bins</span>
+            </a>
+            <a href="#step-3" class="tutorial-step-item">
+              <span class="icon icon-sm check-indicator" style="border: 1.5px solid var(--border-strong); border-radius: 4px; width: 1.15rem; height: 1.15rem;"></span>
+              <span>3. Fastify Service</span>
+            </a>
+            <a href="#step-4" class="tutorial-step-item">
+              <span class="icon icon-sm check-indicator" style="border: 1.5px solid var(--border-strong); border-radius: 4px; width: 1.15rem; height: 1.15rem;"></span>
+              <span>4. Accessibility Spec</span>
+            </a>
+          </div>
+
+          <div style="margin-top: var(--space-6); padding-top: var(--space-4); border-top: 1px solid var(--border-subtle); font-size: 0.8rem; color: var(--text-muted);">
+            <div>Author: Alex Rivera</div>
+            <div>Completions: 1,450 developers</div>
+          </div>
+        </aside>
+
+        <!-- Right Content: Step Execution -->
+        <article>
+          
+          <header style="margin-bottom: var(--space-6);">
+            <div style="display: flex; gap: var(--space-2); margin-bottom: var(--space-3);">
+              <span class="badge badge-tutorial">Step-by-step masterclass</span>
+              <span class="badge badge-neutral">⏱️ ~25 Mins</span>
+            </div>
+            <h1 class="title-page">
+              Building a High-Performance Public Insights Heatmap from Scratch
+            </h1>
+            <p class="text-secondary" style="font-size: 1.05rem; margin-top: var(--space-2); line-height: 1.6;">
+              Learn how to visualize readership activity grids using pure CSS Grid, minimal DOM memory overhead, and Fastify aggregation endpoints.
+            </p>
+          </header>
+
+          <!-- Prerequisites Card -->
+          <div class="card" style="margin-bottom: var(--space-6); border-left: 4px solid var(--accent-sage);">
+            <div style="font-weight: 700; font-size: 0.95rem; margin-bottom: 0.35rem; color: var(--text-main);">Prerequisites</div>
+            <ul style="padding-left: 1.25rem; font-size: 0.885rem; color: var(--text-secondary); line-height: 1.65;">
+              <li>Node.js 18+ and a running Fastify 5.x or Next.js 15 app.</li>
+              <li>Basic knowledge of CSS Grid layout principles.</li>
+              <li>An open terminal window.</li>
+            </ul>
+          </div>
+
+          <!-- Step 1 -->
+          <section id="step-1" class="card" style="margin-bottom: var(--space-6);">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span class="badge badge-tutorial">Step 01</span>
+              <span class="text-muted" style="font-size: 0.8rem;">Est. 5 mins</span>
+            </div>
+
+            <h2 style="font-size: 1.3rem; font-weight: 700; margin: var(--space-3) 0 var(--space-2);">
+              Define the CSS Grid Activity Heatmap Layout
+            </h2>
+            <p class="text-secondary" style="font-size: 0.925rem; line-height: 1.6;">
+              To eliminate heavy third-party charting libraries (which add 150kb+ to your bundle), construct the 52-week activity grid with semantic HTML divs and CSS Grid.
+            </p>
+
+            <div class="code-container">
+              <div class="code-toolbar">
+                <span>styles/heatmap.css</span>
+                <button class="code-copy-action">
+                  <span class="icon icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg></span>
+                  <span>Copy Snippet</span>
+                </button>
+              </div>
+              <pre class="code-pre"><code>.activity-grid-52 {
+  display: grid;
+  grid-template-columns: repeat(26, 1fr);
+  gap: 6px;
+}
+
+.activity-cell {
+  aspect-ratio: 1;
+  border-radius: 4px;
+  background-color: var(--bg-subtle);
+  transition: transform 150ms ease;
+}
+
+.activity-cell:hover {
+  transform: scale(1.35);
+  outline: 2px solid var(--accent-sage);
+}</code></pre>
+            </div>
+
+            <button class="btn btn-secondary btn-sm step-check-trigger">
+              <span class="icon icon-sm check-indicator" style="border: 1.5px solid var(--border-strong); border-radius: 4px; width: 1.15rem; height: 1.15rem;"></span>
+              <span>Mark Step 1 as Done</span>
+            </button>
+          </section>
+
+          <!-- Step 2 -->
+          <section id="step-2" class="card" style="margin-bottom: var(--space-6);">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span class="badge badge-tutorial">Step 02</span>
+              <span class="text-muted" style="font-size: 0.8rem;">Est. 7 mins</span>
+            </div>
+
+            <h2 style="font-size: 1.3rem; font-weight: 700; margin: var(--space-3) 0 var(--space-2);">
+              Calculate 4-Tier Activity Intensity Levels
+            </h2>
+            <p class="text-secondary" style="font-size: 0.925rem; line-height: 1.6;">
+              Map raw event counts into 4 distinct color intensities using quantile bins.
+            </p>
+
+            <button class="btn btn-secondary btn-sm step-check-trigger">
+              <span class="icon icon-sm check-indicator" style="border: 1.5px solid var(--border-strong); border-radius: 4px; width: 1.15rem; height: 1.15rem;"></span>
+              <span>Mark Step 2 as Done</span>
+            </button>
+          </section>
+
+          <!-- Step 3 -->
+          <section id="step-3" class="card" style="margin-bottom: var(--space-6);">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span class="badge badge-tutorial">Step 03</span>
+              <span class="text-muted" style="font-size: 0.8rem;">Est. 8 mins</span>
+            </div>
+
+            <h2 style="font-size: 1.3rem; font-weight: 700; margin: var(--space-3) 0 var(--space-2);">
+              Fastify Backend Aggregation Endpoint
+            </h2>
+            <p class="text-secondary" style="font-size: 0.925rem; line-height: 1.6;">
+              Query event logs with indexed group-by queries to keep p99 response times below 15ms.
+            </p>
+
+            <button class="btn btn-secondary btn-sm step-check-trigger">
+              <span class="icon icon-sm check-indicator" style="border: 1.5px solid var(--border-strong); border-radius: 4px; width: 1.15rem; height: 1.15rem;"></span>
+              <span>Mark Step 3 as Done</span>
+            </button>
+          </section>
+
+          <!-- Step 4 -->
+          <section id="step-4" class="card" style="margin-bottom: var(--space-6);">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span class="badge badge-tutorial">Step 04</span>
+              <span class="text-muted" style="font-size: 0.8rem;">Est. 5 mins</span>
+            </div>
+
+            <h2 style="font-size: 1.3rem; font-weight: 700; margin: var(--space-3) 0 var(--space-2);">
+              Accessibility & Screen-Reader Verification
+            </h2>
+            <p class="text-secondary" style="font-size: 0.925rem; line-height: 1.6;">
+              Ensure each cell includes localized <code>aria-label</code> tags (e.g. <code>aria-label="5 reads on Nov 12"</code>).
+            </p>
+
+            <button class="btn btn-secondary btn-sm step-check-trigger">
+              <span class="icon icon-sm check-indicator" style="border: 1.5px solid var(--border-strong); border-radius: 4px; width: 1.15rem; height: 1.15rem;"></span>
+              <span>Mark Step 4 as Done</span>
+            </button>
+          </section>
+
+          <!-- Completion Banner -->
+          <div class="card" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--space-4);">
+            <div>
+              <div style="font-weight: 700; color: var(--text-main); font-size: 1.05rem;">Want to see this heatmap in action?</div>
+              <div class="text-muted" style="font-size: 0.885rem;">Check out how this looks on a public developer profile.</div>
+            </div>
+            <a href="profile.html" class="btn btn-primary btn-sm">Inspect Public Profile Heatmap →</a>
+          </div>
+
+        </article>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div>Pending Push • Tutorial Runner</div>
+      <div><a href="tutorials.html">Back to Tutorials Hub</a></div>
+    </div>
+  </footer>
+
+  <script src="js/mock-data.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/interactions.js"></script>
+</body>
+</html>

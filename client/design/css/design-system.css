@@ -1,0 +1,367 @@
+/* ==========================================================================
+   PENDING PUSH — FRANK, EASY & FRIENDLY DEVELOPER DESIGN SYSTEM
+   Clean, welcoming, warm & approachable aesthetic.
+   Comfortable typography, soft rounded corners, warm sunset tangerine (#f97316),
+   cozy warm neutrals, and zero cold corporate intimidation.
+   ========================================================================== */
+
+:root {
+  /* Warm, Friendly & Clean Light Mode (Default) */
+  --bg-app: #fafafa;                /* Soft, warm eggshell canvas */
+  --bg-surface: #ffffff;            /* Pure white elevated cards */
+  --bg-subtle: #f4f4f5;             /* Soft neutral container fill */
+  --bg-card: #ffffff;
+  --bg-card-hover: #ffffff;
+  --bg-code: #18181b;               /* Cozy dark zinc for code */
+  --bg-input: #ffffff;
+
+  --text-main: #18181b;             /* Friendly deep charcoal (not harsh pure black) */
+  --text-secondary: #52525b;        /* Highly readable warm slate */
+  --text-muted: #71717a;            /* Friendly helper metadata */
+  --text-faint: #d4d4d8;
+  --text-inverse: #ffffff;
+
+  --border-subtle: #e4e4e7;
+  --border-card: #e4e4e7;
+  --border-strong: #d4d4d8;
+  --border-focus: #f97316;
+
+  /* Warm Friendly Sunset Tangerine & Functional Accents */
+  --brand-terracotta: #f97316;       /* Warm inviting sunset orange */
+  --brand-terracotta-hover: #ea580c;
+  --brand-terracotta-subtle: rgba(249, 115, 22, 0.1);
+
+  --accent-sage: #10b981;            /* Friendly fresh emerald for tutorials */
+  --accent-sage-subtle: rgba(16, 185, 129, 0.1);
+
+  --accent-honey: #f59e0b;           /* Warm sunny amber */
+  --accent-honey-subtle: rgba(245, 158, 11, 0.1);
+
+  --accent-rose: #f43f5e;            /* Friendly coral rose for confessions */
+  --accent-rose-subtle: rgba(244, 63, 94, 0.1);
+
+  --accent-blue: #3b82f6;            /* Friendly sky blue */
+  --accent-blue-subtle: rgba(59, 130, 246, 0.1);
+
+  /* Typography */
+  --font-display: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-serif: 'Lora', 'Charter', Georgia, serif;
+  --font-mono: 'JetBrains Mono', 'SFMono-Regular', Menlo, Consolas, monospace;
+
+  /* Friendly Rounded Radii (Welcoming & Approachable) */
+  --radius-xs: 6px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-full: 9999px;
+
+  /* Spacing */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+
+  /* Layout Widths */
+  --max-w-reading: 760px;
+  --max-w-wide: 1200px;
+  --max-w-screen: 1360px;
+
+  /* Gentle Soft Warm Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+  --shadow-hover: 0 10px 25px -5px rgba(0, 0, 0, 0.07), 0 8px 10px -6px rgba(0, 0, 0, 0.03);
+  --shadow-popup: 0 20px 35px -8px rgba(0, 0, 0, 0.12), 0 1px 3px rgba(0, 0, 0, 0.05);
+
+  --transition-fast: 140ms ease;
+  --transition-normal: 220ms ease;
+}
+
+/* Cozy Warm-Zinc Dark Theme (Soft on eyes, zero cold obsidian void) */
+[data-theme="dark"] {
+  --bg-app: #18181b;                /* Cozy warm-zinc 900 */
+  --bg-surface: #27272a;            /* Elevated warm card surface */
+  --bg-subtle: #202024;             /* Soft container fill */
+  --bg-card: #222226;
+  --bg-card-hover: #29292f;
+  --bg-code: #121214;
+  --bg-input: #1c1c20;
+
+  --text-main: #f4f4f5;             /* Softer white text */
+  --text-secondary: #a1a1aa;        /* Warm zinc slate */
+  --text-muted: #71717a;
+  --text-faint: #3f3f46;
+  --text-inverse: #18181b;
+
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-card: rgba(255, 255, 255, 0.09);
+  --border-strong: rgba(255, 255, 255, 0.18);
+  --border-focus: #f97316;
+
+  --brand-terracotta: #fb923c;       /* Warm glowing tangerine */
+  --brand-terracotta-hover: #f97316;
+  --brand-terracotta-subtle: rgba(251, 146, 60, 0.15);
+
+  --accent-sage: #34d399;
+  --accent-sage-subtle: rgba(52, 211, 153, 0.15);
+
+  --accent-honey: #fbbf24;
+  --accent-honey-subtle: rgba(251, 191, 36, 0.15);
+
+  --accent-rose: #fb7185;
+  --accent-rose-subtle: rgba(251, 113, 133, 0.15);
+
+  --accent-blue: #60a5fa;
+  --accent-blue-subtle: rgba(96, 165, 250, 0.15);
+
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.3), 0 0 0 1px var(--border-card);
+  --shadow-hover: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 0 0 1px var(--border-strong);
+  --shadow-popup: 0 20px 40px -10px rgba(0, 0, 0, 0.6), 0 0 0 1px var(--border-subtle);
+}
+
+/* Base Reset & Comfortable Body */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-family: var(--font-body);
+  font-size: 15.5px;
+  line-height: 1.65;
+  color-scheme: light dark;
+}
+
+body {
+  background-color: var(--bg-app);
+  color: var(--text-main);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* SVG Icon Helper */
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.15rem;
+  height: 1.15rem;
+  stroke-width: 1.85;
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+
+.icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.icon-sm { width: 0.95rem; height: 0.95rem; }
+.icon-lg { width: 1.4rem; height: 1.4rem; }
+
+/* Containers */
+.container {
+  width: 100%;
+  max-width: var(--max-w-wide);
+  margin: 0 auto;
+  padding: 0 var(--space-6);
+}
+
+.container-narrow {
+  width: 100%;
+  max-width: var(--max-w-reading);
+  margin: 0 auto;
+  padding: 0 var(--space-6);
+}
+
+.page-wrapper {
+  flex: 1;
+  padding: var(--space-6) 0 var(--space-12);
+}
+
+/* Friendly Typography Hierarchy */
+.title-hero {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 3.8vw, 3.1rem);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+  color: var(--text-main);
+}
+
+.title-page {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 2.8vw, 2.2rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.28;
+  color: var(--text-main);
+}
+
+.title-section {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  color: var(--text-main);
+}
+
+.text-muted { color: var(--text-muted); }
+.text-secondary { color: var(--text-secondary); }
+
+/* Friendly & Tactile Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.55rem 1.15rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.btn-primary {
+  background-color: var(--brand-terracotta);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(249, 115, 22, 0.25);
+}
+
+.btn-primary:hover {
+  background-color: var(--brand-terracotta-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(249, 115, 22, 0.35);
+}
+
+.btn-secondary {
+  background-color: var(--bg-surface);
+  color: var(--text-main);
+  border: 1px solid var(--border-card);
+}
+
+.btn-secondary:hover {
+  border-color: var(--border-strong);
+  background-color: var(--bg-subtle);
+  transform: translateY(-1px);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-secondary);
+}
+
+.btn-ghost:hover {
+  background-color: var(--bg-subtle);
+  color: var(--text-main);
+}
+
+.btn-sm {
+  padding: 0.38rem 0.85rem;
+  font-size: 0.825rem;
+  border-radius: var(--radius-sm);
+}
+
+/* Badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.22rem 0.65rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  border-radius: var(--radius-full);
+  letter-spacing: 0.01em;
+}
+
+.badge-neutral {
+  background-color: var(--bg-subtle);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+}
+
+.badge-dev {
+  background-color: var(--brand-terracotta-subtle);
+  color: var(--brand-terracotta);
+  border: 1px solid rgba(249, 115, 22, 0.25);
+}
+
+.badge-tutorial {
+  background-color: var(--accent-sage-subtle);
+  color: var(--accent-sage);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+}
+
+.badge-confession {
+  background-color: var(--accent-rose-subtle);
+  color: var(--accent-rose);
+  border: 1px solid rgba(244, 63, 94, 0.25);
+}
+
+/* Cards */
+.card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-card);
+  transition: all var(--transition-normal);
+}
+
+.card-hover:hover {
+  border-color: var(--border-strong);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+}
+
+/* Form Inputs */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+.form-label {
+  font-size: 0.825rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.form-input, .form-textarea, .form-select {
+  width: 100%;
+  padding: 0.6rem 0.95rem;
+  background-color: var(--bg-input);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-md);
+  color: var(--text-main);
+  outline: none;
+  font-size: 0.885rem;
+  font-family: var(--font-body);
+  transition: border-color var(--transition-fast);
+}
+
+.form-input:focus, .form-textarea:focus, .form-select:focus {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px var(--brand-terracotta-subtle);
+}
