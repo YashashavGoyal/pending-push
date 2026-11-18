@@ -2,12 +2,15 @@
 
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useTheme } from '@/Components/ThemeProvider';
 import { useAuth } from '@/lib/auth-context';
+import { createPost } from '@/lib/api';
 
 export default function StudioPage() {
+  const router = useRouter();
   const { theme, toggleTheme } = useTheme();
-  const { user } = useAuth();
+  const { user, token } = useAuth();
 
   const [title, setTitle] = useState('Zero-Copy Serialization in Fastify v5 with Avro');
   const [selectedSpace, setSelectedSpace] = useState('dev-logs');
@@ -213,9 +216,37 @@ End of Technical RFC • Ready for staging.
     }, 0);
   };
 
-  const handlePush = () => {
+  const [isPublishing, setIsPublishing] = useState(false);
+  const [publishNotification, setPublishNotification] = useState<string | null>(null);
+
+  const handlePush = async () => {
+    if (!title.trim() || !source.trim()) return;
+
+    setIsPublishing(true);
+    const formatMap: Record<string, string> = {
+      'dev-logs': 'dev_log',
+      'articles': 'article',
+      'tutorials': 'tutorial',
+      'confessions': 'confession',
+    };
+
+    const res = await createPost({
+      title: title.trim(),
+      content: source.trim(),
+      summary: source.replace(/[#*`>]/g, '').slice(0, 160).trim(),
+      format: formatMap[selectedSpace] || 'dev_log',
+    }, token);
+
+    setIsPublishing(false);
     setIsPushed(true);
-    setTimeout(() => setIsPushed(false), 3000);
+
+    const targetSlug = res.post?.slug || title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    setPublishNotification(`✓ Push committed to ${selectedSpace.toUpperCase()}! Redirecting...`);
+
+    setTimeout(() => {
+      const spacePath = selectedSpace === 'dev-logs' ? '/dev-logs' : selectedSpace === 'articles' ? '/articles' : selectedSpace === 'tutorials' ? '/tutorials' : '/confessions';
+      router.push(`${spacePath}/${targetSlug}`);
+    }, 1200);
   };
 
   const handleCopyCode = (text: string, id: string) => {
@@ -634,19 +665,41 @@ End of Technical RFC • Ready for staging.
           {/* Primary Action Button */}
           <button
             onClick={handlePush}
+            disabled={isPublishing}
             className="btn btn-primary btn-sm"
-            style={{ borderRadius: 'var(--radius-full)', padding: '0.35rem 1rem', fontWeight: 700 }}
+            style={{ borderRadius: 'var(--radius-full)', padding: '0.35rem 1rem', fontWeight: 700, opacity: isPublishing ? 0.7 : 1 }}
           >
             <span className="icon icon-sm">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <polyline points="20 6 9 17 4 12" />
               </svg>
             </span>
-            <span>{isPushed ? 'Staged & Pushed! ✓' : 'Commit & Push'}</span>
+            <span>{isPublishing ? 'Publishing...' : isPushed ? 'Staged & Pushed! ✓' : 'Commit & Push'}</span>
           </button>
 
         </div>
       </header>
+
+      {/* Publish Toast Notification */}
+      {publishNotification && (
+        <div
+          style={{
+            backgroundColor: 'var(--brand-terracotta)',
+            color: '#ffffff',
+            padding: '0.45rem 1.25rem',
+            fontSize: '0.825rem',
+            fontWeight: 700,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            boxShadow: 'var(--shadow-sm)',
+            zIndex: 110
+          }}
+        >
+          <span>{publishNotification}</span>
+          <span style={{ fontSize: '0.75rem', opacity: 0.85 }}>Fastify 5 REST API</span>
+        </div>
+      )}
 
       {/* 2. MARKDOWN FORMATTING & SECTION NAVIGATION TOOLBAR */}
       <div
