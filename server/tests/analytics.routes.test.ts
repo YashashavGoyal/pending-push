@@ -147,6 +147,23 @@ describe('Analytics & Admin HTTP Endpoints', () => {
     });
   });
 
+  describe('GET /api/v1/admin/users', () => {
+    it('should return enriched users with postsCount when queried by admin', async () => {
+      const res = await app.inject({
+        method: 'GET',
+        url: '/api/v1/admin/users',
+        headers: { authorization: `Bearer ${adminToken}` },
+      });
+
+      expect(res.statusCode).toBe(200);
+      const body = JSON.parse(res.body);
+      expect(body.success).toBe(true);
+      expect(body.users).toBeDefined();
+      expect(body.users.length).toBeGreaterThan(0);
+      expect(body.users[0].postsCount).toBeDefined();
+    });
+  });
+
   describe('PATCH /api/v1/admin/users/:id/role', () => {
     it('should update role of a target user', async () => {
       const res = await app.inject({

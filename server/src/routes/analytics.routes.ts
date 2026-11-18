@@ -1,8 +1,9 @@
 import { FastifyInstance } from 'fastify';
 import { AnalyticsController } from '../controllers/analytics.controller.js';
-import { authPreHandler, optionalAuthPreHandler, adminPreHandler } from '../middleware/auth.middleware.js';
-import { validateBody } from '../middleware/validate.middleware.js';
-import { updateUserRoleSchema } from '../validators/analytics.validator.js';
+import { authPreHandler, optionalAuthPreHandler } from '../middleware/auth.middleware.js';
+import { adminPreHandler } from '../middleware/admin.middleware.js';
+import { validateBody, validateParams } from '../middleware/validate.middleware.js';
+import { updateUserRoleSchema, userIdParamSchema } from '../validators/analytics.validator.js';
 
 export const registerAnalyticsRoutes = (
   fastify: FastifyInstance,
@@ -50,7 +51,7 @@ export const registerAnalyticsRoutes = (
   fastify.patch(
     '/admin/users/:id/role',
     {
-      preHandler: [adminPreHandler, validateBody(updateUserRoleSchema)],
+      preHandler: [adminPreHandler, validateParams(userIdParamSchema), validateBody(updateUserRoleSchema)],
       schema: {
         description: 'Update a user role between user and admin (Admin only)',
         tags: ['Admin & Moderation'],

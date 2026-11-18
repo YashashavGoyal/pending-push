@@ -1,7 +1,7 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 import jwt from 'jsonwebtoken';
 import { config } from '../config/env.js';
-import { UnauthorizedError, ForbiddenError } from '../errors/app-error.js';
+import { UnauthorizedError } from '../errors/app-error.js';
 import { AuthPayload } from '../types/index.js';
 
 export const authPreHandler = async (request: FastifyRequest, _reply: FastifyReply): Promise<void> => {
@@ -52,12 +52,5 @@ export const optionalAuthPreHandler = async (request: FastifyRequest, _reply: Fa
     }
   } catch {
     // Ignore token errors on optional auth routes
-  }
-};
-
-export const adminPreHandler = async (request: FastifyRequest, reply: FastifyReply): Promise<void> => {
-  await authPreHandler(request, reply);
-  if (request.user?.role !== 'admin') {
-    throw new ForbiddenError('Administrator privileges required');
   }
 };

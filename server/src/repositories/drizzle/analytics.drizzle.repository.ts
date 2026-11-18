@@ -25,7 +25,7 @@ export class AnalyticsDrizzleRepository implements IAnalyticsRepository {
     // 1. Published posts
     const postRows = await db
       .select({
-        day: sql<string>`TO_CHAR(${posts.publishedAt}, 'YYYY-MM-DD')`,
+        day: sql<string>`TO_CHAR(${posts.publishedAt} AT TIME ZONE 'UTC', 'YYYY-MM-DD')`,
         count: sql<number>`COUNT(*)::int`,
       })
       .from(posts)
@@ -38,7 +38,7 @@ export class AnalyticsDrizzleRepository implements IAnalyticsRepository {
           lte(posts.publishedAt, endDate)
         )
       )
-      .groupBy(sql`TO_CHAR(${posts.publishedAt}, 'YYYY-MM-DD')`);
+      .groupBy(sql`TO_CHAR(${posts.publishedAt} AT TIME ZONE 'UTC', 'YYYY-MM-DD')`);
 
     for (const r of postRows) {
       if (r.day) {
@@ -49,7 +49,7 @@ export class AnalyticsDrizzleRepository implements IAnalyticsRepository {
     // 2. Comments contributed
     const commentRows = await db
       .select({
-        day: sql<string>`TO_CHAR(${comments.createdAt}, 'YYYY-MM-DD')`,
+        day: sql<string>`TO_CHAR(${comments.createdAt} AT TIME ZONE 'UTC', 'YYYY-MM-DD')`,
         count: sql<number>`COUNT(*)::int`,
       })
       .from(comments)
@@ -61,7 +61,7 @@ export class AnalyticsDrizzleRepository implements IAnalyticsRepository {
           lte(comments.createdAt, endDate)
         )
       )
-      .groupBy(sql`TO_CHAR(${comments.createdAt}, 'YYYY-MM-DD')`);
+      .groupBy(sql`TO_CHAR(${comments.createdAt} AT TIME ZONE 'UTC', 'YYYY-MM-DD')`);
 
     for (const r of commentRows) {
       if (r.day) {
@@ -217,6 +217,9 @@ export class AnalyticsDrizzleRepository implements IAnalyticsRepository {
   }
 
   public async updateUserRole(userId: string, role: UserRole): Promise<AdminUserItem | null> {
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(userId);
+    if (!isUuid) return null;
+
     const [updated] = await db
       .update(users)
       .set({ role, updatedAt: new Date() })

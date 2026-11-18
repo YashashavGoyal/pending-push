@@ -1,17 +1,22 @@
 import { IUserRepository } from '../repositories/interfaces/user.repository.interface.js';
 import { IPostRepository } from '../repositories/interfaces/post.repository.interface.js';
 import { IContactRepository } from '../repositories/interfaces/contact.repository.interface.js';
+import { IAnalyticsRepository } from '../repositories/interfaces/analytics.repository.interface.js';
 import { NotFoundError } from '../errors/app-error.js';
-import { User, Post, ContactMessage, PaginatedResult } from '../types/index.js';
+import { User, AdminUserItem, Post, ContactMessage, PaginatedResult } from '../types/index.js';
 
 export class AdminService {
   constructor(
     private readonly userRepository: IUserRepository,
     private readonly postRepository: IPostRepository,
-    private readonly contactRepository: IContactRepository
+    private readonly contactRepository: IContactRepository,
+    private readonly analyticsRepository?: IAnalyticsRepository
   ) {}
 
-  public async getAllUsers(limit = 50, cursor?: string): Promise<PaginatedResult<User>> {
+  public async getAllUsers(limit = 50, cursor?: string): Promise<PaginatedResult<User | AdminUserItem>> {
+    if (this.analyticsRepository) {
+      return this.analyticsRepository.getAdminUsers({ limit, cursor });
+    }
     return this.userRepository.findAll({ limit, cursor });
   }
 

@@ -6,4 +6,9 @@ export const updateUserRoleSchema = z.object({
   }),
 });
 
+export const userIdParamSchema = z.object({
+  id: z.string().min(1, { message: 'User ID is required' }),
+});
+
 export type UpdateUserRoleInput = z.infer<typeof updateUserRoleSchema>;
+export type UserIdParamInput = z.infer<typeof userIdParamSchema>;

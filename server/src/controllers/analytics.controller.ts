@@ -42,23 +42,6 @@ export class AnalyticsController {
     });
   };
 
-  public getAdminUsers = async (request: FastifyRequest, reply: FastifyReply): Promise<void> => {
-    const query = request.query as { limit?: string; cursor?: string };
-    const limit = parseInt(query.limit || '20', 10);
-
-    const result = await this.analyticsService.getAdminUsers({
-      limit,
-      cursor: query.cursor,
-    });
-
-    reply.status(200).send({
-      success: true,
-      users: result.items,
-      hasMore: result.hasMore,
-      nextCursor: result.nextCursor,
-    });
-  };
-
   public updateUserRole = async (request: FastifyRequest, reply: FastifyReply): Promise<void> => {
     const adminId = request.userId;
     if (!adminId) throw new UnauthorizedError('Unauthorized');

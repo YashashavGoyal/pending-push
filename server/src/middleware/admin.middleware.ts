@@ -1,12 +1,13 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
-import { ForbiddenError, UnauthorizedError } from '../errors/app-error.js';
+import { ForbiddenError } from '../errors/app-error.js';
+import { authPreHandler } from './auth.middleware.js';
 
-export const adminPreHandler = async (request: FastifyRequest, _reply: FastifyReply): Promise<void> => {
+export const adminPreHandler = async (request: FastifyRequest, reply: FastifyReply): Promise<void> => {
   if (!request.user) {
-    throw new UnauthorizedError('User must be authenticated');
+    await authPreHandler(request, reply);
   }
 
-  if (request.user.role !== 'admin') {
+  if (request.user?.role !== 'admin') {
     throw new ForbiddenError('Access denied: administrator privileges required');
   }
 };
