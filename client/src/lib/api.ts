@@ -47,6 +47,19 @@ export async function fetchPostBySlug(slug: string): Promise<Post | null> {
   }
 }
 
+export async function fetchRandomPost(): Promise<Post> {
+  try {
+    const res = await fetch(`${API_BASE}/api/post/random`);
+    if (!res.ok) throw new Error('Random post fetch failed');
+    const data = await res.json();
+    if (data.post) return data.post;
+    return data;
+  } catch {
+    const idx = Math.floor(Math.random() * FEED_STORIES.length);
+    return FEED_STORIES[idx] || FEATURED_STORY;
+  }
+}
+
 export async function createPost(
   input: { title: string; content: string; summary?: string; format?: string; coverImage?: string; isAnonymous?: boolean },
   token?: string | null
