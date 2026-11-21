@@ -5,16 +5,101 @@ import { validateBody } from '../middleware/validate.middleware.js';
 import { createPostSchema, updatePostSchema } from '../validators/post.validator.js';
 
 export const registerPostRoutes = (fastify: FastifyInstance, postController: PostController): void => {
+  // Author Drafts (Placed before parametric routes)
+  fastify.get(
+    '/drafts',
+    {
+      preHandler: authPreHandler,
+      schema: {
+        description: 'Get all draft posts for authenticated author',
+        tags: ['Posts', 'Author Studio'],
+      },
+    },
+    postController.getDrafts
+  );
+
   fastify.post(
     '/new',
     {
       preHandler: [authPreHandler, validateBody(createPostSchema)],
       schema: {
-        description: 'Create a new blog post',
-        tags: ['Posts'],
+        description: 'Create a new blog post or draft',
+        tags: ['Posts', 'Author Studio'],
       },
     },
     postController.create
+  );
+
+  fastify.post(
+    '/',
+    {
+      preHandler: [authPreHandler, validateBody(createPostSchema)],
+      schema: {
+        description: 'Create a new blog post or draft (RESTful)',
+        tags: ['Posts', 'Author Studio'],
+      },
+    },
+    postController.create
+  );
+
+  fastify.post(
+    '/:id/publish',
+    {
+      preHandler: authPreHandler,
+      schema: {
+        description: 'Publish an existing draft post',
+        tags: ['Posts', 'Author Studio'],
+      },
+    },
+    postController.publish
+  );
+
+  fastify.post(
+    '/:id/unpublish',
+    {
+      preHandler: authPreHandler,
+      schema: {
+        description: 'Unpublish a post back to draft',
+        tags: ['Posts', 'Author Studio'],
+      },
+    },
+    postController.unpublish
+  );
+
+  fastify.get(
+    '/:id/edit',
+    {
+      preHandler: authPreHandler,
+      schema: {
+        description: 'Fetch post/draft for author studio editing',
+        tags: ['Posts', 'Author Studio'],
+      },
+    },
+    postController.getForEdit
+  );
+
+  fastify.put(
+    '/:id',
+    {
+      preHandler: [authPreHandler, validateBody(updatePostSchema)],
+      schema: {
+        description: 'Update an existing blog post or draft (RESTful PUT)',
+        tags: ['Posts', 'Author Studio'],
+      },
+    },
+    postController.update
+  );
+
+  fastify.patch(
+    '/:id',
+    {
+      preHandler: [authPreHandler, validateBody(updatePostSchema)],
+      schema: {
+        description: 'Update an existing blog post or draft (RESTful PATCH)',
+        tags: ['Posts', 'Author Studio'],
+      },
+    },
+    postController.update
   );
 
   fastify.patch(
@@ -22,7 +107,7 @@ export const registerPostRoutes = (fastify: FastifyInstance, postController: Pos
     {
       preHandler: [authPreHandler, validateBody(updatePostSchema)],
       schema: {
-        description: 'Edit an existing blog post',
+        description: 'Edit an existing blog post (legacy)',
         tags: ['Posts'],
       },
     },
@@ -30,11 +115,23 @@ export const registerPostRoutes = (fastify: FastifyInstance, postController: Pos
   );
 
   fastify.delete(
+    '/:id',
+    {
+      preHandler: authPreHandler,
+      schema: {
+        description: 'Delete a blog post (RESTful)',
+        tags: ['Posts', 'Author Studio'],
+      },
+    },
+    postController.delete
+  );
+
+  fastify.delete(
     '/:id/delete',
     {
       preHandler: authPreHandler,
       schema: {
-        description: 'Delete a blog post',
+        description: 'Delete a blog post (legacy)',
         tags: ['Posts'],
       },
     },

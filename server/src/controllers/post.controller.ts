@@ -75,16 +75,86 @@ export class PostController {
     });
   };
 
+  public getDrafts = async (request: FastifyRequest, reply: FastifyReply): Promise<void> => {
+    const userId = request.userId;
+    if (!userId) {
+      throw new UnauthorizedError('Unauthorized');
+    }
+
+    const query = request.query as { limit?: string; cursor?: string };
+    const limit = parseInt(query.limit || '20', 10);
+    const result = await this.postService.getAuthorDrafts(userId, limit, query.cursor);
+
+    reply.status(200).send({
+      success: true,
+      message: 'Drafts fetched successfully',
+      drafts: result.items,
+      hasMore: result.hasMore,
+      nextCursor: result.nextCursor,
+    });
+  };
+
+  public publish = async (request: FastifyRequest, reply: FastifyReply): Promise<void> => {
+    const userId = request.userId;
+    const userRole = request.user?.role || 'user';
+    const params = request.params as { id: string };
+
+    if (!userId) {
+      throw new UnauthorizedError('Unauthorized');
+    }
+
+    const post = await this.postService.publishPost(params.id, userId, userRole);
+    reply.status(200).send({
+      success: true,
+      message: 'Post Published Successfully',
+      post,
+    });
+  };
+
+  public unpublish = async (request: FastifyRequest, reply: FastifyReply): Promise<void> => {
+    const userId = request.userId;
+    const userRole = request.user?.role || 'user';
+    const params = request.params as { id: string };
+
+    if (!userId) {
+      throw new UnauthorizedError('Unauthorized');
+    }
+
+    const post = await this.postService.unpublishPost(params.id, userId, userRole);
+    reply.status(200).send({
+      success: true,
+      message: 'Post Unpublished to Drafts Successfully',
+      post,
+    });
+  };
+
+  public getForEdit = async (request: FastifyRequest, reply: FastifyReply): Promise<void> => {
+    const userId = request.userId;
+    const userRole = request.user?.role || 'user';
+    const params = request.params as { id: string };
+
+    if (!userId) {
+      throw new UnauthorizedError('Unauthorized');
+    }
+
+    const post = await this.postService.getPostForEdit(params.id, userId, userRole);
+    reply.status(200).send({
+      success: true,
+      post,
+    });
+  };
+
   public getFeed = async (request: FastifyRequest, reply: FastifyReply): Promise<void> => {
-    const query = request.query as { limit?: string; cursor?: string; format?: string; authorId?: string };
+    const query = request.query as { limit?: string; cursor?: string; format?: string; authorId?: string; tag?: string };
     const params = request.params as { num?: string };
 
     const limit = parseInt(query.limit || params.num || '10', 10);
     const cursor = query.cursor;
     const format = query.format as any;
     const authorId = query.authorId;
+    const tag = query.tag;
 
-    const result = await this.postService.getFeed({ limit, cursor, format, authorId });
+    const result = await this.postService.getFeed({ limit, cursor, format, authorId, tag });
     reply.status(200).send({
       success: true,
       message: 'Posts Fetched Successfully',

@@ -13,6 +13,9 @@ export class PostService {
     // Confessions are anonymous by default
     const isAnonymous = format === 'confession' ? true : (input.isAnonymous ?? false);
 
+    const isPublished = input.status ? input.status === 'published' : (input.published ?? true);
+    const status = input.status || (isPublished ? 'published' : 'draft');
+
     return this.postRepository.create({
       title: input.title,
       slug,
@@ -21,7 +24,9 @@ export class PostService {
       coverImage: input.coverImage || null,
       format,
       isAnonymous,
-      published: input.published ?? true,
+      published: isPublished,
+      status,
+      tags: input.tags,
       readingTimeMinutes,
       authorId,
       config: input.config,
@@ -65,6 +70,63 @@ export class PostService {
     }
 
     return updated;
+  }
+
+  public async publishPost(postId: string, userId: string, userRole: 'user' | 'admin'): Promise<Post> {
+    const post = await this.postRepository.findById(postId);
+    if (!post) {
+      throw new NotFoundError('Post not found');
+    }
+
+    if (post.authorId !== userId && userRole !== 'admin') {
+      throw new ForbiddenError('You are not authorized to publish this post');
+    }
+
+    const published = await this.postRepository.publish(postId);
+    if (!published) {
+      throw new NotFoundError('Failed to publish post');
+    }
+
+    return published;
+  }
+
+  public async unpublishPost(postId: string, userId: string, userRole: 'user' | 'admin'): Promise<Post> {
+    const post = await this.postRepository.findById(postId);
+    if (!post) {
+      throw new NotFoundError('Post not found');
+    }
+
+    if (post.authorId !== userId && userRole !== 'admin') {
+      throw new ForbiddenError('You are not authorized to unpublish this post');
+    }
+
+    const unpublished = await this.postRepository.unpublish(postId);
+    if (!unpublished) {
+      throw new NotFoundError('Failed to unpublish post');
+    }
+
+    return unpublished;
+  }
+
+  public async getAuthorDrafts(
+    authorId: string,
+    limit = 20,
+    cursor?: string
+  ): Promise<PaginatedResult<Post>> {
+    return this.postRepository.findDraftsByAuthorId(authorId, { limit, cursor });
+  }
+
+  public async getPostForEdit(postId: string, userId: string, userRole: 'user' | 'admin'): Promise<Post> {
+    const post = await this.postRepository.findById(postId);
+    if (!post) {
+      throw new NotFoundError('Post not found');
+    }
+
+    if (post.authorId !== userId && userRole !== 'admin') {
+      throw new ForbiddenError('You are not authorized to view or edit this draft');
+    }
+
+    return post;
   }
 
   public async deletePost(postId: string, userId: string, userRole: 'user' | 'admin'): Promise<void> {

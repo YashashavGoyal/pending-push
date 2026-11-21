@@ -7,6 +7,8 @@ export class MockPostRepository implements IPostRepository {
   public async create(data: CreatePostData): Promise<Post> {
     const id = `post_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`;
     const now = new Date();
+    const isPublished = data.status ? data.status === 'published' : (data.published ?? true);
+
     const post: Post = {
       id,
       title: data.title,
@@ -16,14 +18,15 @@ export class MockPostRepository implements IPostRepository {
       coverImage: data.coverImage || null,
       format: data.format || 'article',
       isAnonymous: data.isAnonymous ?? false,
-      published: data.published ?? true,
+      published: isPublished,
       readingTimeMinutes: data.readingTimeMinutes,
       viewsCount: 0,
       clapsCount: 0,
       authorId: data.authorId,
+      tags: data.tags || [],
       config: data.config || {},
       metadata: data.metadata || {},
-      publishedAt: data.published ?? true ? now : null,
+      publishedAt: isPublished ? now : null,
       createdAt: now,
       updatedAt: now,
     };
@@ -60,6 +63,9 @@ export class MockPostRepository implements IPostRepository {
     if (query?.authorId) {
       items = items.filter((p) => p.authorId === query.authorId);
     }
+    if (query?.tag) {
+      items = items.filter((p) => p.tags && p.tags.some((t) => t.toLowerCase() === query.tag?.toLowerCase()));
+    }
 
     const mapped = items.map((p) => {
       const author = p.isAnonymous
@@ -77,6 +83,11 @@ export class MockPostRepository implements IPostRepository {
 
   public async findByAuthorId(authorId: string): Promise<PaginatedResult<Post>> {
     const items = Array.from(this.posts.values()).filter((p) => p.authorId === authorId);
+    return { items, hasMore: false, nextCursor: null };
+  }
+
+  public async findDraftsByAuthorId(authorId: string): Promise<PaginatedResult<Post>> {
+    const items = Array.from(this.posts.values()).filter((p) => p.authorId === authorId && !p.published);
     return { items, hasMore: false, nextCursor: null };
   }
 
@@ -110,9 +121,36 @@ export class MockPostRepository implements IPostRepository {
   public async update(id: string, data: UpdatePostData): Promise<Post | null> {
     const post = this.posts.get(id);
     if (!post) return null;
-    const updated = { ...post, ...data, updatedAt: new Date() };
+
+    const isPublished = data.status ? data.status === 'published' : (data.published !== undefined ? data.published : post.published);
+    const updated = {
+      ...post,
+      ...data,
+      published: isPublished,
+      tags: data.tags || post.tags,
+      updatedAt: new Date(),
+    };
     this.posts.set(id, updated);
     return updated;
+  }
+
+  public async publish(id: string): Promise<Post | null> {
+    const post = this.posts.get(id);
+    if (!post) return null;
+    post.published = true;
+    post.publishedAt = post.publishedAt || new Date();
+    post.updatedAt = new Date();
+    this.posts.set(id, post);
+    return post;
+  }
+
+  public async unpublish(id: string): Promise<Post | null> {
+    const post = this.posts.get(id);
+    if (!post) return null;
+    post.published = false;
+    post.updatedAt = new Date();
+    this.posts.set(id, post);
+    return post;
   }
 
   public async deleteById(id: string): Promise<boolean> {
