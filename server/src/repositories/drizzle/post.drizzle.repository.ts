@@ -1,12 +1,16 @@
-import { eq, desc, isNull, and, sql } from 'drizzle-orm';
+import { eq, desc, isNull, and, sql, inArray } from 'drizzle-orm';
 import { db } from '../../db/index.js';
-import { posts, users } from '../../db/schema/index.js';
+import { posts, users, tags, postTags } from '../../db/schema/index.js';
 import { IPostRepository, CreatePostData, UpdatePostData, FeedFilterQuery } from '../interfaces/post.repository.interface.js';
+import { ITagRepository } from '../interfaces/tag.repository.interface.js';
 import { Post, PostWithAuthor, PostFormat, PaginatedQuery, PaginatedResult } from '../../types/index.js';
 
 export class PostDrizzleRepository implements IPostRepository {
+  constructor(private readonly tagRepository?: ITagRepository) {}
+
   public async create(data: CreatePostData): Promise<Post> {
-    const isPublished = data.published ?? true;
+    const isPublished = data.status ? data.status === 'published' : (data.published ?? true);
+    const status = data.status || (isPublished ? 'published' : 'draft');
     const format = data.format || 'article';
     const isAnonymous = data.isAnonymous ?? false;
 
@@ -22,15 +26,23 @@ export class PostDrizzleRepository implements IPostRepository {
         coverImage: data.coverImage,
         format,
         isAnonymous,
-        status: isPublished ? 'published' : 'draft',
+        status,
         readingTimeMinutes: data.readingTimeMinutes,
-        publishedAt: isPublished ? new Date() : null,
+        publishedAt: status === 'published' ? new Date() : null,
         config: data.config || {},
         metadata: data.metadata || {},
       })
       .returning();
 
-    return this.mapToDomain(created);
+    let syncedTags: string[] = [];
+    if (data.tags && this.tagRepository) {
+      syncedTags = await this.tagRepository.syncPostTags(created.id, data.tags);
+    }
+
+    return {
+      ...this.mapToDomain(created),
+      tags: syncedTags,
+    };
   }
 
   public async findById(id: string): Promise<Post | null> {
@@ -40,7 +52,14 @@ export class PostDrizzleRepository implements IPostRepository {
       .where(and(eq(posts.id, id), isNull(posts.deletedAt)))
       .limit(1);
 
-    return row ? this.mapToDomain(row) : null;
+    if (!row) return null;
+
+    const postTagsList = this.tagRepository ? await this.tagRepository.getTagsForPost(row.id) : [];
+
+    return {
+      ...this.mapToDomain(row),
+      tags: postTagsList,
+    };
   }
 
   public async findBySlug(slug: string): Promise<PostWithAuthor | null> {
@@ -57,9 +76,12 @@ export class PostDrizzleRepository implements IPostRepository {
       ? { id: 'anonymous', username: 'Anonymous Developer', name: 'Anonymous', avatarUrl: null }
       : { id: row.author.id, username: row.author.username, name: row.author.name, avatarUrl: row.author.avatarUrl };
 
+    const postTagsList = this.tagRepository ? await this.tagRepository.getTagsForPost(row.id) : [];
+
     return {
       ...this.mapToDomain(row),
       author,
+      tags: postTagsList,
     };
   }
 
@@ -72,6 +94,15 @@ export class PostDrizzleRepository implements IPostRepository {
     }
     if (query?.authorId) {
       conditions.push(eq(posts.authorId, query.authorId));
+    }
+    if (query?.tag) {
+      const matchingPostIds = db
+        .select({ postId: postTags.postId })
+        .from(postTags)
+        .innerJoin(tags, eq(postTags.tagId, tags.id))
+        .where(eq(tags.slug, query.tag.toLowerCase()));
+
+      conditions.push(inArray(posts.id, matchingPostIds));
     }
 
     const rows = await db.query.posts.findMany({
@@ -86,16 +117,21 @@ export class PostDrizzleRepository implements IPostRepository {
     const hasMore = rows.length > limit;
     const items = hasMore ? rows.slice(0, limit) : rows;
 
-    const mapped: PostWithAuthor[] = items.map((r) => {
-      const author = r.isAnonymous
-        ? { id: 'anonymous', username: 'Anonymous Developer', name: 'Anonymous', avatarUrl: null }
-        : { id: r.author.id, username: r.author.username, name: r.author.name, avatarUrl: r.author.avatarUrl };
+    const mapped: PostWithAuthor[] = await Promise.all(
+      items.map(async (r) => {
+        const author = r.isAnonymous
+          ? { id: 'anonymous', username: 'Anonymous Developer', name: 'Anonymous', avatarUrl: null }
+          : { id: r.author.id, username: r.author.username, name: r.author.name, avatarUrl: r.author.avatarUrl };
 
-      return {
-        ...this.mapToDomain(r),
-        author,
-      };
-    });
+        const postTagsList = this.tagRepository ? await this.tagRepository.getTagsForPost(r.id) : [];
+
+        return {
+          ...this.mapToDomain(r),
+          author,
+          tags: postTagsList,
+        };
+      })
+    );
 
     return {
       items: mapped,
@@ -112,6 +148,27 @@ export class PostDrizzleRepository implements IPostRepository {
       .from(posts)
       .where(and(eq(posts.authorId, authorId), isNull(posts.deletedAt)))
       .orderBy(desc(posts.createdAt))
+      .limit(limit + 1);
+
+    const hasMore = rows.length > limit;
+    const items = hasMore ? rows.slice(0, limit) : rows;
+    const mapped = items.map((p) => this.mapToDomain(p));
+
+    return {
+      items: mapped,
+      hasMore,
+      nextCursor: mapped.length > 0 ? mapped[mapped.length - 1].id : null,
+    };
+  }
+
+  public async findDraftsByAuthorId(authorId: string, pagination?: PaginatedQuery): Promise<PaginatedResult<Post>> {
+    const limit = pagination?.limit || 20;
+
+    const rows = await db
+      .select()
+      .from(posts)
+      .where(and(eq(posts.authorId, authorId), eq(posts.status, 'draft'), isNull(posts.deletedAt)))
+      .orderBy(desc(posts.updatedAt))
       .limit(limit + 1);
 
     const hasMore = rows.length > limit;
@@ -146,9 +203,12 @@ export class PostDrizzleRepository implements IPostRepository {
       ? { id: 'anonymous', username: 'Anonymous Developer', name: 'Anonymous', avatarUrl: null }
       : { id: r.author.id, username: r.author.username, name: r.author.name, avatarUrl: r.author.avatarUrl };
 
+    const postTagsList = this.tagRepository ? await this.tagRepository.getTagsForPost(r.id) : [];
+
     return {
       ...this.mapToDomain(r),
       author,
+      tags: postTagsList,
     };
   }
 
@@ -160,7 +220,7 @@ export class PostDrizzleRepository implements IPostRepository {
   }
 
   public async update(id: string, data: UpdatePostData): Promise<Post | null> {
-    const updateValues: Partial<typeof posts.$inferInsert> = {
+    const updateValues: Record<string, unknown> = {
       updatedAt: new Date(),
     };
 
@@ -177,9 +237,16 @@ export class PostDrizzleRepository implements IPostRepository {
       updateValues.content = { body: data.content };
       updateValues.contentText = data.content;
     }
-    if (data.published !== undefined) {
+    if (data.status !== undefined) {
+      updateValues.status = data.status;
+      if (data.status === 'published') {
+        updateValues.publishedAt = sql`COALESCE(${posts.publishedAt}, NOW())`;
+      }
+    } else if (data.published !== undefined) {
       updateValues.status = data.published ? 'published' : 'draft';
-      if (data.published) updateValues.publishedAt = new Date();
+      if (data.published) {
+        updateValues.publishedAt = sql`COALESCE(${posts.publishedAt}, NOW())`;
+      }
     }
 
     const [updated] = await db
@@ -188,7 +255,58 @@ export class PostDrizzleRepository implements IPostRepository {
       .where(and(eq(posts.id, id), isNull(posts.deletedAt)))
       .returning();
 
-    return updated ? this.mapToDomain(updated) : null;
+    if (!updated) return null;
+
+    let postTagsList: string[] = [];
+    if (data.tags && this.tagRepository) {
+      postTagsList = await this.tagRepository.syncPostTags(id, data.tags);
+    } else if (this.tagRepository) {
+      postTagsList = await this.tagRepository.getTagsForPost(id);
+    }
+
+    return {
+      ...this.mapToDomain(updated),
+      tags: postTagsList,
+    };
+  }
+
+  public async publish(id: string): Promise<Post | null> {
+    const [updated] = await db
+      .update(posts)
+      .set({
+        status: 'published',
+        publishedAt: sql`COALESCE(${posts.publishedAt}, NOW())`,
+        updatedAt: new Date(),
+      })
+      .where(and(eq(posts.id, id), isNull(posts.deletedAt)))
+      .returning();
+
+    if (!updated) return null;
+    const postTagsList = this.tagRepository ? await this.tagRepository.getTagsForPost(id) : [];
+
+    return {
+      ...this.mapToDomain(updated),
+      tags: postTagsList,
+    };
+  }
+
+  public async unpublish(id: string): Promise<Post | null> {
+    const [updated] = await db
+      .update(posts)
+      .set({
+        status: 'draft',
+        updatedAt: new Date(),
+      })
+      .where(and(eq(posts.id, id), isNull(posts.deletedAt)))
+      .returning();
+
+    if (!updated) return null;
+    const postTagsList = this.tagRepository ? await this.tagRepository.getTagsForPost(id) : [];
+
+    return {
+      ...this.mapToDomain(updated),
+      tags: postTagsList,
+    };
   }
 
   public async deleteById(id: string): Promise<boolean> {
