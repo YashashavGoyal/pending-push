@@ -14,12 +14,14 @@ import { IPostRepository } from './repositories/interfaces/post.repository.inter
 import { IContactRepository } from './repositories/interfaces/contact.repository.interface.js';
 import { IInteractionRepository } from './repositories/interfaces/interaction.repository.interface.js';
 import { IAnalyticsRepository } from './repositories/interfaces/analytics.repository.interface.js';
+import { ITagRepository } from './repositories/interfaces/tag.repository.interface.js';
 import { UserDrizzleRepository } from './repositories/drizzle/user.drizzle.repository.js';
 import { SessionDrizzleRepository } from './repositories/drizzle/session.drizzle.repository.js';
 import { PostDrizzleRepository } from './repositories/drizzle/post.drizzle.repository.js';
 import { ContactDrizzleRepository } from './repositories/drizzle/contact.drizzle.repository.js';
 import { InteractionDrizzleRepository } from './repositories/drizzle/interaction.drizzle.repository.js';
 import { AnalyticsDrizzleRepository } from './repositories/drizzle/analytics.drizzle.repository.js';
+import { TagDrizzleRepository } from './repositories/drizzle/tag.drizzle.repository.js';
 import { AuthService } from './services/auth.service.js';
 import { PostService } from './services/post.service.js';
 import { ContactService } from './services/contact.service.js';
@@ -27,6 +29,7 @@ import { AdminService } from './services/admin.service.js';
 import { UserService } from './services/user.service.js';
 import { InteractionService } from './services/interaction.service.js';
 import { AnalyticsService } from './services/analytics.service.js';
+import { TagService } from './services/tag.service.js';
 import { AuthController } from './controllers/auth.controller.js';
 import { PostController } from './controllers/post.controller.js';
 import { ContactController } from './controllers/contact.controller.js';
@@ -34,6 +37,7 @@ import { AdminController } from './controllers/admin.controller.js';
 import { UserController } from './controllers/user.controller.js';
 import { InteractionController } from './controllers/interaction.controller.js';
 import { AnalyticsController } from './controllers/analytics.controller.js';
+import { TagController } from './controllers/tag.controller.js';
 
 export interface AppDependencies {
   userRepository?: IUserRepository;
@@ -42,6 +46,7 @@ export interface AppDependencies {
   contactRepository?: IContactRepository;
   interactionRepository?: IInteractionRepository;
   analyticsRepository?: IAnalyticsRepository;
+  tagRepository?: ITagRepository;
 }
 
 export const createApp = async (dependencies?: AppDependencies): Promise<FastifyInstance> => {
@@ -137,7 +142,8 @@ export const createApp = async (dependencies?: AppDependencies): Promise<Fastify
   // Dependency Injection Wiring
   const userRepository = dependencies?.userRepository || new UserDrizzleRepository();
   const sessionRepository = dependencies?.sessionRepository || new SessionDrizzleRepository();
-  const postRepository = dependencies?.postRepository || new PostDrizzleRepository();
+  const tagRepository = dependencies?.tagRepository || new TagDrizzleRepository();
+  const postRepository = dependencies?.postRepository || new PostDrizzleRepository(tagRepository);
   const contactRepository = dependencies?.contactRepository || new ContactDrizzleRepository();
   const interactionRepository = dependencies?.interactionRepository || new InteractionDrizzleRepository();
   const analyticsRepository = dependencies?.analyticsRepository || new AnalyticsDrizzleRepository();
@@ -149,6 +155,7 @@ export const createApp = async (dependencies?: AppDependencies): Promise<Fastify
   const userService = new UserService(userRepository);
   const interactionService = new InteractionService(interactionRepository, postRepository, userRepository);
   const analyticsService = new AnalyticsService(analyticsRepository, userRepository);
+  const tagService = new TagService(tagRepository);
 
   const authController = new AuthController(authService);
   const postController = new PostController(postService);
@@ -157,6 +164,7 @@ export const createApp = async (dependencies?: AppDependencies): Promise<Fastify
   const userController = new UserController(userService);
   const interactionController = new InteractionController(interactionService);
   const analyticsController = new AnalyticsController(analyticsService);
+  const tagController = new TagController(tagService, postService);
 
   await setupRoutes(fastify, {
     authController,
@@ -166,6 +174,7 @@ export const createApp = async (dependencies?: AppDependencies): Promise<Fastify
     userController,
     interactionController,
     analyticsController,
+    tagController,
   });
 
   return fastify;

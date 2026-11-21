@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 export const postFormatEnumSchema = z.enum(['article', 'dev_log', 'tutorial', 'confession']);
+export const postStatusEnumSchema = z.enum(['draft', 'published', 'archived']);
 
 export const createPostSchema = z.object({
   title: z
@@ -16,6 +17,8 @@ export const createPostSchema = z.object({
   format: postFormatEnumSchema.optional().default('article'),
   isAnonymous: z.boolean().optional().default(false),
   published: z.boolean().optional().default(true),
+  status: postStatusEnumSchema.optional(),
+  tags: z.array(z.string().trim().min(1).max(50)).max(10).optional(),
   config: z.record(z.unknown()).optional(),
   metadata: z.record(z.unknown()).optional(),
 });
@@ -28,8 +31,14 @@ export const updatePostSchema = z.object({
   format: postFormatEnumSchema.optional(),
   isAnonymous: z.boolean().optional(),
   published: z.boolean().optional(),
+  status: postStatusEnumSchema.optional(),
+  tags: z.array(z.string().trim().min(1).max(50)).max(10).optional(),
   config: z.record(z.unknown()).optional(),
   metadata: z.record(z.unknown()).optional(),
+});
+
+export const postIdParamSchema = z.object({
+  id: z.string().min(1, { message: 'Post ID is required' }),
 });
 
 export const feedQuerySchema = z.object({
@@ -42,3 +51,4 @@ export const feedQuerySchema = z.object({
 export type CreatePostInput = z.infer<typeof createPostSchema>;
 export type UpdatePostInput = z.infer<typeof updatePostSchema>;
 export type FeedQueryInput = z.infer<typeof feedQuerySchema>;
+export type PostIdParamInput = z.infer<typeof postIdParamSchema>;

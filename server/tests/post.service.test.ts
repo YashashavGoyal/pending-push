@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { PostService } from '../src/services/post.service.js';
 import { MockPostRepository } from './mocks/mock-post.repository.js';
 import { CreatePostInput } from '../src/validators/post.validator.js';
+import { ForbiddenError, NotFoundError } from '../src/errors/app-error.js';
 
 describe('PostService & Publishing Spaces', () => {
   let postService: PostService;
@@ -62,6 +63,94 @@ describe('PostService & Publishing Spaces', () => {
       const fetched = await postService.getPostBySlug(post.slug);
       expect(fetched.author?.username).toBe('Author');
       expect(fetched.author?.id).toBe('user-1');
+    });
+  });
+
+  describe('Author Studio Drafts & Post Lifecycle', () => {
+    it('should create a working draft when published is false or status is draft', async () => {
+      const draft = await postService.createPost('author-1', {
+        title: 'Unfinished Draft on Zero-Copy IO',
+        content: 'Draft content undergoing internal review and benchmarks...',
+        published: false,
+        tags: ['Fastify', 'Performance'],
+      });
+
+      expect(draft.published).toBe(false);
+      expect(draft.tags).toEqual(['Fastify', 'Performance']);
+
+      const draftsList = await postService.getAuthorDrafts('author-1');
+      expect(draftsList.items).toHaveLength(1);
+      expect(draftsList.items[0].id).toBe(draft.id);
+
+      // Draft should NOT appear in public feed
+      const feed = await postService.getFeed();
+      expect(feed.items.some((p) => p.id === draft.id)).toBe(false);
+    });
+
+    it('should allow author to publish an existing draft', async () => {
+      const draft = await postService.createPost('author-1', {
+        title: 'Draft ready for publishing',
+        content: 'Completed technical post content ready for production release.',
+        published: false,
+      });
+
+      const published = await postService.publishPost(draft.id, 'author-1', 'user');
+      expect(published.published).toBe(true);
+      expect(published.publishedAt).toBeDefined();
+
+      const feed = await postService.getFeed();
+      expect(feed.items.some((p) => p.id === draft.id)).toBe(true);
+    });
+
+    it('should allow author to unpublish a post back to draft', async () => {
+      const post = await postService.createPost('author-1', {
+        title: 'Story to be pulled back to draft',
+        content: 'Content that needs revision before being public again.',
+        published: true,
+      });
+
+      const unpublished = await postService.unpublishPost(post.id, 'author-1', 'user');
+      expect(unpublished.published).toBe(false);
+
+      const drafts = await postService.getAuthorDrafts('author-1');
+      expect(drafts.items.some((p) => p.id === post.id)).toBe(true);
+    });
+
+    it('should prevent unauthorized users from editing or publishing another user post', async () => {
+      const post = await postService.createPost('author-1', {
+        title: 'Protected Story',
+        content: 'Author 1 private story content.',
+        published: false,
+      });
+
+      await expect(
+        postService.publishPost(post.id, 'malicious-user', 'user')
+      ).rejects.toThrow(ForbiddenError);
+
+      await expect(
+        postService.editPost(post.id, 'malicious-user', 'user', { title: 'Hacked Title' })
+      ).rejects.toThrow(ForbiddenError);
+
+      await expect(
+        postService.deletePost(post.id, 'malicious-user', 'user')
+      ).rejects.toThrow(ForbiddenError);
+    });
+
+    it('should allow admin to edit or delete any post', async () => {
+      const post = await postService.createPost('author-1', {
+        title: 'Story moderated by admin',
+        content: 'Author 1 content.',
+        published: true,
+      });
+
+      const edited = await postService.editPost(post.id, 'admin-user', 'admin', {
+        title: 'Moderated Clean Title',
+      });
+      expect(edited.title).toBe('Moderated Clean Title');
+
+      await postService.deletePost(post.id, 'admin-user', 'admin');
+      const found = await mockPostRepo.findById(post.id);
+      expect(found).toBeNull();
     });
   });
 

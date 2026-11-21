@@ -77,6 +77,7 @@ export interface Post {
   viewsCount: number;
   clapsCount: number;
   authorId: string;
+  tags?: string[];
   config?: Record<string, unknown>;
   metadata?: Record<string, unknown>;
   publishedAt?: Date | null;
@@ -91,6 +92,14 @@ export interface PostWithAuthor extends Post {
     name?: string | null;
     avatarUrl?: string | null;
   } | null;
+}
+
+export interface TagItem {
+  id: string;
+  name: string;
+  slug: string;
+  postsCount: number;
+  createdAt: Date;
 }
 
 export interface ContactMessage {
