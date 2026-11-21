@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
+import { loginUser } from '@/lib/api';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -29,36 +30,22 @@ export default function LoginPage() {
     setErrorMsg('');
 
     try {
-      const endpoint = loginRole === 'admin' ? '/api/auth/admin-login' : '/api/auth/login';
-      const body = loginRole === 'admin'
-        ? { username: formData.username || formData.email, password: formData.password }
-        : { email: formData.email, password: formData.password };
-
-      const res = await fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
+      const res = await loginUser({
+        email: formData.email,
+        username: formData.username || formData.email,
+        password: formData.password,
+        role: loginRole
       });
 
-      const data = await res.json().catch(() => ({}));
-
-      if (res.ok) {
-        setSuccessMsg(data.message || 'Logged in successfully! Redirecting...');
-        const token = data.token || `pp_token_${Date.now()}`;
-        const user = data.user || {
-          name: loginRole === 'admin' ? 'Security Admin' : 'Alex Rivera',
-          username: loginRole === 'admin' ? 'admin' : (formData.email.split('@')[0] || 'alexrivera'),
-          email: formData.email || 'alex@pendingpush.dev',
-          role: loginRole,
-          avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&q=80'
-        };
-        login(token, user);
+      if (res.success && res.token) {
+        setSuccessMsg(res.message || 'Logged in successfully! Redirecting...');
+        login(res.token, res.user);
 
         setTimeout(() => {
           router.push('/dashboard');
         }, 1000);
       } else {
-        setErrorMsg(data.message || 'Invalid credentials. Please verify your email and password.');
+        setErrorMsg(res.message || 'Invalid credentials. Please verify your email and password.');
       }
     } catch {
       // Graceful local development simulation

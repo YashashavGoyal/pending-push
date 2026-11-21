@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
+import { registerUser } from '@/lib/api';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -84,34 +85,26 @@ export default function RegisterPage() {
     setErrorMsg('');
 
     try {
-      const res = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+      const res = await registerUser({
+        name: formData.username,
+        username: formData.username,
+        email: formData.email,
+        password: formData.password,
+        privacyPolicyAccepted: acceptedCheckbox
       });
 
-      const data = await res.json().catch(() => ({}));
-
-      if (res.ok) {
-        setSuccessMsg(data.message || 'Account created successfully! Welcome to Pending Push.');
+      if (res.success && res.token) {
+        setSuccessMsg(res.message || 'Account created successfully! Welcome to Pending Push.');
         setShowPolicyModal(false);
 
-        const token = data.token || `pp_token_${Date.now()}`;
-        const user = data.user || {
-          name: formData.username,
-          username: formData.username,
-          email: formData.email,
-          role: 'author' as const,
-          avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&q=80'
-        };
-        login(token, user);
+        login(res.token, res.user);
 
         setTimeout(() => {
           router.push('/dashboard');
         }, 1200);
       } else {
         setShowPolicyModal(false);
-        setErrorMsg(data.message || 'Registration failed. Please check your information.');
+        setErrorMsg(res.message || 'Registration failed. Please check your information.');
       }
     } catch {
       // Graceful local development simulation
