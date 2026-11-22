@@ -9,10 +9,8 @@ import { loginUser } from '@/lib/api';
 export default function LoginPage() {
   const router = useRouter();
   const { login } = useAuth();
-  const [loginRole, setLoginRole] = useState<'author' | 'admin'>('author');
   const [formData, setFormData] = useState({
     email: '',
-    username: '',
     password: '',
   });
   const [loading, setLoading] = useState(false);
@@ -32,9 +30,8 @@ export default function LoginPage() {
     try {
       const res = await loginUser({
         email: formData.email,
-        username: formData.username || formData.email,
         password: formData.password,
-        role: loginRole
+        role: 'author'
       });
 
       if (res.success && res.token) {
@@ -49,13 +46,13 @@ export default function LoginPage() {
       }
     } catch {
       // Graceful local development simulation
-      setSuccessMsg(`Signed in as ${loginRole === 'admin' ? 'Administrator' : 'Author'}! Redirecting...`);
+      setSuccessMsg('Signed in successfully! Redirecting...');
       const token = `pp_token_${Date.now()}`;
       const user = {
-        name: loginRole === 'admin' ? 'Security Admin' : 'Alex Rivera',
-        username: loginRole === 'admin' ? 'admin' : (formData.email.split('@')[0] || 'alexrivera'),
+        name: 'Alex Rivera',
+        username: formData.email.split('@')[0] || 'alexrivera',
         email: formData.email || 'alex@pendingpush.dev',
-        role: loginRole,
+        role: 'author' as const,
         avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&q=80'
       };
       login(token, user);
@@ -141,56 +138,6 @@ export default function LoginPage() {
         {/* Card Form */}
         <div className="card" style={{ padding: 'var(--space-8)', borderRadius: 'var(--radius-xl)', boxShadow: 'var(--shadow-card)' }}>
           
-          {/* Role Mode Selector Tabs */}
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: '1fr 1fr',
-              gap: '0.35rem',
-              padding: '0.3rem',
-              backgroundColor: 'var(--bg-subtle)',
-              borderRadius: 'var(--radius-lg)',
-              marginBottom: 'var(--space-6)'
-            }}
-          >
-            <button
-              type="button"
-              onClick={() => { setLoginRole('author'); setErrorMsg(''); }}
-              style={{
-                border: 'none',
-                background: loginRole === 'author' ? 'var(--bg-card)' : 'transparent',
-                color: loginRole === 'author' ? 'var(--brand-terracotta)' : 'var(--text-muted)',
-                fontWeight: loginRole === 'author' ? 700 : 500,
-                padding: '0.55rem 0.75rem',
-                borderRadius: 'var(--radius-md)',
-                fontSize: '0.85rem',
-                cursor: 'pointer',
-                boxShadow: loginRole === 'author' ? 'var(--shadow-sm)' : 'none',
-                transition: 'all var(--transition-fast)'
-              }}
-            >
-              Author / Member
-            </button>
-            <button
-              type="button"
-              onClick={() => { setLoginRole('admin'); setErrorMsg(''); }}
-              style={{
-                border: 'none',
-                background: loginRole === 'admin' ? 'var(--bg-card)' : 'transparent',
-                color: loginRole === 'admin' ? 'var(--accent-indigo)' : 'var(--text-muted)',
-                fontWeight: loginRole === 'admin' ? 700 : 500,
-                padding: '0.55rem 0.75rem',
-                borderRadius: 'var(--radius-md)',
-                fontSize: '0.85rem',
-                cursor: 'pointer',
-                boxShadow: loginRole === 'admin' ? 'var(--shadow-sm)' : 'none',
-                transition: 'all var(--transition-fast)'
-              }}
-            >
-              Administrator
-            </button>
-          </div>
-
           {errorMsg && (
             <div
               style={{
@@ -226,41 +173,22 @@ export default function LoginPage() {
 
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
             
-            {loginRole === 'author' ? (
-              <div>
-                <label htmlFor="email" style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '0.35rem' }}>
-                  Email Address
-                </label>
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  required
-                  value={formData.email}
-                  onChange={handleChange}
-                  placeholder="alex@example.com"
-                  className="form-input"
-                  style={{ borderRadius: 'var(--radius-md)' }}
-                />
-              </div>
-            ) : (
-              <div>
-                <label htmlFor="username" style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '0.35rem' }}>
-                  Admin Username or Email
-                </label>
-                <input
-                  id="username"
-                  name="username"
-                  type="text"
-                  required
-                  value={formData.username}
-                  onChange={handleChange}
-                  placeholder="admin or security@pendingpush.dev"
-                  className="form-input"
-                  style={{ borderRadius: 'var(--radius-md)' }}
-                />
-              </div>
-            )}
+            <div>
+              <label htmlFor="email" style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '0.35rem' }}>
+                Email Address
+              </label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                required
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="alex@example.com"
+                className="form-input"
+                style={{ borderRadius: 'var(--radius-md)' }}
+              />
+            </div>
 
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
@@ -294,7 +222,7 @@ export default function LoginPage() {
                 marginTop: 'var(--space-2)'
               }}
             >
-              {loading ? 'Authenticating...' : `Sign in as ${loginRole === 'admin' ? 'Administrator' : 'Author'}`}
+              {loading ? 'Authenticating...' : 'Sign in to Pending Push'}
             </button>
 
           </form>
