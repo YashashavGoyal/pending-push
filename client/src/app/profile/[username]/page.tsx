@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import FollowButton from '@/Components/FollowButton';
+import ActivityHeatmap from '@/Components/ActivityHeatmap';
+import { fetchUserActivity } from '@/lib/api';
 
 interface ProfileProps {
   params: Promise<{ username: string }>;
@@ -15,6 +17,7 @@ export async function generateMetadata({ params }: ProfileProps) {
 
 export default async function ProfilePage({ params }: ProfileProps) {
   const { username } = await params;
+  const activity = await fetchUserActivity(username || 'alexrivera');
 
   return (
     <main className="page-wrapper">
@@ -100,18 +103,8 @@ export default async function ProfilePage({ params }: ProfileProps) {
             </div>
           </div>
 
-          {/* 52-Week Activity Heatmap */}
-          <div>
-            <div style={{ display: 'flex', justifySelf: 'stretch', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.5rem' }}>
-              <span>Publishing &amp; Contribution Frequency</span>
-              <span className="text-muted" style={{ fontSize: '0.8rem', fontFamily: 'var(--font-mono)' }}>Less ■ ■ ■ ■ More</span>
-            </div>
-
-            <div className="activity-grid-52">
-              <div className="activity-cell lvl-1" /><div className="activity-cell lvl-2" /><div className="activity-cell lvl-4" /><div className="activity-cell lvl-3" /><div className="activity-cell lvl-1" /><div className="activity-cell" /><div className="activity-cell lvl-2" /><div className="activity-cell lvl-4" /><div className="activity-cell lvl-2" /><div className="activity-cell lvl-1" /><div className="activity-cell lvl-3" /><div className="activity-cell lvl-4" /><div className="activity-cell lvl-2" /><div className="activity-cell lvl-3" /><div className="activity-cell lvl-4" /><div className="activity-cell lvl-1" /><div className="activity-cell lvl-3" /><div className="activity-cell lvl-4" /><div className="activity-cell lvl-2" /><div className="activity-cell lvl-1" /><div className="activity-cell" /><div className="activity-cell lvl-3" /><div className="activity-cell lvl-4" /><div className="activity-cell lvl-4" /><div className="activity-cell lvl-3" /><div className="activity-cell lvl-2" />
-              <div className="activity-cell lvl-2" /><div className="activity-cell lvl-3" /><div className="activity-cell lvl-1" /><div className="activity-cell lvl-4" /><div className="activity-cell lvl-2" /><div className="activity-cell lvl-3" /><div className="activity-cell lvl-4" /><div className="activity-cell lvl-1" /><div className="activity-cell" /><div className="activity-cell lvl-3" /><div className="activity-cell lvl-2" /><div className="activity-cell lvl-4" /><div className="activity-cell lvl-1" /><div className="activity-cell lvl-3" /><div className="activity-cell lvl-4" /><div className="activity-cell lvl-2" /><div className="activity-cell lvl-4" /><div className="activity-cell lvl-3" /><div className="activity-cell lvl-2" /><div className="activity-cell lvl-1" /><div className="activity-cell lvl-4" /><div className="activity-cell lvl-2" /><div className="activity-cell lvl-3" /><div className="activity-cell lvl-1" /><div className="activity-cell lvl-4" /><div className="activity-cell lvl-3" />
-            </div>
-          </div>
+          {/* 52-Week Dynamic Activity Heatmap */}
+          <ActivityHeatmap activity={activity} username={username || 'alexrivera'} />
         </section>
 
         {/* Published Work Stream */}

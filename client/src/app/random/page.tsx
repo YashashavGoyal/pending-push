@@ -1,21 +1,29 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { FEED_STORIES } from '@/lib/mock-data';
+import { fetchRandomPost } from '@/lib/api';
+import { Post } from '@/lib/types';
+import StoryInteractions from '@/Components/StoryInteractions';
 
 export default function RandomPage() {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentStory, setCurrentStory] = useState<Post>(FEED_STORIES[0]);
+  const [loading, setLoading] = useState(false);
 
-  const handleShuffle = () => {
-    let nextIndex = Math.floor(Math.random() * FEED_STORIES.length);
-    if (nextIndex === currentIndex && FEED_STORIES.length > 1) {
-      nextIndex = (currentIndex + 1) % FEED_STORIES.length;
+  useEffect(() => {
+    fetchRandomPost().then(setCurrentStory);
+  }, []);
+
+  const handleShuffle = async () => {
+    setLoading(true);
+    try {
+      const next = await fetchRandomPost();
+      setCurrentStory(next);
+    } finally {
+      setLoading(false);
     }
-    setCurrentIndex(nextIndex);
   };
-
-  const currentStory = FEED_STORIES[currentIndex] || FEED_STORIES[0];
 
   return (
     <main className="page-wrapper">
@@ -33,6 +41,7 @@ export default function RandomPage() {
 
           <button
             onClick={handleShuffle}
+            disabled={loading}
             className="btn btn-primary btn-sm"
             style={{ borderRadius: 'var(--radius-full)' }}
           >
@@ -45,7 +54,7 @@ export default function RandomPage() {
                 <line x1="4" y1="4" x2="9" y2="9" />
               </svg>
             </span>
-            <span>Shuffle Another Push</span>
+            <span>{loading ? 'Discovering...' : 'Shuffle Another Push'}</span>
           </button>
         </section>
 
@@ -87,6 +96,11 @@ export default function RandomPage() {
             </p>
           </div>
 
+          {/* Social Interactions: Claps & Bookmarks */}
+          <div style={{ margin: 'var(--space-6) 0' }}>
+            <StoryInteractions postId={currentStory.id} initialRelates={currentStory.relates} />
+          </div>
+
           <div style={{ marginTop: 'var(--space-8)', paddingTop: 'var(--space-5)', borderTop: '1px solid var(--border-subtle)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <Link
               href={currentStory.category === 'dev-log' ? `/dev-logs/${currentStory.slug}` : `/articles/${currentStory.slug}`}
@@ -97,10 +111,11 @@ export default function RandomPage() {
             </Link>
             <button
               onClick={handleShuffle}
+              disabled={loading}
               className="btn btn-primary btn-sm"
               style={{ borderRadius: 'var(--radius-full)' }}
             >
-              Roll Next Random Push &rarr;
+              {loading ? 'Discovering...' : 'Roll Next Random Push \u2192'}
             </button>
           </div>
         </article>

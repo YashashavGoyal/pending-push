@@ -260,3 +260,57 @@ test('Studio Publishing: Space formats map accurately to backend format types', 
   assert.equal(spaceToFormat['03 / Tutorials Space'], 'tutorial');
   assert.equal(spaceToFormat['04 / Engineering Confessions'], 'confession');
 });
+
+// ----------------------------------------------------
+// 8. STUDIO DRAFT LIFECYCLE & TAGS TAXONOMY
+// ----------------------------------------------------
+test('Studio Draft: Tags taxonomy prevents duplicates and limits to max 5 items', () => {
+  let tags: string[] = ['Fastify', 'Architecture'];
+  const maxTags = 5;
+
+  function addTag(rawTag: string): boolean {
+    const clean = rawTag.trim();
+    if (!clean) return false;
+    if (tags.length >= maxTags) return false;
+    if (tags.some(t => t.toLowerCase() === clean.toLowerCase())) return false;
+    tags.push(clean);
+    return true;
+  }
+
+  function removeTag(tagToRemove: string): void {
+    tags = tags.filter(t => t.toLowerCase() !== tagToRemove.toLowerCase());
+  }
+
+  assert.equal(addTag('TypeScript'), true);
+  assert.equal(tags.length, 3);
+  assert.equal(addTag('fastify'), false); // Duplicate (case-insensitive)
+  assert.equal(tags.length, 3);
+
+  assert.equal(addTag('Performance'), true);
+  assert.equal(addTag('V8'), true);
+  assert.equal(tags.length, 5);
+  assert.equal(addTag('Nodejs'), false); // Exceeds max 5
+  assert.equal(tags.length, 5);
+
+  removeTag('Architecture');
+  assert.equal(tags.length, 4);
+  assert.equal(tags.includes('Architecture'), false);
+});
+
+// ----------------------------------------------------
+// 9. DYNAMIC CONTENT PARSING & SANITIZATION
+// ----------------------------------------------------
+test('Dynamic Readers: Content blocks parse headers, quotes, and code blocks correctly', () => {
+  const markdownSource = `## Motivation and Overhead\n\n> Focus is an ecosystem.\n\n\`\`\`ts\nconst x = 1;\n\`\`\`\n\nStandard paragraph content.`;
+  const blocks = markdownSource.split('\n\n');
+
+  assert.equal(blocks.length, 4);
+  assert.equal(blocks[0].startsWith('## '), true);
+  assert.equal(blocks[0].replace('## ', ''), 'Motivation and Overhead');
+
+  assert.equal(blocks[1].startsWith('> '), true);
+  assert.equal(blocks[1].replace('> ', ''), 'Focus is an ecosystem.');
+
+  assert.equal(blocks[2].startsWith('```'), true);
+  assert.equal(blocks[3], 'Standard paragraph content.');
+});

@@ -24,8 +24,8 @@ export default async function ArticleReaderPage({ params }: ArticlePageProps) {
           {/* Header */}
           <header style={{ marginBottom: 'var(--space-8)' }}>
             <div style={{ display: 'flex', gap: 'var(--space-2)', marginBottom: 'var(--space-3)', fontSize: '0.8rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
-              <span className="badge badge-neutral">editorial</span>
-              <span>Productivity • {post.readTime} • {post.publishedAt}</span>
+              <span className="badge badge-neutral">{post.category || 'editorial'}</span>
+              <span>{(post.tags && post.tags.length > 0 ? post.tags.join(' • ') : 'Productivity')} • {post.readTime} • {post.publishedAt}</span>
             </div>
 
             <h1 className="title-page" style={{ fontSize: 'clamp(2rem, 3.2vw, 2.75rem)', lineHeight: 1.25, marginBottom: 'var(--space-4)' }}>
@@ -71,30 +71,52 @@ export default async function ArticleReaderPage({ params }: ArticlePageProps) {
 
           {/* Prose Reading Content */}
           <div className="prose" style={{ fontSize: '1.125rem', lineHeight: 1.85, color: 'var(--text-main)' }}>
-            <p>
-              It is 2:15 PM on a Wednesday. You just opened your code editor, reproduced a subtle race condition in your staging environment, and began formulating an elegant fix in your head. 
-            </p>
+            {post.content ? (
+              post.content.split('\n\n').map((paragraph, idx) => {
+                const trimmed = paragraph.trim();
+                if (trimmed.startsWith('## ')) {
+                  return <h2 key={idx}>{trimmed.replace('## ', '')}</h2>;
+                }
+                if (trimmed.startsWith('> ')) {
+                  return <blockquote key={idx}>{trimmed.replace('> ', '')}</blockquote>;
+                }
+                if (trimmed.startsWith('```')) {
+                  return (
+                    <pre key={idx} className="code-pre" style={{ margin: 'var(--space-4) 0' }}>
+                      <code>{trimmed.replace(/```[a-z]*\n?/g, '')}</code>
+                    </pre>
+                  );
+                }
+                return <p key={idx}>{trimmed}</p>;
+              })
+            ) : (
+              <>
+                <p>
+                  It is 2:15 PM on a Wednesday. You just opened your code editor, reproduced a subtle race condition in your staging environment, and began formulating an elegant fix in your head. 
+                </p>
 
-            <p>
-              Then, an instant ping rings: <em>&quot;Hey, do you have a quick 2 minutes?&quot;</em>
-            </p>
+                <p>
+                  Then, an instant ping rings: <em>&quot;Hey, do you have a quick 2 minutes?&quot;</em>
+                </p>
 
-            <p>
-              That &quot;quick 2 minutes&quot; is never two minutes. Even if the answer is trivial, the neurobiological cost of severing that train of thought is immense. Research shows it takes an average of 23 minutes and 15 seconds to return to the original mental state after an interruption.
-            </p>
+                <p>
+                  That &quot;quick 2 minutes&quot; is never two minutes. Even if the answer is trivial, the neurobiological cost of severing that train of thought is immense. Research shows it takes an average of 23 minutes and 15 seconds to return to the original mental state after an interruption.
+                </p>
 
-            <blockquote>
-              &quot;Focus is not something you sit down and turn on like a tap. Focus is an ecosystem you fiercely defend against well-meaning distractions.&quot;
-            </blockquote>
+                <blockquote>
+                  &quot;Focus is not something you sit down and turn on like a tap. Focus is an ecosystem you fiercely defend against well-meaning distractions.&quot;
+                </blockquote>
 
-            <h2>The Myth of the 10x Multitasker</h2>
-            <p>
-              In high-growth startups, there is often an unspoken badge of honor awarded to the person who responds to every chat message within 30 seconds. But rapid response times and deep engineering throughput are in direct conflict.
-            </p>
+                <h2>The Myth of the 10x Multitasker</h2>
+                <p>
+                  In high-growth startups, there is often an unspoken badge of honor awarded to the person who responds to every chat message within 30 seconds. But rapid response times and deep engineering throughput are in direct conflict.
+                </p>
 
-            <p>
-              When engineers are subjected to constant micro-pings, they naturally adapt by avoiding complex tasks. Subconsciously, knowing you will be interrupted within 15 minutes prevents you from tackling intricate refactors, difficult concurrency bugs, or high-leverage architectural designs.
-            </p>
+                <p>
+                  When engineers are subjected to constant micro-pings, they naturally adapt by avoiding complex tasks. Subconsciously, knowing you will be interrupted within 15 minutes prevents you from tackling intricate refactors, difficult concurrency bugs, or high-leverage architectural designs.
+                </p>
+              </>
+            )}
           </div>
 
           {/* Claps & Share Bar */}

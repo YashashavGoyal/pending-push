@@ -5,7 +5,15 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useTheme } from '@/Components/ThemeProvider';
 import { useAuth } from '@/lib/auth-context';
-import { createPost } from '@/lib/api';
+import {
+  createPost,
+  updatePost,
+  publishPost,
+  fetchAuthorDrafts,
+  fetchTags,
+  TagItem
+} from '@/lib/api';
+import { Post } from '@/lib/types';
 
 export default function StudioPage() {
   const router = useRouter();
@@ -14,6 +22,13 @@ export default function StudioPage() {
 
   const [title, setTitle] = useState('Zero-Copy Serialization in Fastify v5 with Avro');
   const [selectedSpace, setSelectedSpace] = useState('dev-logs');
+  const [draftId, setDraftId] = useState<string | null>(null);
+  const [saveStatus, setSaveStatus] = useState<'saved' | 'saving'>('saved');
+  const [tags, setTags] = useState<string[]>(['Fastify', 'Architecture']);
+  const [tagInput, setTagInput] = useState('');
+  const [availableTags, setAvailableTags] = useState<TagItem[]>([]);
+  const [draftsList, setDraftsList] = useState<Post[]>([]);
+  const [draftsModalOpen, setDraftsModalOpen] = useState(false);
   const [source, setSource] = useState(`## 1. Motivation & GC Pressure
 
 When scaling our event telemetry ingestion pipeline to handle 100k requests/sec, heap snapshots exposed a critical bottleneck: standard \`JSON.stringify()\` was triggering frequent V8 minor GC pauses, accumulating over 420ms of stop-the-world latency every 30 seconds.
@@ -73,6 +88,64 @@ End of Technical RFC • Ready for staging.
   }, [source]);
 
   const readTimeMins = Math.max(1, Math.ceil(words / 200));
+
+  // 1. Fetch available tags and author drafts
+  useEffect(() => {
+    fetchTags().then(setAvailableTags);
+    if (token) {
+      fetchAuthorDrafts(token).then(setDraftsList);
+    }
+  }, [token]);
+
+  // 2. Clean up scrollTimeout on unmount (P3 fix)
+  useEffect(() => {
+    return () => {
+      if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
+    };
+  }, []);
+
+  // 3. Debounced Auto-Save Draft to Backend
+  useEffect(() => {
+    if (!title.trim() && !source.trim()) return;
+    setSaveStatus('saving');
+
+    const timer = setTimeout(async () => {
+      const formatMap: Record<string, string> = {
+        'dev-logs': 'dev_log',
+        'articles': 'article',
+        'tutorials': 'tutorial',
+        'confessions': 'confession',
+      };
+
+      if (draftId) {
+        await updatePost(draftId, {
+          title: title.trim(),
+          content: source.trim(),
+          summary: source.replace(/[#*`>]/g, '').slice(0, 160).trim(),
+          format: formatMap[selectedSpace] || 'dev_log',
+          tags,
+          status: 'draft',
+          published: false
+        }, token);
+      } else {
+        const res = await createPost({
+          title: title.trim(),
+          content: source.trim(),
+          summary: source.replace(/[#*`>]/g, '').slice(0, 160).trim(),
+          format: formatMap[selectedSpace] || 'dev_log',
+          tags,
+          status: 'draft',
+          published: false
+        }, token);
+        if (res.post?.id) {
+          setDraftId(res.post.id);
+        }
+      }
+      setSaveStatus('saved');
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, [title, source, tags, selectedSpace, draftId, token]);
 
   // Extract headings from source for piecewise sync & jump list
   const headings = useMemo(() => {
@@ -219,6 +292,21 @@ End of Technical RFC • Ready for staging.
   const [isPublishing, setIsPublishing] = useState(false);
   const [publishNotification, setPublishNotification] = useState<string | null>(null);
 
+  const handleLoadDraft = (d: Post) => {
+    setDraftId(d.id);
+    setTitle(d.title);
+    if (d.content) setSource(d.content);
+    if (d.tags) setTags(d.tags);
+    if (d.category) {
+      setSelectedSpace(
+        d.category === 'dev-log' ? 'dev-logs' :
+        d.category === 'tutorial' ? 'tutorials' :
+        d.category === 'confession' ? 'confessions' : 'articles'
+      );
+    }
+    setDraftsModalOpen(false);
+  };
+
   const handlePush = async () => {
     if (!title.trim() || !source.trim()) return;
 
@@ -230,17 +318,35 @@ End of Technical RFC • Ready for staging.
       'confessions': 'confession',
     };
 
-    const res = await createPost({
-      title: title.trim(),
-      content: source.trim(),
-      summary: source.replace(/[#*`>]/g, '').slice(0, 160).trim(),
-      format: formatMap[selectedSpace] || 'dev_log',
-    }, token);
+    let targetSlug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+
+    if (draftId) {
+      await updatePost(draftId, {
+        title: title.trim(),
+        content: source.trim(),
+        summary: source.replace(/[#*`>]/g, '').slice(0, 160).trim(),
+        format: formatMap[selectedSpace] || 'dev_log',
+        tags,
+        status: 'published',
+        published: true
+      }, token);
+      await publishPost(draftId, token);
+    } else {
+      const res = await createPost({
+        title: title.trim(),
+        content: source.trim(),
+        summary: source.replace(/[#*`>]/g, '').slice(0, 160).trim(),
+        format: formatMap[selectedSpace] || 'dev_log',
+        tags,
+        status: 'published',
+        published: true
+      }, token);
+      if (res.post?.slug) targetSlug = res.post.slug;
+    }
 
     setIsPublishing(false);
     setIsPushed(true);
 
-    const targetSlug = res.post?.slug || title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
     setPublishNotification(`✓ Push committed to ${selectedSpace.toUpperCase()}! Redirecting...`);
 
     setTimeout(() => {
@@ -571,9 +677,9 @@ End of Technical RFC • Ready for staging.
 
           <span style={{ width: '1px', height: '1rem', backgroundColor: 'var(--border-subtle)' }} />
 
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.775rem', color: 'var(--status-emerald)', fontFamily: 'var(--font-mono)' }}>
-            <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: 'var(--status-emerald)', display: 'inline-block' }} />
-            Saved to draft
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.775rem', color: saveStatus === 'saving' ? 'var(--brand-terracotta)' : 'var(--status-emerald)', fontFamily: 'var(--font-mono)' }}>
+            <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: saveStatus === 'saving' ? 'var(--brand-terracotta)' : 'var(--status-emerald)', display: 'inline-block' }} />
+            {saveStatus === 'saving' ? 'Saving draft...' : 'Saved to draft'}
           </span>
 
           <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
@@ -584,6 +690,28 @@ End of Technical RFC • Ready for staging.
         {/* Right: Sync Scroll Toggle, Theme Toggle, & Commit Action */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem' }}>
           
+          {/* My Drafts Button */}
+          <button
+            type="button"
+            onClick={() => setDraftsModalOpen(true)}
+            className="btn btn-secondary btn-sm"
+            style={{
+              borderRadius: 'var(--radius-full)',
+              padding: '0.3rem 0.75rem',
+              fontSize: '0.775rem',
+              fontWeight: 600,
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.35rem'
+            }}
+            title="Browse your saved drafts"
+          >
+            <span>My Drafts</span>
+            <span className="badge badge-neutral" style={{ padding: '0.1rem 0.35rem', fontSize: '0.675rem' }}>
+              {draftsList.length}
+            </span>
+          </button>
+
           {/* SYNC SCROLL BUTTON (User Toggle) */}
           <button
             type="button"
@@ -788,6 +916,75 @@ End of Technical RFC • Ready for staging.
               <span>•</span>
               <span>branch: feat/rfc-telemetry</span>
             </div>
+
+            {/* Tags Taxonomy Row */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginTop: '0.45rem', flexWrap: 'wrap' }}>
+              <span style={{ fontSize: '0.725rem', color: 'var(--text-muted)' }}>Tags:</span>
+              {tags.map(t => (
+                <span
+                  key={t}
+                  className="badge badge-dev"
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem', padding: '0.12rem 0.45rem', fontSize: '0.725rem' }}
+                >
+                  {t}
+                  <button
+                    type="button"
+                    onClick={() => setTags(tags.filter(x => x !== t))}
+                    style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, color: 'inherit', fontSize: '0.75rem', lineHeight: 1 }}
+                  >
+                    ✕
+                  </button>
+                </span>
+              ))}
+              {tags.length < 5 && (
+                <input
+                  type="text"
+                  value={tagInput}
+                  onChange={(e) => setTagInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && tagInput.trim()) {
+                      e.preventDefault();
+                      const val = tagInput.trim();
+                      if (!tags.includes(val)) setTags([...tags, val]);
+                      setTagInput('');
+                    }
+                  }}
+                  placeholder="+ Add tag (Enter)..."
+                  style={{
+                    fontSize: '0.725rem',
+                    background: 'transparent',
+                    border: '1px dashed var(--border-subtle)',
+                    borderRadius: 'var(--radius-sm)',
+                    padding: '0.12rem 0.4rem',
+                    color: 'var(--text-main)',
+                    width: '120px'
+                  }}
+                />
+              )}
+              {availableTags.length > 0 && tags.length < 5 && (
+                <div style={{ display: 'flex', gap: '0.3rem', alignItems: 'center' }}>
+                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>Popular:</span>
+                  {availableTags.slice(0, 4).filter(at => !tags.includes(at.name)).map(at => (
+                    <button
+                      key={at.id}
+                      type="button"
+                      onClick={() => setTags([...tags, at.name])}
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        color: 'var(--brand-terracotta)',
+                        fontSize: '0.7rem',
+                        cursor: 'pointer',
+                        padding: '0.1rem 0.2rem',
+                        textDecoration: 'underline'
+                      }}
+                    >
+                      +{at.name}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Synchronized Scrollable Source Textarea */}
@@ -872,6 +1069,92 @@ End of Technical RFC • Ready for staging.
         </div>
 
       </div>
+
+      {/* 4. SAVED DRAFTS DRAWER / MODAL */}
+      {draftsModalOpen && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.65)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1000,
+            padding: '1rem'
+          }}
+          onClick={() => setDraftsModalOpen(false)}
+        >
+          <div
+            className="card"
+            style={{
+              maxWidth: '560px',
+              width: '100%',
+              maxHeight: '80vh',
+              overflowY: 'auto',
+              padding: '1.5rem',
+              boxShadow: 'var(--shadow-lg)'
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+              <div>
+                <h3 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 800 }}>My Saved Drafts</h3>
+                <p style={{ margin: '0.2rem 0 0', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                  Resume writing or push previous work in progress.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setDraftsModalOpen(false)}
+                className="btn btn-ghost btn-sm"
+                style={{ fontSize: '1rem', padding: '0.2rem 0.5rem' }}
+              >
+                ✕
+              </button>
+            </div>
+
+            {draftsList.length === 0 ? (
+              <div style={{ textAlign: 'center', padding: '2rem 1rem', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+                No saved drafts found. When you write in Studio, your work automatically auto-saves here.
+              </div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                {draftsList.map(d => (
+                  <div
+                    key={d.id}
+                    style={{
+                      padding: '0.75rem 1rem',
+                      backgroundColor: 'var(--bg-subtle)',
+                      borderRadius: 'var(--radius-md)',
+                      border: '1px solid var(--border-subtle)',
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      gap: '0.75rem'
+                    }}
+                  >
+                    <div>
+                      <div style={{ fontWeight: 700, fontSize: '0.925rem', color: 'var(--text-main)' }}>{d.title}</div>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.2rem' }}>
+                        {d.category} • {d.publishedAt}
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => handleLoadDraft(d)}
+                      className="btn btn-primary btn-sm"
+                      style={{ borderRadius: 'var(--radius-full)', padding: '0.25rem 0.75rem', fontSize: '0.775rem' }}
+                    >
+                      Load Draft
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
     </div>
   );

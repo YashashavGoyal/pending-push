@@ -3,19 +3,31 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/lib/auth-context';
-import { fetchBookmarks, toggleBookmark } from '@/lib/api';
+import {
+  fetchBookmarks,
+  toggleBookmark,
+  fetchAuthorTelemetry,
+  AuthorTelemetry,
+  fetchPlatformStats,
+  PlatformStats,
+  updateUserRole
+} from '@/lib/api';
 import { Post } from '@/lib/types';
 
 export default function DashboardPage() {
   const { user } = useAuth();
   const [activeRole, setActiveRole] = useState<'author' | 'admin'>('author');
   const [savedBookmarks, setSavedBookmarks] = useState<Post[]>([]);
+  const [telemetry, setTelemetry] = useState<AuthorTelemetry | null>(null);
+  const [platformStats, setPlatformStats] = useState<PlatformStats | null>(null);
 
   useEffect(() => {
     if (user?.role) {
       setActiveRole(user.role);
     }
     fetchBookmarks().then(setSavedBookmarks);
+    fetchAuthorTelemetry().then(setTelemetry);
+    fetchPlatformStats().then(setPlatformStats);
   }, [user]);
 
   const handleRemoveBookmark = async (id: string, slug: string) => {
@@ -36,16 +48,21 @@ export default function DashboardPage() {
     { id: 'rep-2', type: 'Dev Log', title: 'Zero-Copy Serialization RFC', reason: 'Suggested benchmark methodology clarification', reportedBy: 'Peer Reviewer', status: 'Under Review' },
   ]);
 
-  const toggleUserRole = (id: string) => {
+  const toggleUserRole = async (id: string) => {
+    const target = usersList.find(u => u.id === id);
+    if (!target) return;
+    const newRole = target.role === 'admin' ? 'user' : 'admin';
+
     setUsersList(prev =>
       prev.map(u => {
         if (u.id === id) {
-          const newRole = u.role === 'admin' ? 'user' : 'admin';
           return { ...u, role: newRole };
         }
         return u;
       })
     );
+
+    await updateUserRole(id, newRole);
   };
 
   const handleDismissReport = (id: string) => {
@@ -170,26 +187,34 @@ export default function DashboardPage() {
             {/* Author KPI Cards */}
             <div className="insights-overview-grid" style={{ marginBottom: 'var(--space-6)' }}>
               <div className="metric-tile">
-                <div className="metric-tile-title">Total Article Reads</div>
-                <div className="metric-tile-number" style={{ color: 'var(--brand-terracotta)' }}>142.8K</div>
-                <div style={{ fontSize: '0.8rem', color: 'var(--accent-sage)', fontWeight: 600 }}>+18.4% this month</div>
-              </div>
-
-              <div className="metric-tile">
-                <div className="metric-tile-title">Total Views</div>
-                <div className="metric-tile-number">318.5K</div>
+                <div className="metric-tile-title">Total Story Views</div>
+                <div className="metric-tile-number" style={{ color: 'var(--brand-terracotta)' }}>
+                  {telemetry ? (telemetry.totalViews >= 1000 ? `${(telemetry.totalViews / 1000).toFixed(1)}K` : telemetry.totalViews) : '318.5K'}
+                </div>
                 <div style={{ fontSize: '0.8rem', color: 'var(--accent-sage)', fontWeight: 600 }}>+24.1% this month</div>
               </div>
 
               <div className="metric-tile">
-                <div className="metric-tile-title">Followers</div>
-                <div className="metric-tile-number">1,240</div>
+                <div className="metric-tile-title">Total Reader Claps</div>
+                <div className="metric-tile-number">
+                  {telemetry ? telemetry.totalClaps.toLocaleString() : '6,890'}
+                </div>
+                <div style={{ fontSize: '0.8rem', color: 'var(--accent-sage)', fontWeight: 600 }}>+18.4% this month</div>
+              </div>
+
+              <div className="metric-tile">
+                <div className="metric-tile-title">Active Followers</div>
+                <div className="metric-tile-number">
+                  {telemetry ? telemetry.totalFollowers.toLocaleString() : '1,240'}
+                </div>
                 <div style={{ fontSize: '0.8rem', color: 'var(--accent-sage)', fontWeight: 600 }}>+84 new readers</div>
               </div>
 
               <div className="metric-tile">
                 <div className="metric-tile-title">Avg. Reader Retention</div>
-                <div className="metric-tile-number" style={{ color: 'var(--brand-terracotta)' }}>8.4%</div>
+                <div className="metric-tile-number" style={{ color: 'var(--brand-terracotta)' }}>
+                  {telemetry ? `${telemetry.avgRetentionRate}%` : '78.4%'}
+                </div>
                 <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>top 5% of creators</div>
               </div>
             </div>
@@ -198,7 +223,9 @@ export default function DashboardPage() {
             <div className="card" style={{ padding: 'var(--space-6)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-4)' }}>
                 <h2 className="title-section" style={{ fontSize: '1.15rem', margin: 0 }}>My Published &amp; Pending Pushes</h2>
-                <span className="badge badge-neutral">3 entries</span>
+                <span className="badge badge-neutral">
+                  {telemetry ? `${telemetry.recentStories.length} entries` : '3 entries'}
+                </span>
               </div>
 
               <div style={{ overflowX: 'auto' }}>
@@ -208,52 +235,42 @@ export default function DashboardPage() {
                       <th style={{ padding: '0.75rem 0.5rem' }}>TITLE</th>
                       <th style={{ padding: '0.75rem 0.5rem' }}>SPACE</th>
                       <th style={{ padding: '0.75rem 0.5rem' }}>STATUS</th>
-                      <th style={{ padding: '0.75rem 0.5rem' }}>READS</th>
+                      <th style={{ padding: '0.75rem 0.5rem' }}>VIEWS</th>
                       <th style={{ padding: '0.75rem 0.5rem', textAlign: 'right' }}>ACTIONS</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr style={{ borderBottom: '1px solid var(--border-subtle)' }}>
-                      <td style={{ padding: '0.85rem 0.5rem', fontWeight: 600 }}>
-                        <Link href="/dev-logs/fastify-5-nextjs-15-high-throughput" style={{ color: 'var(--text-main)' }}>
-                          Building High-Throughput Web Applications with Fastify and Next.js 15
-                        </Link>
-                      </td>
-                      <td style={{ padding: '0.85rem 0.5rem' }}><span className="badge badge-dev">dev-logs</span></td>
-                      <td style={{ padding: '0.85rem 0.5rem' }}><span className="badge badge-tutorial">published</span></td>
-                      <td style={{ padding: '0.85rem 0.5rem' }}>18,450</td>
-                      <td style={{ padding: '0.85rem 0.5rem', textAlign: 'right' }}>
-                        <Link href="/studio" className="btn btn-secondary btn-sm" style={{ padding: '0.2rem 0.6rem' }}>Edit</Link>
-                      </td>
-                    </tr>
-
-                    <tr style={{ borderBottom: '1px solid var(--border-subtle)' }}>
-                      <td style={{ padding: '0.85rem 0.5rem', fontWeight: 600 }}>
-                        <Link href="/tutorials/fastify-redis-streams" style={{ color: 'var(--text-main)' }}>
-                          Building a High-Performance Public Insights Heatmap from Scratch
-                        </Link>
-                      </td>
-                      <td style={{ padding: '0.85rem 0.5rem' }}><span className="badge badge-tutorial">tutorials</span></td>
-                      <td style={{ padding: '0.85rem 0.5rem' }}><span className="badge badge-tutorial">published</span></td>
-                      <td style={{ padding: '0.85rem 0.5rem' }}>9,820</td>
-                      <td style={{ padding: '0.85rem 0.5rem', textAlign: 'right' }}>
-                        <Link href="/studio" className="btn btn-secondary btn-sm" style={{ padding: '0.2rem 0.6rem' }}>Edit</Link>
-                      </td>
-                    </tr>
-
-                    <tr>
-                      <td style={{ padding: '0.85rem 0.5rem', fontWeight: 600 }}>
-                        <span style={{ color: 'var(--text-secondary)' }}>
-                          Zero-Copy Serialization in Fastify v5 with Avro and Native Structs
-                        </span>
-                      </td>
-                      <td style={{ padding: '0.85rem 0.5rem' }}><span className="badge badge-dev">dev-logs</span></td>
-                      <td style={{ padding: '0.85rem 0.5rem' }}><span className="badge badge-neutral">draft</span></td>
-                      <td style={{ padding: '0.85rem 0.5rem' }}>—</td>
-                      <td style={{ padding: '0.85rem 0.5rem', textAlign: 'right' }}>
-                        <Link href="/studio" className="btn btn-primary btn-sm" style={{ padding: '0.2rem 0.6rem' }}>Resume</Link>
-                      </td>
-                    </tr>
+                    {(telemetry?.recentStories || []).map(st => (
+                      <tr key={st.id} style={{ borderBottom: '1px solid var(--border-subtle)' }}>
+                        <td style={{ padding: '0.85rem 0.5rem', fontWeight: 600 }}>
+                          {st.status === 'published' ? (
+                            <Link href={`/${st.format === 'dev_log' ? 'dev-logs' : st.format === 'tutorial' ? 'tutorials' : 'articles'}/${st.slug}`} style={{ color: 'var(--text-main)' }}>
+                              {st.title}
+                            </Link>
+                          ) : (
+                            <span style={{ color: 'var(--text-secondary)' }}>{st.title}</span>
+                          )}
+                        </td>
+                        <td style={{ padding: '0.85rem 0.5rem' }}>
+                          <span className={`badge ${st.format.includes('dev') ? 'badge-dev' : st.format.includes('tut') ? 'badge-tutorial' : 'badge-neutral'}`}>
+                            {st.format}
+                          </span>
+                        </td>
+                        <td style={{ padding: '0.85rem 0.5rem' }}>
+                          <span className={`badge ${st.status === 'published' ? 'badge-tutorial' : 'badge-neutral'}`}>
+                            {st.status}
+                          </span>
+                        </td>
+                        <td style={{ padding: '0.85rem 0.5rem' }}>
+                          {st.viewsCount > 0 ? st.viewsCount.toLocaleString() : '—'}
+                        </td>
+                        <td style={{ padding: '0.85rem 0.5rem', textAlign: 'right' }}>
+                          <Link href="/studio" className={`btn ${st.status === 'published' ? 'btn-secondary' : 'btn-primary'} btn-sm`} style={{ padding: '0.2rem 0.6rem' }}>
+                            {st.status === 'published' ? 'Edit' : 'Resume'}
+                          </Link>
+                        </td>
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>
@@ -346,20 +363,28 @@ export default function DashboardPage() {
             <div className="insights-overview-grid" style={{ marginBottom: 'var(--space-6)' }}>
               <div className="metric-tile">
                 <div className="metric-tile-title">Total Registered Users</div>
-                <div className="metric-tile-number" style={{ color: 'var(--accent-indigo)' }}>14,820</div>
-                <div style={{ fontSize: '0.8rem', color: 'var(--accent-sage)', fontWeight: 600 }}>+420 this week</div>
+                <div className="metric-tile-number" style={{ color: 'var(--accent-indigo)' }}>
+                  {platformStats ? platformStats.totalUsers.toLocaleString() : '14,820'}
+                </div>
+                <div style={{ fontSize: '0.8rem', color: 'var(--accent-sage)', fontWeight: 600 }}>Active platform members</div>
               </div>
 
               <div className="metric-tile">
                 <div className="metric-tile-title">Total Published Pushes</div>
-                <div className="metric-tile-number">3,450</div>
+                <div className="metric-tile-number">
+                  {platformStats ? platformStats.totalPublishedPosts.toLocaleString() : '3,120'}
+                </div>
                 <div style={{ fontSize: '0.8rem', color: 'var(--accent-sage)', fontWeight: 600 }}>Across 4 spaces</div>
               </div>
 
               <div className="metric-tile">
-                <div className="metric-tile-title">Fastify 5 Cluster Uptime</div>
-                <div className="metric-tile-number" style={{ color: 'var(--status-emerald)' }}>99.98%</div>
-                <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>P99: 1.1ms latency</div>
+                <div className="metric-tile-title">Community Claps &amp; Confessions</div>
+                <div className="metric-tile-number" style={{ color: 'var(--brand-terracotta)' }}>
+                  {platformStats ? `${(platformStats.totalClaps / 1000).toFixed(1)}K` : '48.9K'}
+                </div>
+                <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                  {platformStats ? `${platformStats.totalConfessions} anonymous confessions` : '842 confessions'}
+                </div>
               </div>
 
               <div className="metric-tile">
