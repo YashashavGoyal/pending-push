@@ -7,6 +7,7 @@ import { UserController } from '../controllers/user.controller.js';
 import { InteractionController } from '../controllers/interaction.controller.js';
 import { AnalyticsController } from '../controllers/analytics.controller.js';
 import { TagController } from '../controllers/tag.controller.js';
+import { RealtimeController } from '../controllers/realtime.controller.js';
 import { registerAuthRoutes } from './auth.routes.js';
 import { registerPostRoutes } from './post.routes.js';
 import { registerContactRoutes } from './contact.routes.js';
@@ -15,6 +16,7 @@ import { registerUserRoutes } from './user.routes.js';
 import { registerInteractionRoutes } from './interaction.routes.js';
 import { registerAnalyticsRoutes } from './analytics.routes.js';
 import { registerTagRoutes } from './tag.routes.js';
+import { registerRealtimeRoutes } from './realtime.routes.js';
 
 export interface RouteControllers {
   authController: AuthController;
@@ -25,6 +27,7 @@ export interface RouteControllers {
   interactionController: InteractionController;
   analyticsController: AnalyticsController;
   tagController: TagController;
+  realtimeController: RealtimeController;
 }
 
 export const setupRoutes = async (fastify: FastifyInstance, controllers: RouteControllers): Promise<void> => {
@@ -37,6 +40,7 @@ export const setupRoutes = async (fastify: FastifyInstance, controllers: RouteCo
   await fastify.register(async (child) => registerInteractionRoutes(child, controllers.interactionController), { prefix: '/api' });
   await fastify.register(async (child) => registerAnalyticsRoutes(child, controllers.analyticsController), { prefix: '/api' });
   await fastify.register(async (child) => registerTagRoutes(child, controllers.tagController), { prefix: '/api/tags' });
+  await fastify.register(async (child) => registerRealtimeRoutes(child, controllers.realtimeController), { prefix: '/api/realtime' });
 
   // Modern v1 API routes for future Next.js client
   await fastify.register(async (child) => registerAuthRoutes(child, controllers.authController), { prefix: '/api/v1/auth' });
@@ -47,4 +51,5 @@ export const setupRoutes = async (fastify: FastifyInstance, controllers: RouteCo
   await fastify.register(async (child) => registerInteractionRoutes(child, controllers.interactionController), { prefix: '/api/v1' });
   await fastify.register(async (child) => registerAnalyticsRoutes(child, controllers.analyticsController), { prefix: '/api/v1' });
   await fastify.register(async (child) => registerTagRoutes(child, controllers.tagController), { prefix: '/api/v1/tags' });
+  await fastify.register(async (child) => registerRealtimeRoutes(child, controllers.realtimeController), { prefix: '/api/v1/realtime' });
 };

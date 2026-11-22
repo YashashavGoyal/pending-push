@@ -38,6 +38,8 @@ import { UserController } from './controllers/user.controller.js';
 import { InteractionController } from './controllers/interaction.controller.js';
 import { AnalyticsController } from './controllers/analytics.controller.js';
 import { TagController } from './controllers/tag.controller.js';
+import { RealtimeService } from './services/realtime.service.js';
+import { RealtimeController } from './controllers/realtime.controller.js';
 
 export interface AppDependencies {
   userRepository?: IUserRepository;
@@ -47,6 +49,7 @@ export interface AppDependencies {
   interactionRepository?: IInteractionRepository;
   analyticsRepository?: IAnalyticsRepository;
   tagRepository?: ITagRepository;
+  realtimeService?: RealtimeService;
 }
 
 export const createApp = async (dependencies?: AppDependencies): Promise<FastifyInstance> => {
@@ -153,18 +156,20 @@ export const createApp = async (dependencies?: AppDependencies): Promise<Fastify
   const contactService = new ContactService(contactRepository);
   const adminService = new AdminService(userRepository, postRepository, contactRepository, analyticsRepository);
   const userService = new UserService(userRepository);
-  const interactionService = new InteractionService(interactionRepository, postRepository, userRepository);
   const analyticsService = new AnalyticsService(analyticsRepository, userRepository);
   const tagService = new TagService(tagRepository);
+  const realtimeService = dependencies?.realtimeService || new RealtimeService();
 
   const authController = new AuthController(authService);
   const postController = new PostController(postService);
   const contactController = new ContactController(contactService);
   const adminController = new AdminController(authService, adminService);
   const userController = new UserController(userService);
+  const interactionService = new InteractionService(interactionRepository, postRepository, userRepository, realtimeService);
   const interactionController = new InteractionController(interactionService);
   const analyticsController = new AnalyticsController(analyticsService);
   const tagController = new TagController(tagService, postService);
+  const realtimeController = new RealtimeController(realtimeService);
 
   await setupRoutes(fastify, {
     authController,
@@ -175,6 +180,7 @@ export const createApp = async (dependencies?: AppDependencies): Promise<Fastify
     interactionController,
     analyticsController,
     tagController,
+    realtimeController,
   });
 
   return fastify;
