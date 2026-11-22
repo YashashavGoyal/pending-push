@@ -42,3 +42,9 @@ export class ValidationError extends AppError {
     super(message, 422, details);
   }
 }
+
+export class InternalServerError extends AppError {
+  constructor(message = 'Internal server error', details?: unknown) {
+    super(message, 500, details);
+  }
+}

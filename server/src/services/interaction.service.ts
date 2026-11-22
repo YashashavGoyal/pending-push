@@ -1,6 +1,7 @@
 import { IInteractionRepository } from '../repositories/interfaces/interaction.repository.interface.js';
 import { IPostRepository } from '../repositories/interfaces/post.repository.interface.js';
 import { IUserRepository } from '../repositories/interfaces/user.repository.interface.js';
+import { RealtimeService } from './realtime.service.js';
 import { NotFoundError, BadRequestError, ForbiddenError } from '../errors/app-error.js';
 import {
   ClapResult,
@@ -16,7 +17,8 @@ export class InteractionService {
   constructor(
     private readonly interactionRepository: IInteractionRepository,
     private readonly postRepository: IPostRepository,
-    private readonly userRepository: IUserRepository
+    private readonly userRepository: IUserRepository,
+    private readonly realtimeService?: RealtimeService
   ) {}
 
   // ================= CLAPS =================
@@ -26,7 +28,21 @@ export class InteractionService {
       throw new NotFoundError('Post not found');
     }
 
-    return this.interactionRepository.clap(postId, userId, increment);
+    const result = await this.interactionRepository.clap(postId, userId, increment);
+
+    if (this.realtimeService) {
+      this.realtimeService
+        .broadcastToPost(postId, 'post:clap', {
+          postId,
+          increment,
+          totalClaps: result.totalClaps,
+          userClaps: result.userClaps,
+          userId,
+        })
+        .catch(() => {});
+    }
+
+    return result;
   }
 
   public async getUserClaps(postId: string, userId: string): Promise<number> {
@@ -80,6 +96,16 @@ export class InteractionService {
     }
 
     const following = await this.interactionRepository.toggleFollow(followerId, followingId);
+
+    if (following && this.realtimeService) {
+      this.realtimeService
+        .notifyUser(followingId, 'user:notification', {
+          type: 'follow',
+          actorId: followerId,
+        })
+        .catch(() => {});
+    }
+
     return { following };
   }
 
@@ -134,12 +160,34 @@ export class InteractionService {
       throw new NotFoundError('Post not found');
     }
 
-    return this.interactionRepository.createComment({
+    const comment = await this.interactionRepository.createComment({
       postId,
       authorId,
       content: input.content,
       parentId: input.parentId || null,
     });
+
+    if (this.realtimeService) {
+      this.realtimeService
+        .broadcastToPost(postId, 'post:comment', {
+          postId,
+          comment,
+        })
+        .catch(() => {});
+
+      if (post.authorId && post.authorId !== authorId) {
+        this.realtimeService
+          .notifyUser(post.authorId, 'user:notification', {
+            type: 'comment',
+            postId,
+            commentId: comment.id,
+            actorId: authorId,
+          })
+          .catch(() => {});
+      }
+    }
+
+    return comment;
   }
 
   public async getComments(postId: string): Promise<CommentItem[]> {
