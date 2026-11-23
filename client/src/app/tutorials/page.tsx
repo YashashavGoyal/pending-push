@@ -1,14 +1,24 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { TUTORIAL_TRACKS } from '@/lib/mock-data';
+import { fetchTutorials } from '@/lib/api';
+import { TutorialTrack } from '@/lib/types';
 
 export default function TutorialsPage() {
+  const [tracks, setTracks] = useState<TutorialTrack[]>([]);
+  const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'all' | 'started' | 'completed' | 'saved'>('all');
   const [searchQuery, setSearchQuery] = useState('');
 
-  const filteredTracks = TUTORIAL_TRACKS.filter(track => {
+  useEffect(() => {
+    fetchTutorials().then(data => {
+      setTracks(data);
+      setLoading(false);
+    });
+  }, []);
+
+  const filteredTracks = tracks.filter(track => {
     // Filter by tab
     if (activeTab === 'started' && track.status !== 'started') return false;
     if (activeTab === 'completed' && track.status !== 'completed') return false;
@@ -25,9 +35,9 @@ export default function TutorialsPage() {
     return true;
   });
 
-  const startedCount = TUTORIAL_TRACKS.filter(t => t.status === 'started').length;
-  const completedCount = TUTORIAL_TRACKS.filter(t => t.status === 'completed').length;
-  const savedCount = TUTORIAL_TRACKS.filter(t => t.status === 'saved').length;
+  const startedCount = tracks.filter(t => t.status === 'started').length;
+  const completedCount = tracks.filter(t => t.status === 'completed').length;
+  const savedCount = tracks.filter(t => t.status === 'saved').length;
 
   return (
     <main className="page-wrapper">
@@ -48,11 +58,11 @@ export default function TutorialsPage() {
 
           <div className="space-actions">
             <Link
-              href="/tutorials/fastify-redis-streams"
+              href="/studio"
               className="btn btn-primary btn-sm"
               style={{ borderRadius: 'var(--radius-full)' }}
             >
-              <span>Resume Current (Step 3) &rarr;</span>
+              <span>Publish Masterclass &rarr;</span>
             </Link>
           </div>
         </section>
@@ -110,7 +120,7 @@ export default function TutorialsPage() {
               className={`btn btn-sm ${activeTab === 'all' ? 'btn-primary' : 'btn-secondary'}`}
               style={{ borderRadius: 'var(--radius-full)' }}
             >
-              All Masterclasses ({TUTORIAL_TRACKS.length})
+              All Masterclasses ({tracks.length})
             </button>
             <button
               onClick={() => setActiveTab('started')}
@@ -146,88 +156,86 @@ export default function TutorialsPage() {
               <span>Saved Tracks ({savedCount})</span>
             </button>
           </div>
-
-          <div style={{ fontSize: '0.825rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
-            <span>Your Total Progress: <strong style={{ color: 'var(--brand-terracotta)' }}>65% Avg</strong></span>
-            <span>•</span>
-            <span>Time Spent: <strong>2h 15m</strong></span>
-          </div>
         </div>
 
-        {/* Tutorials Grid */}
-        <div className="tutorial-grid">
-          {filteredTracks.map(track => {
-            const percent = Math.round((track.completedSteps / track.totalSteps) * 100);
-            return (
-              <article key={track.id} className="tutorial-card">
-                <div style={{ display: 'flex', alignItems: 'center', justifySelf: 'stretch', justifyContent: 'space-between', marginBottom: 'var(--space-4)' }}>
-                  <span className="badge badge-tutorial">{track.totalSteps} Steps • {track.duration}</span>
-                  {track.status === 'started' && (
-                    <span className="badge badge-dev" style={{ backgroundColor: 'rgba(249, 115, 22, 0.12)', color: 'var(--brand-terracotta)' }}>
-                      In Progress ({percent}%)
-                    </span>
-                  )}
-                  {track.status === 'completed' && (
-                    <span className="badge badge-neutral" style={{ backgroundColor: 'rgba(16, 185, 129, 0.12)', color: 'var(--status-emerald)' }}>
-                      Completed
-                    </span>
-                  )}
-                  {track.status === 'saved' && (
-                    <span className="badge badge-neutral">Saved</span>
-                  )}
-                </div>
-
-                <h2 style={{ fontSize: '1.35rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: 'var(--space-2)', lineHeight: 1.35 }}>
-                  <Link href={`/tutorials/${track.slug}`}>{track.title}</Link>
-                </h2>
-
-                <p className="text-secondary" style={{ fontSize: '0.925rem', lineHeight: 1.6, flex: 1 }}>
-                  {track.description}
-                </p>
-
-                {track.status === 'started' && (
-                  <div style={{ margin: 'var(--space-5) 0 var(--space-2)' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.775rem', color: 'var(--text-muted)', marginBottom: '0.25rem' }}>
-                      <span>Step {track.completedSteps} of {track.totalSteps} completed</span>
-                      <span style={{ fontWeight: 700, color: 'var(--accent-sage)' }}>{percent}%</span>
-                    </div>
-                    <div className="tutorial-progress-mini">
-                      <div
-                        className="tutorial-progress-mini-bar"
-                        style={{
-                          width: `${percent}%`,
-                          background: 'linear-gradient(90deg, var(--brand-terracotta), var(--accent-sage))'
-                        }}
-                      />
-                    </div>
-                  </div>
-                )}
-
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: 'var(--space-4)', borderTop: '1px solid var(--border-subtle)', fontSize: '0.825rem', color: 'var(--text-muted)' }}>
-                  <span>{track.lastPracticed ? `Last practiced ${track.lastPracticed}` : `${track.level} Level`}</span>
-                  <Link
-                    href={`/tutorials/${track.slug}`}
-                    className="btn btn-primary btn-sm"
-                    style={{ borderRadius: 'var(--radius-full)' }}
-                  >
-                    <span>{track.status === 'started' ? 'Resume Track \u2192' : 'Start Track \u2192'}</span>
-                  </Link>
-                </div>
-              </article>
-            );
-          })}
-        </div>
-
-        {filteredTracks.length === 0 && (
+        {loading ? (
           <div style={{ textAlign: 'center', padding: 'var(--space-12) 0', color: 'var(--text-muted)' }}>
-            <p style={{ fontSize: '1.1rem', marginBottom: 'var(--space-2)' }}>No tutorials found matching your filters.</p>
-            <button
-              onClick={() => { setActiveTab('all'); setSearchQuery(''); }}
-              className="btn btn-secondary btn-sm"
-              style={{ borderRadius: 'var(--radius-full)' }}
-            >
-              Reset Filters
-            </button>
+            <p style={{ fontSize: '1rem' }}>Loading tutorials from database...</p>
+          </div>
+        ) : tracks.length === 0 ? (
+          <div className="card" style={{ padding: 'var(--space-8)', textAlign: 'center', borderRadius: 'var(--radius-xl)' }}>
+            <div style={{ fontSize: '2.5rem', marginBottom: 'var(--space-2)' }}>🎓</div>
+            <h2 style={{ fontSize: '1.35rem', fontWeight: 800, marginBottom: 'var(--space-2)' }}>No Masterclasses Available Yet</h2>
+            <p className="text-secondary" style={{ maxWidth: '440px', margin: '0 auto var(--space-4)', fontSize: '0.925rem' }}>
+              Structured tutorials and multi-step engineering masterclasses will appear here once published from the Author Studio.
+            </p>
+            <Link href="/studio" className="btn btn-primary btn-sm" style={{ borderRadius: 'var(--radius-full)' }}>
+              Open Studio &rarr;
+            </Link>
+          </div>
+        ) : (
+          /* Tutorials Grid */
+          <div className="tutorial-grid">
+            {filteredTracks.map(track => {
+              const percent = Math.round((track.completedSteps / track.totalSteps) * 100);
+              return (
+                <article key={track.id} className="tutorial-card">
+                  <div style={{ display: 'flex', alignItems: 'center', justifySelf: 'stretch', justifyContent: 'space-between', marginBottom: 'var(--space-4)' }}>
+                    <span className="badge badge-tutorial">{track.totalSteps} Steps • {track.duration}</span>
+                    {track.status === 'started' && (
+                      <span className="badge badge-dev" style={{ backgroundColor: 'rgba(249, 115, 22, 0.12)', color: 'var(--brand-terracotta)' }}>
+                        In Progress ({percent}%)
+                      </span>
+                    )}
+                    {track.status === 'completed' && (
+                      <span className="badge badge-neutral" style={{ backgroundColor: 'rgba(16, 185, 129, 0.12)', color: 'var(--status-emerald)' }}>
+                        Completed
+                      </span>
+                    )}
+                    {track.status === 'saved' && (
+                      <span className="badge badge-neutral">Saved</span>
+                    )}
+                  </div>
+
+                  <h2 style={{ fontSize: '1.35rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: 'var(--space-2)', lineHeight: 1.35 }}>
+                    <Link href={`/tutorials/${track.slug}`}>{track.title}</Link>
+                  </h2>
+
+                  <p className="text-secondary" style={{ fontSize: '0.925rem', lineHeight: 1.6, flex: 1 }}>
+                    {track.description}
+                  </p>
+
+                  {track.status === 'started' && (
+                    <div style={{ margin: 'var(--space-5) 0 var(--space-2)' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.775rem', color: 'var(--text-muted)', marginBottom: '0.25rem' }}>
+                        <span>Step {track.completedSteps} of {track.totalSteps} completed</span>
+                        <span style={{ fontWeight: 700, color: 'var(--accent-sage)' }}>{percent}%</span>
+                      </div>
+                      <div className="tutorial-progress-mini">
+                        <div
+                          className="tutorial-progress-mini-bar"
+                          style={{
+                            width: `${percent}%`,
+                            background: 'linear-gradient(90deg, var(--brand-terracotta), var(--accent-sage))'
+                          }}
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: 'var(--space-4)', borderTop: '1px solid var(--border-subtle)', fontSize: '0.825rem', color: 'var(--text-muted)' }}>
+                    <span>{track.lastPracticed ? `Last practiced ${track.lastPracticed}` : `${track.level} Level`}</span>
+                    <Link
+                      href={`/tutorials/${track.slug}`}
+                      className="btn btn-primary btn-sm"
+                      style={{ borderRadius: 'var(--radius-full)' }}
+                    >
+                      <span>{track.status === 'started' ? 'Resume Track \u2192' : 'Start Track \u2192'}</span>
+                    </Link>
+                  </div>
+                </article>
+              );
+            })}
           </div>
         )}
 

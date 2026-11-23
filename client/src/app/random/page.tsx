@@ -2,24 +2,27 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { FEED_STORIES } from '@/lib/mock-data';
 import { fetchRandomPost } from '@/lib/api';
 import { Post } from '@/lib/types';
 import StoryInteractions from '@/Components/StoryInteractions';
 
 export default function RandomPage() {
-  const [currentStory, setCurrentStory] = useState<Post>(FEED_STORIES[0]);
+  const [currentStory, setCurrentStory] = useState<Post | null>(null);
+  const [initialLoading, setInitialLoading] = useState(true);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    fetchRandomPost().then(setCurrentStory);
+    fetchRandomPost().then(res => {
+      setCurrentStory(res);
+      setInitialLoading(false);
+    });
   }, []);
 
   const handleShuffle = async () => {
     setLoading(true);
     try {
       const next = await fetchRandomPost();
-      setCurrentStory(next);
+      if (next) setCurrentStory(next);
     } finally {
       setLoading(false);
     }
@@ -41,7 +44,7 @@ export default function RandomPage() {
 
           <button
             onClick={handleShuffle}
-            disabled={loading}
+            disabled={loading || !currentStory}
             className="btn btn-primary btn-sm"
             style={{ borderRadius: 'var(--radius-full)' }}
           >
@@ -58,67 +61,110 @@ export default function RandomPage() {
           </button>
         </section>
 
-        {/* Article Reader */}
-        <article>
-          <header style={{ marginBottom: 'var(--space-6)' }}>
-            <div style={{ display: 'flex', gap: 'var(--space-2)', marginBottom: 'var(--space-3)' }}>
-              <span className="badge badge-dev">{currentStory.category}</span>
-              {currentStory.tags.map(t => (
-                <span key={t} className="badge badge-neutral">{t}</span>
-              ))}
-            </div>
-
-            <h1 className="title-page">
-              {currentStory.title}
-            </h1>
-
-            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', marginTop: 'var(--space-3)', fontSize: '0.825rem', color: 'var(--text-muted)' }}>
-              <img
-                style={{ width: '1.75rem', height: '1.75rem', borderRadius: '999px' }}
-                src={currentStory.author.avatar}
-                alt={currentStory.author.name}
-              />
-              <span style={{ color: 'var(--text-main)', fontWeight: 600 }}>{currentStory.author.name}</span>
-              <span>•</span>
-              <span>{currentStory.readTime}</span>
-              <span>•</span>
-              <span>{currentStory.publishedAt}</span>
-            </div>
-          </header>
-
-          <div style={{ fontSize: '1.05rem', lineHeight: 1.8, color: 'var(--text-main)' }}>
-            <p style={{ marginBottom: '1.25rem' }}>
-              {currentStory.summary}
-            </p>
-
-            <p style={{ marginBottom: '1.25rem' }}>
-              In high-concurrency systems, reducing memory allocations and eliminating unnecessary abstraction layers delivers monumental improvements in end-to-end responsiveness and cloud expenditure efficiency.
-            </p>
+        {initialLoading ? (
+          <div style={{ textAlign: 'center', padding: 'var(--space-12) 0', color: 'var(--text-muted)' }}>
+            <p>Fetching a random story from the database...</p>
           </div>
-
-          {/* Social Interactions: Claps & Bookmarks */}
-          <div style={{ margin: 'var(--space-6) 0' }}>
-            <StoryInteractions postId={currentStory.id} initialRelates={currentStory.relates} />
-          </div>
-
-          <div style={{ marginTop: 'var(--space-8)', paddingTop: 'var(--space-5)', borderTop: '1px solid var(--border-subtle)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Link
-              href={currentStory.category === 'dev-log' ? `/dev-logs/${currentStory.slug}` : `/articles/${currentStory.slug}`}
-              className="btn btn-secondary btn-sm"
-              style={{ borderRadius: 'var(--radius-full)' }}
-            >
-              Read Full Post &rarr;
+        ) : !currentStory ? (
+          <div className="card" style={{ padding: 'var(--space-8)', textAlign: 'center', borderRadius: 'var(--radius-xl)' }}>
+            <div style={{ fontSize: '2.5rem', marginBottom: 'var(--space-2)' }}>🎲</div>
+            <h2 style={{ fontSize: '1.35rem', fontWeight: 800, marginBottom: 'var(--space-2)' }}>No Stories Available Yet</h2>
+            <p className="text-secondary" style={{ maxWidth: '440px', margin: '0 auto var(--space-4)', fontSize: '0.925rem' }}>
+              The serendipity engine needs at least one published story in the database to randomize.
+            </p>
+            <Link href="/studio" className="btn btn-primary btn-sm" style={{ borderRadius: 'var(--radius-full)' }}>
+              Publish First Story &rarr;
             </Link>
-            <button
-              onClick={handleShuffle}
-              disabled={loading}
-              className="btn btn-primary btn-sm"
-              style={{ borderRadius: 'var(--radius-full)' }}
-            >
-              {loading ? 'Discovering...' : 'Roll Next Random Push \u2192'}
-            </button>
           </div>
-        </article>
+        ) : (
+          /* Article Reader */
+          <article>
+            <header style={{ marginBottom: 'var(--space-6)' }}>
+              <div style={{ display: 'flex', gap: 'var(--space-2)', marginBottom: 'var(--space-3)', flexWrap: 'wrap' }}>
+                <span className="badge badge-dev">{currentStory.category}</span>
+                {currentStory.tags.map(t => (
+                  <span key={t} className="badge badge-neutral">{t}</span>
+                ))}
+              </div>
+
+              <h1 className="title-page">
+                {currentStory.title}
+              </h1>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', marginTop: 'var(--space-3)', fontSize: '0.825rem', color: 'var(--text-muted)' }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  style={{ width: '1.75rem', height: '1.75rem', borderRadius: 'var(--radius-full)', objectFit: 'cover' }}
+                  src={currentStory.author.avatar}
+                  alt={currentStory.author.name}
+                />
+                <span style={{ color: 'var(--text-main)', fontWeight: 600 }}>{currentStory.author.name}</span>
+                <span>•</span>
+                <span>{currentStory.readTime}</span>
+                <span>•</span>
+                <span>{currentStory.publishedAt}</span>
+              </div>
+            </header>
+
+            <div className="prose" style={{ fontSize: '1.1rem', lineHeight: 1.8 }}>
+              {currentStory.content ? (
+                currentStory.content.split('\n\n').map((paragraph, idx) => {
+                  const trimmed = paragraph.trim();
+                  if (trimmed.startsWith('## ')) {
+                    return <h2 key={idx}>{trimmed.replace('## ', '')}</h2>;
+                  }
+                  if (trimmed.startsWith('> ')) {
+                    return <blockquote key={idx}>{trimmed.replace('> ', '')}</blockquote>;
+                  }
+                  if (trimmed.startsWith('```')) {
+                    return (
+                      <pre key={idx} className="code-pre" style={{ margin: 'var(--space-4) 0' }}>
+                        <code>{trimmed.replace(/```[a-z]*\n?/g, '')}</code>
+                      </pre>
+                    );
+                  }
+                  return <p key={idx}>{trimmed}</p>;
+                })
+              ) : (
+                <p>{currentStory.summary}</p>
+              )}
+            </div>
+
+            {/* Social Interactions Bar */}
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: 'var(--space-5) 0',
+                marginTop: 'var(--space-8)',
+                borderTop: '1px solid var(--border-subtle)',
+                borderBottom: '1px solid var(--border-subtle)',
+                flexWrap: 'wrap',
+                gap: 'var(--space-3)'
+              }}
+            >
+              <StoryInteractions
+                postId={currentStory.id}
+                slug={currentStory.slug}
+                title={currentStory.title}
+                initialRelates={currentStory.relates}
+                showShare={true}
+                layout="bar"
+              />
+              <div style={{ display: 'flex', gap: 'var(--space-2)' }}>
+                <button
+                  onClick={handleShuffle}
+                  className="btn btn-secondary btn-sm"
+                  style={{ borderRadius: 'var(--radius-full)' }}
+                >
+                  Shuffle Another &rarr;
+                </button>
+              </div>
+            </div>
+
+          </article>
+        )}
 
       </div>
     </main>

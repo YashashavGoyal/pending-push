@@ -15,46 +15,63 @@ export default async function HomePage() {
           {/* LEFT COLUMN: FEATURED STORY & STORIES STREAM */}
           <div>
 
-            {/* 1. FEATURED STORY OF THE WEEK */}
-            <article className="featured-story-card">
-              <div className="featured-kicker">
-                <span>✦ Featured Publication</span>
-                <span>•</span>
-                <span>Architecture & Craft</span>
-              </div>
-              
-              <h1 className="featured-title">
-                <Link href={`/articles/${featured.slug}`}>
-                  {featured.title}
+            {!featured && stories.length === 0 ? (
+              <div className="card" style={{ padding: 'var(--space-8)', textAlign: 'center', marginBottom: 'var(--space-6)' }}>
+                <div style={{ fontSize: '2.5rem', marginBottom: 'var(--space-2)' }}>📝</div>
+                <h2 style={{ fontSize: '1.35rem', fontWeight: 800, marginBottom: 'var(--space-2)' }}>No Stories Published Yet</h2>
+                <p className="text-secondary" style={{ maxWidth: '460px', margin: '0 auto var(--space-4)', fontSize: '0.925rem' }}>
+                  The platform feed is waiting for its first push. Be the first developer to publish an essay, technical dev log, or interactive masterclass.
+                </p>
+                <Link href="/studio" className="btn btn-primary btn-sm" style={{ borderRadius: 'var(--radius-full)' }}>
+                  Open Author Studio &rarr;
                 </Link>
-              </h1>
-
-              <p className="featured-summary">
-                {featured.summary}
-              </p>
-
-              <div className="story-meta-row">
-                <Link href={`/profile/${featured.author.username}`} className="story-author-chip">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img className="story-author-avatar" src={featured.author.avatar} alt={featured.author.name} />
-                  <span>{featured.author.name} (@{featured.author.username})</span>
-                </Link>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>
-                  <span>{featured.readTime}</span>
-                  <span>•</span>
-                  <span style={{ color: 'var(--brand-terracotta)', fontWeight: 600 }}>{featured.relates} relates</span>
-                  <span>•</span>
-                  <span className="icon icon-sm" style={{ color: 'var(--text-muted)', cursor: 'pointer' }} title="Bookmark Story">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                      <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" />
-                    </svg>
-                  </span>
-                </div>
               </div>
-            </article>
+            ) : (
+              <>
+                {/* 1. FEATURED STORY OF THE WEEK */}
+                {featured && (
+                  <article className="featured-story-card">
+                    <div className="featured-kicker">
+                      <span>✦ Featured Publication</span>
+                      <span>•</span>
+                      <span>{featured.category}</span>
+                    </div>
+                    
+                    <h1 className="featured-title">
+                      <Link href={`/articles/${featured.slug}`}>
+                        {featured.title}
+                      </Link>
+                    </h1>
 
-            {/* 2. FEED TABS & STORIES STREAM */}
-            <HomeFeedTabs initialStories={stories} />
+                    <p className="featured-summary">
+                      {featured.summary}
+                    </p>
+
+                    <div className="story-meta-row">
+                      <Link href={`/profile/${featured.author.username}`} className="story-author-chip">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img className="story-author-avatar" src={featured.author.avatar} alt={featured.author.name} />
+                        <span>{featured.author.name} (@{featured.author.username})</span>
+                      </Link>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>
+                        <span>{featured.readTime}</span>
+                        <span>•</span>
+                        <span style={{ color: 'var(--brand-terracotta)', fontWeight: 600 }}>{featured.relates} relates</span>
+                        <span>•</span>
+                        <span className="icon icon-sm" style={{ color: 'var(--text-muted)', cursor: 'pointer' }} title="Bookmark Story">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" />
+                          </svg>
+                        </span>
+                      </div>
+                    </div>
+                  </article>
+                )}
+
+                {/* 2. FEED TABS & STORIES STREAM */}
+                {stories.length > 0 && <HomeFeedTabs initialStories={stories} />}
+              </>
+            )}
 
           </div>
 

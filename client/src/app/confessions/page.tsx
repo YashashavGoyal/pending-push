@@ -1,18 +1,25 @@
 'use client';
 
-import { useState } from 'react';
-import { CONFESSIONS_DATA } from '@/lib/mock-data';
+import { useState, useEffect } from 'react';
 import { Confession } from '@/lib/types';
-import { createPost } from '@/lib/api';
+import { createPost, fetchConfessions } from '@/lib/api';
 
 export default function ConfessionsPage() {
-  const [confessions, setConfessions] = useState<Confession[]>(CONFESSIONS_DATA);
+  const [confessions, setConfessions] = useState<Confession[]>([]);
+  const [loading, setLoading] = useState(true);
   const [activeFilter, setActiveFilter] = useState<'all' | 'incidents' | 'imposter' | 'career' | 'latenight'>('all');
   const [modalOpen, setModalOpen] = useState(false);
   const [newAlias, setNewAlias] = useState('');
   const [newMessage, setNewMessage] = useState('');
   const [newCategory, setNewCategory] = useState<'incidents' | 'imposter' | 'career' | 'latenight'>('incidents');
   const [relatedIds, setRelatedIds] = useState<Record<string, boolean>>({});
+
+  useEffect(() => {
+    fetchConfessions().then(data => {
+      setConfessions(data);
+      setLoading(false);
+    });
+  }, []);
 
   const handleRelate = (id: string) => {
     setConfessions(prev =>
@@ -30,7 +37,7 @@ export default function ConfessionsPage() {
     setRelatedIds(prev => ({ ...prev, [id]: !prev[id] }));
   };
 
-  const handleSubmitConfession = (e: React.FormEvent) => {
+  const handleSubmitConfession = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newMessage.trim()) return;
 
@@ -41,9 +48,19 @@ export default function ConfessionsPage() {
       latenight: 'Late Night Regrets'
     };
 
+    const aliasName = newAlias.trim() || 'Anonymous Developer';
+
+    const res = await createPost({
+      title: `Confession: ${newMessage.trim().slice(0, 40)}...`,
+      content: newMessage.trim(),
+      format: 'confession',
+      isAnonymous: true,
+      summary: newMessage.trim().slice(0, 140)
+    });
+
     const newConfession: Confession = {
-      id: `cf-${Date.now()}`,
-      alias: newAlias.trim() || 'Anonymous Developer',
+      id: res.post?.id || `cf-${Date.now()}`,
+      alias: aliasName,
       avatarIcon: 'fox',
       category: newCategory,
       categoryLabel: categoryLabels[newCategory],
@@ -53,19 +70,10 @@ export default function ConfessionsPage() {
       commentsCount: 0
     };
 
-    setConfessions([newConfession, ...confessions]);
+    setConfessions(prev => [newConfession, ...prev]);
     setNewAlias('');
     setNewMessage('');
     setModalOpen(false);
-
-    // Persist anonymous confession to backend
-    createPost({
-      title: `Confession: ${newMessage.trim().slice(0, 40)}...`,
-      content: newMessage.trim(),
-      format: 'confession',
-      isAnonymous: true,
-      summary: newMessage.trim().slice(0, 140)
-    }).catch(() => {});
   };
 
   const filteredConfessions = confessions.filter(c => {
@@ -202,7 +210,27 @@ export default function ConfessionsPage() {
 
             {/* Confessions Stream */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
-              {filteredConfessions.map(confession => {
+              {loading ? (
+                <div style={{ padding: 'var(--space-8)', textAlign: 'center', color: 'var(--text-muted)' }}>
+                  Loading uncommitted confessions...
+                </div>
+              ) : filteredConfessions.length === 0 ? (
+                <div className="card" style={{ padding: 'var(--space-8)', textAlign: 'center', borderRadius: 'var(--radius-xl)' }}>
+                  <div style={{ fontSize: '2rem', marginBottom: 'var(--space-2)' }}>🦊</div>
+                  <h3 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: 'var(--space-2)' }}>No Confessions Found</h3>
+                  <p className="text-secondary" style={{ maxWidth: '420px', margin: '0 auto var(--space-4)', fontSize: '0.9rem' }}>
+                    There are no uncommitted confessions in this filter yet. Be the first to anonymously share your story.
+                  </p>
+                  <button
+                    onClick={() => setModalOpen(true)}
+                    className="btn btn-secondary btn-sm"
+                    style={{ borderRadius: 'var(--radius-full)' }}
+                  >
+                    Share First Confession &rarr;
+                  </button>
+                </div>
+              ) : (
+                filteredConfessions.map(confession => {
                 const isRel = relatedIds[confession.id];
                 return (
                   <article
@@ -274,7 +302,7 @@ export default function ConfessionsPage() {
                     </div>
                   </article>
                 );
-              })}
+              }))}
             </div>
 
           </div>

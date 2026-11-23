@@ -1,38 +1,85 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { FEED_STORIES, FEATURED_STORY, CONFESSIONS_DATA, TUTORIAL_TRACKS } from '../lib/mock-data.ts';
+import { normalizePost, normalizeTutorial, normalizeConfession } from '../lib/api.ts';
 
 // ----------------------------------------------------
-// 1. DATA MODELS & MOCK INTEGRITY
+// 1. DATA NORMALIZATION (DB -> CLIENT)
 // ----------------------------------------------------
-test('Data Integrity: Featured story and feed stories are well-formed', () => {
-  assert.ok(FEATURED_STORY.id, 'Featured story must have an id');
-  assert.ok(FEATURED_STORY.slug, 'Featured story must have a slug');
-  assert.ok(FEATURED_STORY.title, 'Featured story must have a title');
-  assert.ok(FEATURED_STORY.summary, 'Featured story must have summary');
-  assert.ok(FEATURED_STORY.author?.name, 'Featured story must have author name');
+test('Data Normalization: Backend database post row maps accurately to Client Post', () => {
+  const dbPostRow = {
+    id: 'post-uuid-1',
+    title: 'Zero-Copy Serialization in Fastify v5',
+    slug: 'zero-copy-serialization-fastify-v5',
+    summary: 'Eliminating V8 heap garbage collection pauses.',
+    content: '## 1. Motivation\n\nDeep dive into binary serialization buffers.',
+    format: 'dev_log',
+    status: 'published',
+    readingTimeMinutes: 6,
+    clapsCount: 142,
+    publishedAt: '2026-11-15T10:00:00.000Z',
+    author: {
+      id: 'author-uuid-1',
+      name: 'Alex Rivera',
+      username: 'alexrivera',
+      avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb',
+      role: 'Staff Engineer'
+    },
+    tags: ['Fastify', 'Performance', 'Rust']
+  };
 
-  assert.ok(Array.isArray(FEED_STORIES), 'FEED_STORIES must be an array');
-  assert.ok(FEED_STORIES.length >= 3, 'FEED_STORIES must have at least 3 stories');
-
-  for (const story of FEED_STORIES) {
-    assert.ok(story.id, 'Story must have an id');
-    assert.ok(story.slug, 'Story must have a slug');
-    assert.ok(story.title, 'Story must have a title');
-    assert.ok(['article', 'dev-log', 'tutorial', 'confession'].includes(story.category), `Invalid category: ${story.category}`);
-  }
+  const normalized = normalizePost(dbPostRow);
+  assert.equal(normalized.id, 'post-uuid-1');
+  assert.equal(normalized.title, 'Zero-Copy Serialization in Fastify v5');
+  assert.equal(normalized.category, 'dev-log');
+  assert.equal(normalized.author.name, 'Alex Rivera');
+  assert.equal(normalized.author.avatar, 'https://images.unsplash.com/photo-1534528741775-53994a69daeb');
+  assert.equal(normalized.readTime, '6 min read');
+  assert.equal(normalized.relates, 142);
+  assert.deepEqual(normalized.tags, ['Fastify', 'Performance', 'Rust']);
 });
 
-test('Data Integrity: Tutorial tracks and confessions are populated', () => {
-  assert.ok(TUTORIAL_TRACKS.length > 0, 'Tutorial tracks should not be empty');
-  for (const track of TUTORIAL_TRACKS) {
-    assert.ok(track.id && track.title && track.totalSteps > 0, 'Tutorial track must have id, title, and totalSteps');
-  }
+test('Data Normalization: Backend tutorial and confession rows map accurately', () => {
+  const dbTutorial = {
+    id: 'tut-uuid-1',
+    slug: 'fastify-redis-streams',
+    title: 'Building Real-Time Microservices with Redis Streams',
+    summary: 'Masterclass covering consumer groups and backpressure.',
+    readingTimeMinutes: 45,
+    metadata: {
+      level: 'Advanced',
+      totalSteps: 5,
+      completedSteps: 3,
+      status: 'started'
+    },
+    tags: ['Redis', 'Fastify']
+  };
 
-  assert.ok(CONFESSIONS_DATA.length > 0, 'Confessions data should not be empty');
-  for (const confession of CONFESSIONS_DATA) {
-    assert.ok(confession.id && confession.message && confession.alias, 'Confession must have id, message, and alias');
-  }
+  const normTutorial = normalizeTutorial(dbTutorial);
+  assert.equal(normTutorial.id, 'tut-uuid-1');
+  assert.equal(normTutorial.totalSteps, 5);
+  assert.equal(normTutorial.completedSteps, 3);
+  assert.equal(normTutorial.level, 'Advanced');
+  assert.equal(normTutorial.status, 'started');
+
+  const dbConfession = {
+    id: 'cf-uuid-1',
+    content: 'I dropped the production audit database during a 3 AM migration.',
+    publishedAt: '2026-11-20T03:00:00.000Z',
+    clapsCount: 895,
+    author: { name: 'Anonymous Dev' },
+    metadata: {
+      confessionCategory: 'incidents',
+      avatarIcon: 'fox'
+    }
+  };
+
+  const normConfession = normalizeConfession(dbConfession);
+  assert.equal(normConfession.id, 'cf-uuid-1');
+  assert.equal(normConfession.alias, 'Anonymous Dev');
+  assert.equal(normConfession.category, 'incidents');
+  assert.equal(normConfession.categoryLabel, 'Incidents & Production');
+  assert.equal(normConfession.relates, 895);
+  assert.equal(normConfession.message, 'I dropped the production audit database during a 3 AM migration.');
 });
 
 // ----------------------------------------------------

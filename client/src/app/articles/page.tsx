@@ -1,9 +1,15 @@
 import Link from 'next/link';
-import { fetchFeed } from '@/lib/api';
+import { fetchSpaceFeed } from '@/lib/api';
+
+export const metadata = {
+  title: 'Articles — Pending Push',
+  description: 'Warm, long-form essays on software systems design, cognitive stamina, asynchronous workflows, and technical leadership.'
+};
 
 export default async function ArticlesPage() {
-  const { featured, stories } = await fetchFeed();
-  const articles = stories.filter(s => s.category === 'article' || s.category === 'tutorial');
+  const articles = await fetchSpaceFeed('articles');
+  const featured = articles.length > 0 ? articles[0] : null;
+  const listArticles = articles.length > 1 ? articles.slice(1) : articles;
 
   return (
     <main className="page-wrapper">
@@ -35,123 +41,137 @@ export default async function ArticlesPage() {
           </div>
         </section>
 
-        {/* Featured Read Hero */}
-        <article className="featured-story-card">
-          <div className="featured-kicker">
-            <span>✦ Featured Read of the Month</span>
-            <span>•</span>
-            <span>Productivity & Deep Work</span>
-          </div>
-          
-          <h2 className="featured-title">
-            <Link href={`/articles/${featured.slug}`}>
-              {featured.title}
+        {articles.length === 0 ? (
+          <div className="card" style={{ padding: 'var(--space-8)', textAlign: 'center', margin: 'var(--space-6) 0' }}>
+            <div style={{ fontSize: '2.5rem', marginBottom: 'var(--space-2)' }}>📖</div>
+            <h2 style={{ fontSize: '1.35rem', fontWeight: 800, marginBottom: 'var(--space-2)' }}>No Articles Published Yet</h2>
+            <p className="text-secondary" style={{ maxWidth: '440px', margin: '0 auto var(--space-4)', fontSize: '0.925rem' }}>
+              The Articles space is waiting for its first deep-dive essay. Start writing your engineering reflection or architecture retrospective.
+            </p>
+            <Link href="/studio" className="btn btn-primary btn-sm" style={{ borderRadius: 'var(--radius-full)' }}>
+              Open Studio &rarr;
             </Link>
-          </h2>
-
-          <p className="featured-summary">
-            {featured.summary}
-          </p>
-
-          <div className="story-meta-row">
-            <Link href={`/profile/${featured.author.username}`} className="story-author-chip">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img className="story-author-avatar" src={featured.author.avatar} alt={featured.author.name} />
-              <span>{featured.author.name} ({featured.author.role})</span>
-            </Link>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>
-              <span>{featured.readTime}</span>
-              <span>•</span>
-              <span style={{ color: 'var(--brand-terracotta)', fontWeight: 600 }}>{featured.relates} relates</span>
-            </div>
           </div>
-        </article>
+        ) : (
+          <>
+            {/* Featured Read Hero */}
+            {featured && (
+              <article className="featured-story-card">
+                <div className="featured-kicker">
+                  <span>✦ Featured Read</span>
+                  <span>•</span>
+                  <span>{featured.category}</span>
+                </div>
+                
+                <h2 className="featured-title">
+                  <Link href={`/articles/${featured.slug}`}>
+                    {featured.title}
+                  </Link>
+                </h2>
 
-        {/* 2-COLUMN EDITORIAL LAYOUT */}
-        <div className="blog-layout">
+                <p className="featured-summary">
+                  {featured.summary}
+                </p>
 
-          {/* LEFT: ESSAYS STREAM */}
-          <div>
-            <div style={{ display: 'flex', gap: 'var(--space-2)', marginBottom: 'var(--space-6)', flexWrap: 'wrap', alignItems: 'center' }}>
-              <button className="topic-chip" style={{ backgroundColor: 'var(--brand-terracotta-subtle)', color: 'var(--brand-terracotta)', borderColor: 'var(--brand-terracotta)', fontWeight: 700 }}>All Essays</button>
-              <button className="topic-chip">Productivity & Focus</button>
-              <button className="topic-chip">Systems & Architecture</button>
-              <button className="topic-chip">Culture & Leadership</button>
-            </div>
+                <div className="story-meta-row">
+                  <Link href={`/profile/${featured.author.username}`} className="story-author-chip">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img className="story-author-avatar" src={featured.author.avatar} alt={featured.author.name} />
+                    <span>{featured.author.name} ({featured.author.role})</span>
+                  </Link>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>
+                    <span>{featured.readTime}</span>
+                    <span>•</span>
+                    <span style={{ color: 'var(--brand-terracotta)', fontWeight: 600 }}>{featured.relates} relates</span>
+                  </div>
+                </div>
+              </article>
+            )}
 
-            <div className="feed-stream">
-              {articles.map((article) => (
-                <article key={article.id} className="story-card">
-                  <div>
-                    <div className="story-kicker">{article.tags.join(' • ')}</div>
-                    <h3 className="story-title">
-                      <Link href={`/articles/${article.slug}`}>{article.title}</Link>
-                    </h3>
-                    <p className="story-excerpt">{article.summary}</p>
-                    <div className="story-meta-row">
-                      <Link href={`/profile/${article.author.username}`} className="story-author-chip">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img className="story-author-avatar" src={article.author.avatar} alt={article.author.name} />
-                        <span>{article.author.name}</span>
-                      </Link>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
-                        <span>{article.readTime}</span>
-                        <span>•</span>
-                        <span>{article.relates} relates</span>
+            {/* 2-COLUMN EDITORIAL LAYOUT */}
+            <div className="blog-layout">
+
+              {/* LEFT: ESSAYS STREAM */}
+              <div>
+                <div style={{ display: 'flex', gap: 'var(--space-2)', marginBottom: 'var(--space-6)', flexWrap: 'wrap', alignItems: 'center' }}>
+                  <button className="topic-chip" style={{ backgroundColor: 'var(--brand-terracotta-subtle)', color: 'var(--brand-terracotta)', borderColor: 'var(--brand-terracotta)', fontWeight: 700 }}>
+                    All Essays ({articles.length})
+                  </button>
+                  <button className="topic-chip">Productivity &amp; Focus</button>
+                  <button className="topic-chip">Systems &amp; Architecture</button>
+                  <button className="topic-chip">Culture &amp; Leadership</button>
+                </div>
+
+                <div className="feed-stream">
+                  {listArticles.map((article) => (
+                    <article key={article.id} className="story-card">
+                      <div>
+                        <div className="story-kicker">{article.tags.length > 0 ? article.tags.join(' • ') : article.category}</div>
+                        <h3 className="story-title">
+                          <Link href={`/articles/${article.slug}`}>{article.title}</Link>
+                        </h3>
+                        <p className="story-excerpt">{article.summary}</p>
+                        <div className="story-meta-row">
+                          <Link href={`/profile/${article.author.username}`} className="story-author-chip">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img className="story-author-avatar" src={article.author.avatar} alt={article.author.name} />
+                            <span>{article.author.name}</span>
+                          </Link>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
+                            <span>{article.readTime}</span>
+                            <span>•</span>
+                            <span>{article.relates} relates</span>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                  {article.thumbnail && (
-                    <div className="story-thumbnail">
-                      <span style={{ fontWeight: 700, color: 'var(--brand-terracotta)' }}>{article.thumbnail.kicker}</span>
-                      <span style={{ fontSize: '0.7rem', margin: '4px 0' }}>{article.thumbnail.subtext}</span>
-                      <span>{article.thumbnail.badge}</span>
-                    </div>
-                  )}
-                </article>
-              ))}
-            </div>
-          </div>
-
-          {/* RIGHT: CURATED SIDEBAR */}
-          <aside className="blog-sidebar">
-            <div className="sidebar-widget">
-              <div className="sidebar-title">
-                <span>Curated Reading Tracks</span>
-              </div>
-              <div className="trending-list">
-                <div className="trending-item">
-                  <span className="trending-number">01</span>
-                  <div className="trending-content">
-                    <Link href={`/articles/${featured.slug}`} className="trending-headline">The Senior Architect&apos;s Syllabus</Link>
-                    <span className="trending-byline">4 essays • Curated by Marcus</span>
-                  </div>
-                </div>
-                <div className="trending-item">
-                  <span className="trending-number">02</span>
-                  <div className="trending-content">
-                    <Link href={`/articles/${featured.slug}`} className="trending-headline">Deep Work & Focus Systems</Link>
-                    <span className="trending-byline">3 essays • Curated by Elena</span>
-                  </div>
+                      {article.thumbnail && (
+                        <div className="story-thumbnail">
+                          <span style={{ fontWeight: 700, color: 'var(--brand-terracotta)' }}>{article.thumbnail.kicker}</span>
+                          <span style={{ fontSize: '0.7rem', margin: '4px 0' }}>{article.thumbnail.subtext}</span>
+                          <span>{article.thumbnail.badge}</span>
+                        </div>
+                      )}
+                    </article>
+                  ))}
                 </div>
               </div>
-            </div>
 
-            <div className="sidebar-widget">
-              <div className="sidebar-title">
-                <span>Article Topics</span>
-              </div>
-              <div className="topic-cloud">
-                <span className="topic-chip">#Productivity</span>
-                <span className="topic-chip">#Architecture</span>
-                <span className="topic-chip">#Leadership</span>
-                <span className="topic-chip">#RemoteWork</span>
-                <span className="topic-chip">#CleanCode</span>
-              </div>
-            </div>
-          </aside>
+              {/* RIGHT: CURATED SIDEBAR */}
+              <aside className="blog-sidebar">
+                <div className="sidebar-widget">
+                  <div className="sidebar-title">
+                    <span>Curated Reading Space</span>
+                  </div>
+                  <div className="trending-list">
+                    {articles.slice(0, 3).map((a, idx) => (
+                      <div key={a.id} className="trending-item">
+                        <span className="trending-number">0{idx + 1}</span>
+                        <div className="trending-content">
+                          <Link href={`/articles/${a.slug}`} className="trending-headline">{a.title}</Link>
+                          <span className="trending-byline">{a.author.name} • {a.readTime}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
 
-        </div>
+                <div className="sidebar-widget">
+                  <div className="sidebar-title">
+                    <span>Article Topics</span>
+                  </div>
+                  <div className="topic-cloud">
+                    <span className="topic-chip">#Productivity</span>
+                    <span className="topic-chip">#Architecture</span>
+                    <span className="topic-chip">#Leadership</span>
+                    <span className="topic-chip">#RemoteWork</span>
+                    <span className="topic-chip">#CleanCode</span>
+                  </div>
+                </div>
+              </aside>
+
+            </div>
+          </>
+        )}
 
       </div>
     </main>

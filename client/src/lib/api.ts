@@ -1,5 +1,4 @@
-import { Post, TutorialTrack, Confession } from './types';
-import { FEATURED_STORY, FEED_STORIES, TUTORIAL_TRACKS, CONFESSIONS_DATA } from './mock-data';
+import type { Post, TutorialTrack, Confession } from './types';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
@@ -12,24 +11,136 @@ function getAuthHeader(token?: string | null): Record<string, string> {
   return headers;
 }
 
-// ----------------- FEEDS & POSTS -----------------
+// ----------------- DATA NORMALIZERS (DB -> CLIENT) -----------------
 
-export async function fetchFeed(): Promise<{ featured: Post; stories: Post[] }> {
+export function normalizePost(p: any): Post {
+  if (!p) {
+    throw new Error('Cannot normalize null or undefined post');
+  }
+
+  const categoryMap: Record<string, 'article' | 'dev-log' | 'tutorial' | 'confession'> = {
+    article: 'article',
+    dev_log: 'dev-log',
+    'dev-log': 'dev-log',
+    tutorial: 'tutorial',
+    confession: 'confession'
+  };
+
+  const defaultAvatar = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&q=80';
+  const authorData = p.author || {};
+
+  let contentText = '';
+  if (typeof p.content === 'string') {
+    contentText = p.content;
+  } else if (typeof p.content === 'object' && p.content !== null && 'body' in p.content) {
+    contentText = String(p.content.body);
+  } else {
+    contentText = p.contentText || '';
+  }
+
+  return {
+    id: p.id || '',
+    title: p.title || 'Untitled Post',
+    slug: p.slug || '',
+    summary: p.summary || contentText.slice(0, 160),
+    content: contentText,
+    category: categoryMap[p.format || p.category] || 'article',
+    author: {
+      id: authorData.id || p.authorId,
+      name: authorData.name || (p.isAnonymous ? 'Anonymous Developer' : 'Author'),
+      username: authorData.username || (p.isAnonymous ? 'anonymous' : 'author'),
+      avatar: authorData.avatar || authorData.avatarUrl || defaultAvatar,
+      role: authorData.role || (p.isAnonymous ? 'Verified Dev' : 'Contributor'),
+      bio: authorData.bio || ''
+    },
+    readTime: p.readTime || `${p.readingTimeMinutes || 1} min read`,
+    relates: p.relates ?? p.clapsCount ?? 0,
+    publishedAt: p.publishedAt
+      ? new Date(p.publishedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+      : 'Recently',
+    tags: Array.isArray(p.tags) ? p.tags : [],
+    thumbnail: p.thumbnail || (p.metadata?.thumbnail ? p.metadata.thumbnail : undefined)
+  };
+}
+
+export function normalizeConfession(p: any): Confession {
+  const categoryLabels: Record<string, string> = {
+    incidents: 'Incidents & Production',
+    imposter: 'Imposter Syndrome',
+    career: 'Career & Team',
+    latenight: 'Late Night Regrets'
+  };
+
+  const cat = (p.metadata?.confessionCategory || p.category || 'incidents') as Confession['category'];
+  const validCat: Confession['category'] = ['incidents', 'imposter', 'career', 'latenight'].includes(cat) ? cat : 'incidents';
+
+  return {
+    id: p.id,
+    alias: p.author?.name || p.alias || 'Anonymous Developer',
+    avatarIcon: p.metadata?.avatarIcon || p.avatarIcon || 'fox',
+    category: validCat,
+    categoryLabel: categoryLabels[validCat] || 'Production Confession',
+    message: typeof p.content === 'string' ? p.content : (p.summary || p.message || ''),
+    timeAgo: p.publishedAt
+      ? new Date(p.publishedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+      : 'Recently',
+    relates: p.relates ?? p.clapsCount ?? 0,
+    commentsCount: p.commentsCount ?? 0
+  };
+}
+
+export function normalizeTutorial(p: any): TutorialTrack {
+  const meta = p.metadata || {};
+  return {
+    id: p.id,
+    slug: p.slug || '',
+    title: p.title || 'Untitled Tutorial',
+    description: p.summary || '',
+    level: meta.level || 'Intermediate',
+    duration: meta.duration || `${p.readingTimeMinutes || 15} mins`,
+    totalSteps: meta.totalSteps || 5,
+    completedSteps: meta.completedSteps || 0,
+    status: meta.status || 'started',
+    tags: Array.isArray(p.tags) ? p.tags : ['Engineering'],
+    lastPracticed: meta.lastPracticed || (p.publishedAt ? new Date(p.publishedAt).toLocaleDateString() : undefined)
+  };
+}
+
+// ----------------- FEEDS & POSTS (DIRECT FROM DB) -----------------
+
+export async function fetchFeed(format?: string): Promise<{ featured: Post | null; stories: Post[] }> {
   try {
-    const res = await fetch(`${API_BASE}/api/post/feed`, {
+    const url = format ? `${API_BASE}/api/post/feed?format=${format}` : `${API_BASE}/api/post/feed`;
+    const res = await fetch(url, {
       next: { revalidate: 30 }
     });
     if (!res.ok) throw new Error('Backend feed unavailable');
     const data = await res.json();
+    const rawPosts: any[] = Array.isArray(data) ? data : data.posts || [];
+    const stories = rawPosts.map(normalizePost);
     return {
-      featured: data.featured || FEATURED_STORY,
-      stories: Array.isArray(data) ? data : data.posts || FEED_STORIES
+      featured: stories.length > 0 ? stories[0] : null,
+      stories: stories.length > 1 ? stories.slice(1) : (stories.length === 1 ? stories : [])
     };
   } catch {
     return {
-      featured: FEATURED_STORY,
-      stories: FEED_STORIES
+      featured: null,
+      stories: []
     };
+  }
+}
+
+export async function fetchSpaceFeed(space: string): Promise<Post[]> {
+  try {
+    const res = await fetch(`${API_BASE}/api/post/spaces/${space}`, {
+      next: { revalidate: 30 }
+    });
+    if (!res.ok) throw new Error(`Space feed for ${space} unavailable`);
+    const data = await res.json();
+    const rawPosts: any[] = data.posts || [];
+    return rawPosts.map(normalizePost);
+  } catch {
+    return [];
   }
 }
 
@@ -38,27 +149,54 @@ export async function fetchPostBySlug(slug: string): Promise<Post | null> {
     const res = await fetch(`${API_BASE}/api/post/slug/${slug}`, {
       next: { revalidate: 60 }
     });
-    if (!res.ok) throw new Error('Post not found on backend');
-    return await res.json();
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.post ? normalizePost(data.post) : null;
   } catch {
-    if (slug === FEATURED_STORY.slug) return FEATURED_STORY;
-    const found = FEED_STORIES.find(s => s.slug === slug);
-    return found || FEATURED_STORY;
+    return null;
   }
 }
 
-export async function fetchRandomPost(): Promise<Post> {
+export async function fetchRandomPost(): Promise<Post | null> {
   try {
     const res = await fetch(`${API_BASE}/api/post/random`);
-    if (!res.ok) throw new Error('Random post fetch failed');
+    if (!res.ok) return null;
     const data = await res.json();
-    if (data.post) return data.post;
-    return data;
+    return data.post ? normalizePost(data.post) : null;
   } catch {
-    const idx = Math.floor(Math.random() * FEED_STORIES.length);
-    return FEED_STORIES[idx] || FEATURED_STORY;
+    return null;
   }
 }
+
+export async function fetchTutorials(): Promise<TutorialTrack[]> {
+  try {
+    const res = await fetch(`${API_BASE}/api/post/spaces/tutorials`, {
+      next: { revalidate: 30 }
+    });
+    if (!res.ok) return [];
+    const data = await res.json();
+    const rawPosts: any[] = data.posts || [];
+    return rawPosts.map(normalizeTutorial);
+  } catch {
+    return [];
+  }
+}
+
+export async function fetchConfessions(): Promise<Confession[]> {
+  try {
+    const res = await fetch(`${API_BASE}/api/post/spaces/confessions`, {
+      next: { revalidate: 30 }
+    });
+    if (!res.ok) return [];
+    const data = await res.json();
+    const rawPosts: any[] = data.posts || [];
+    return rawPosts.map(normalizeConfession);
+  } catch {
+    return [];
+  }
+}
+
+// ----------------- AUTHOR STUDIO & DRAFTS LIFECYCLE -----------------
 
 export interface CreatePostPayload {
   title: string;
@@ -83,31 +221,18 @@ export async function createPost(
       body: JSON.stringify(input)
     });
     const data = await res.json();
-    if (!res.ok) throw new Error(data.message || 'Failed to create post');
-    return { success: true, post: data.post, message: data.message };
-  } catch (err: any) {
-    // Offline / demo fallback
+    if (!res.ok) {
+      return { success: false, message: data.message || 'Failed to create post' };
+    }
     return {
       success: true,
-      message: 'Post created and staged successfully (local mode)',
-      post: {
-        id: `post-${Date.now()}`,
-        title: input.title,
-        slug: input.title.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
-        summary: input.summary || input.content.slice(0, 140),
-        content: input.content,
-        category: (input.format?.replace('_', '-') as any) || 'dev-log',
-        author: {
-          name: 'Alex Rivera',
-          username: 'alexrivera',
-          avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&q=80',
-          role: 'Author'
-        },
-        readTime: `${Math.max(1, Math.ceil(input.content.split(/\s+/).length / 200))} min read`,
-        relates: 1,
-        publishedAt: 'Just now',
-        tags: input.tags || [input.format || 'dev-log', 'Engineering']
-      }
+      post: data.post ? normalizePost(data.post) : undefined,
+      message: data.message
+    };
+  } catch (err: any) {
+    return {
+      success: false,
+      message: err?.message || 'Network error creating post'
     };
   }
 }
@@ -124,12 +249,18 @@ export async function updatePost(
       body: JSON.stringify(input)
     });
     const data = await res.json();
-    if (!res.ok) throw new Error(data.message || 'Failed to update post');
-    return { success: true, post: data.post, message: data.message };
-  } catch (err: any) {
+    if (!res.ok) {
+      return { success: false, message: data.message || 'Failed to update post' };
+    }
     return {
       success: true,
-      message: 'Draft auto-saved locally'
+      post: data.post ? normalizePost(data.post) : undefined,
+      message: data.message
+    };
+  } catch (err: any) {
+    return {
+      success: false,
+      message: err?.message || 'Network error updating post'
     };
   }
 }
@@ -139,29 +270,12 @@ export async function fetchAuthorDrafts(token?: string | null): Promise<Post[]> 
     const res = await fetch(`${API_BASE}/api/post/drafts`, {
       headers: getAuthHeader(token)
     });
-    if (!res.ok) throw new Error('Failed to fetch drafts');
+    if (!res.ok) return [];
     const data = await res.json();
-    return data.drafts || [];
+    const rawDrafts: any[] = data.drafts || [];
+    return rawDrafts.map(normalizePost);
   } catch {
-    return [
-      {
-        id: 'draft-zero-copy',
-        slug: 'zero-copy-serialization-fastify-v5',
-        title: 'Zero-Copy Serialization in Fastify v5 with Avro and Native Structs',
-        summary: 'Deep dive into eliminating V8 heap garbage collection overhead with slab-allocated binary serialization buffers.',
-        category: 'dev-log',
-        author: {
-          name: 'Alex Rivera',
-          username: 'alexrivera',
-          avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&q=80',
-          role: 'Staff Engineer'
-        },
-        readTime: '6 min read',
-        relates: 0,
-        publishedAt: 'Draft (auto-saved)',
-        tags: ['Fastify', 'V8', 'Performance']
-      }
-    ];
+    return [];
   }
 }
 
@@ -170,9 +284,9 @@ export async function fetchPostForEdit(id: string, token?: string | null): Promi
     const res = await fetch(`${API_BASE}/api/post/${id}/edit`, {
       headers: getAuthHeader(token)
     });
-    if (!res.ok) throw new Error('Failed to fetch post for edit');
+    if (!res.ok) return null;
     const data = await res.json();
-    return data.post || null;
+    return data.post ? normalizePost(data.post) : null;
   } catch {
     return null;
   }
@@ -186,7 +300,7 @@ export async function publishPost(id: string, token?: string | null): Promise<bo
     });
     return res.ok;
   } catch {
-    return true;
+    return false;
   }
 }
 
@@ -198,7 +312,7 @@ export async function unpublishPost(id: string, token?: string | null): Promise<
     });
     return res.ok;
   } catch {
-    return true;
+    return false;
   }
 }
 
@@ -210,7 +324,7 @@ export async function deletePost(id: string, token?: string | null): Promise<boo
     });
     return res.ok;
   } catch {
-    return true;
+    return false;
   }
 }
 
@@ -227,18 +341,11 @@ export async function fetchTags(): Promise<TagItem[]> {
     const res = await fetch(`${API_BASE}/api/tags`, {
       next: { revalidate: 120 }
     });
-    if (!res.ok) throw new Error('Tags fetch failed');
+    if (!res.ok) return [];
     const data = await res.json();
     return data.tags || [];
   } catch {
-    return [
-      { id: 'tag-1', name: 'Fastify', slug: 'fastify', postsCount: 14 },
-      { id: 'tag-2', name: 'Architecture', slug: 'architecture', postsCount: 28 },
-      { id: 'tag-3', name: 'Performance', slug: 'performance', postsCount: 19 },
-      { id: 'tag-4', name: 'Rust', slug: 'rust', postsCount: 11 },
-      { id: 'tag-5', name: 'TypeScript', slug: 'typescript', postsCount: 32 },
-      { id: 'tag-6', name: 'Microservices', slug: 'microservices', postsCount: 16 }
-    ];
+    return [];
   }
 }
 
@@ -256,22 +363,18 @@ export async function loginUser(
     });
     const data = await res.json().catch(() => ({}));
     if (res.ok) {
-      return { success: true, token: data.token, user: data.user, message: data.message };
-    }
-    return { success: false, message: data.message || 'Login failed' };
-  } catch {
-    // Demo / offline simulation
-    return {
-      success: true,
-      token: `pp_token_${Date.now()}`,
-      user: {
-        name: body.role === 'admin' ? 'Security Admin' : 'Alex Rivera',
-        username: body.role === 'admin' ? 'admin' : (body.email?.split('@')[0] || 'alexrivera'),
-        email: body.email || 'alex@pendingpush.dev',
+      const user = data.user || {
+        name: body.role === 'admin' ? 'Security Admin' : (body.email?.split('@')[0] || 'User'),
+        username: body.role === 'admin' ? 'admin' : (body.email?.split('@')[0] || 'user'),
+        email: body.email || '',
         role: body.role || 'author',
         avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&q=80'
-      }
-    };
+      };
+      return { success: true, token: data.accessToken || data.token, user, message: data.message };
+    }
+    return { success: false, message: data.message || 'Login failed' };
+  } catch (err: any) {
+    return { success: false, message: err?.message || 'Network error during login' };
   }
 }
 
@@ -286,21 +389,18 @@ export async function registerUser(
     });
     const data = await res.json().catch(() => ({}));
     if (res.ok) {
-      return { success: true, token: data.token, user: data.user, message: data.message };
-    }
-    return { success: false, message: data.message || 'Registration failed' };
-  } catch {
-    return {
-      success: true,
-      token: `pp_token_${Date.now()}`,
-      user: {
+      const user = data.user || {
         name: body.name,
         username: body.username,
         email: body.email,
         role: 'author',
         avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&q=80'
-      }
-    };
+      };
+      return { success: true, token: data.accessToken || data.token, user, message: data.message };
+    }
+    return { success: false, message: data.message || 'Registration failed' };
+  } catch (err: any) {
+    return { success: false, message: err?.message || 'Network error during registration' };
   }
 }
 
@@ -308,52 +408,37 @@ export async function registerUser(
 
 export async function clapPost(
   postId: string,
-  increment: number = 1,
+  claps: number = 1,
   token?: string | null
-): Promise<{ success: boolean; totalClaps?: number; userClaps?: number }> {
+): Promise<{ success: boolean; totalClaps?: number; userClaps?: number; message?: string }> {
   try {
     const res = await fetch(`${API_BASE}/api/posts/${postId}/clap`, {
       method: 'POST',
       headers: getAuthHeader(token),
-      body: JSON.stringify({ increment })
+      body: JSON.stringify({ claps })
     });
     const data = await res.json();
-    if (!res.ok) throw new Error(data.message || 'Clap failed');
+    if (!res.ok) return { success: false, message: data.message };
     return { success: true, totalClaps: data.totalClaps, userClaps: data.userClaps };
-  } catch {
-    // Offline simulation: persist locally
-    if (typeof window !== 'undefined') {
-      const stored = parseInt(localStorage.getItem(`claps_${postId}`) || '0', 10);
-      const next = Math.min(50, stored + increment);
-      localStorage.setItem(`claps_${postId}`, next.toString());
-      return { success: true, totalClaps: 42 + next, userClaps: next };
-    }
-    return { success: true };
+  } catch (err: any) {
+    return { success: false, message: err?.message };
   }
 }
 
 export async function toggleBookmark(
   postId: string,
   token?: string | null
-): Promise<{ success: boolean; bookmarked: boolean }> {
+): Promise<{ success: boolean; bookmarked: boolean; message?: string }> {
   try {
     const res = await fetch(`${API_BASE}/api/posts/${postId}/bookmark`, {
       method: 'POST',
       headers: getAuthHeader(token)
     });
     const data = await res.json();
-    if (!res.ok) throw new Error(data.message || 'Bookmark toggle failed');
+    if (!res.ok) return { success: false, bookmarked: false, message: data.message };
     return { success: true, bookmarked: data.bookmarked };
-  } catch {
-    // Offline simulation
-    if (typeof window !== 'undefined') {
-      const list: string[] = JSON.parse(localStorage.getItem('my_bookmarks') || '[]');
-      const isSaved = list.includes(postId);
-      const updated = isSaved ? list.filter(id => id !== postId) : [...list, postId];
-      localStorage.setItem('my_bookmarks', JSON.stringify(updated));
-      return { success: true, bookmarked: !isSaved };
-    }
-    return { success: true, bookmarked: true };
+  } catch (err: any) {
+    return { success: false, bookmarked: false, message: err?.message };
   }
 }
 
@@ -362,14 +447,11 @@ export async function fetchBookmarks(token?: string | null): Promise<Post[]> {
     const res = await fetch(`${API_BASE}/api/bookmarks`, {
       headers: getAuthHeader(token)
     });
-    if (!res.ok) throw new Error('Bookmarks fetch failed');
+    if (!res.ok) return [];
     const data = await res.json();
-    return data.bookmarks || [];
+    const rawBookmarks: any[] = data.bookmarks || [];
+    return rawBookmarks.map(normalizePost);
   } catch {
-    if (typeof window !== 'undefined') {
-      const list: string[] = JSON.parse(localStorage.getItem('my_bookmarks') || '[]');
-      return FEED_STORIES.filter(s => list.includes(s.id) || list.includes(s.slug));
-    }
     return [];
   }
 }
@@ -392,47 +474,11 @@ export interface CommentItem {
 export async function fetchComments(postId: string): Promise<CommentItem[]> {
   try {
     const res = await fetch(`${API_BASE}/api/posts/${postId}/comments`);
-    if (!res.ok) throw new Error('Failed to load comments');
+    if (!res.ok) return [];
     const data = await res.json();
     return data.comments || [];
   } catch {
-    // Mock sample discussion for rich preview
-    return [
-      {
-        id: 'cm-1',
-        postId,
-        authorId: 'u-elena',
-        authorName: 'Elena Rostova',
-        authorUsername: 'elenarostova',
-        authorAvatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=80&q=80',
-        content: 'Fascinating throughput results. Did you evaluate memory heap allocations under spike traffic when Avro schemas contain nested optional arrays?',
-        createdAt: '2 hours ago',
-        replies: [
-          {
-            id: 'cm-1-1',
-            postId,
-            authorId: 'u-alex',
-            authorName: 'Alex Rivera',
-            authorUsername: 'alexrivera',
-            authorAvatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&q=80',
-            content: 'Great question Elena! Yes, with pre-compiled Avro encoders, the V8 heap overhead remains flat even with deeply nested arrays because buffers are allocated slab-style.',
-            parentId: 'cm-1',
-            createdAt: '1 hour ago'
-          }
-        ]
-      },
-      {
-        id: 'cm-2',
-        postId,
-        authorId: 'u-marcus',
-        authorName: 'Marcus Vance',
-        authorUsername: 'marcusv',
-        authorAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=80&q=80',
-        content: 'We implemented a similar pattern on Fastify 5 last quarter. Shaved 80ms off p99 latency under 40k RPS. Solid write-up!',
-        createdAt: '4 hours ago',
-        replies: []
-      }
-    ];
+    return [];
   }
 }
 
@@ -449,23 +495,10 @@ export async function addComment(
       body: JSON.stringify({ content, parentId })
     });
     const data = await res.json();
-    if (!res.ok) throw new Error(data.message || 'Failed to post comment');
+    if (!res.ok) return { success: false, message: data.message || 'Failed to post comment' };
     return { success: true, comment: data.comment, message: data.message };
-  } catch {
-    return {
-      success: true,
-      comment: {
-        id: `cm-${Date.now()}`,
-        postId,
-        authorId: 'current-user',
-        authorName: 'Alex Rivera',
-        authorUsername: 'alexrivera',
-        authorAvatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&q=80',
-        content,
-        parentId: parentId || null,
-        createdAt: 'Just now'
-      }
-    };
+  } catch (err: any) {
+    return { success: false, message: err?.message || 'Network error posting comment' };
   }
 }
 
@@ -477,7 +510,7 @@ export async function deleteComment(commentId: string, token?: string | null): P
     });
     return res.ok;
   } catch {
-    return true;
+    return false;
   }
 }
 
@@ -495,12 +528,7 @@ export async function toggleFollow(
     const data = await res.json();
     return { success: true, following: data.following };
   } catch {
-    if (typeof window !== 'undefined') {
-      const stored = localStorage.getItem(`following_${userId}`) === 'true';
-      localStorage.setItem(`following_${userId}`, (!stored).toString());
-      return { success: true, following: !stored };
-    }
-    return { success: true, following: true };
+    return { success: false, following: false };
   }
 }
 
@@ -509,11 +537,12 @@ export async function fetchFollowingFeed(token?: string | null): Promise<Post[]>
     const res = await fetch(`${API_BASE}/api/posts/feed/following`, {
       headers: getAuthHeader(token)
     });
-    if (!res.ok) throw new Error('Following feed failed');
+    if (!res.ok) return [];
     const data = await res.json();
-    return data.posts || [];
+    const rawPosts: any[] = data.posts || [];
+    return rawPosts.map(normalizePost);
   } catch {
-    return FEED_STORIES.slice(0, 3);
+    return [];
   }
 }
 
@@ -533,32 +562,11 @@ export async function fetchActiveSessions(token?: string | null): Promise<Device
     const res = await fetch(`${API_BASE}/api/auth/sessions`, {
       headers: getAuthHeader(token)
     });
-    if (!res.ok) throw new Error('Failed to load active sessions');
+    if (!res.ok) return [];
     const data = await res.json();
     return data.sessions || [];
   } catch {
-    return [
-      {
-        id: 'sess-current',
-        ipAddress: '127.0.0.1 (Localhost)',
-        userAgent: typeof window !== 'undefined' ? window.navigator.userAgent : 'Chrome/131.0 Windows 11',
-        deviceType: 'Desktop',
-        browser: 'Google Chrome 131',
-        os: 'Windows 11',
-        lastActiveAt: 'Active Now',
-        isCurrent: true
-      },
-      {
-        id: 'sess-mobile-1',
-        ipAddress: '172.56.21.84',
-        userAgent: 'Safari/605.1 iPhone iOS 18.1',
-        deviceType: 'Mobile',
-        browser: 'Mobile Safari 18.1',
-        os: 'iOS 18.1 (iPhone 15 Pro)',
-        lastActiveAt: 'Yesterday at 9:42 PM',
-        isCurrent: false
-      }
-    ];
+    return [];
   }
 }
 
@@ -570,7 +578,7 @@ export async function revokeSession(sessionId: string, token?: string | null): P
     });
     return res.ok;
   } catch {
-    return true;
+    return false;
   }
 }
 
@@ -582,16 +590,8 @@ export async function revokeOtherSessions(token?: string | null): Promise<boolea
     });
     return res.ok;
   } catch {
-    return true;
+    return false;
   }
-}
-
-export async function fetchTutorials(): Promise<TutorialTrack[]> {
-  return TUTORIAL_TRACKS;
-}
-
-export async function fetchConfessions(): Promise<Confession[]> {
-  return CONFESSIONS_DATA;
 }
 
 // ----------------- ANALYTICS & ACTIVITY HEATMAP -----------------
@@ -621,64 +621,13 @@ export async function fetchUserActivity(
     if (!res.ok) throw new Error('User activity not found');
     const data = await res.json();
     if (data.activity) return data.activity;
-  } catch {
-    // Offline / demo fallback: generate realistic 52-week trailing activity
-  }
-
-  const days: ActivityDay[] = [];
-  const now = new Date();
-  let totalContributions = 0;
-  let currentStreak = 0;
-  let longestStreak = 0;
-  let tempStreak = 0;
-
-  for (let i = 364; i >= 0; i--) {
-    const d = new Date(now);
-    d.setDate(d.getDate() - i);
-    const dateStr = d.toISOString().split('T')[0];
-    
-    // Deterministic pseudo-random pattern based on day index
-    const seed = (i * 9301 + 49297) % 233280;
-    const rand = seed / 233280;
-    
-    let count = 0;
-    let level: 0 | 1 | 2 | 3 | 4 = 0;
-    
-    if (rand > 0.5) {
-      if (rand > 0.92) { count = 5; level = 4; }
-      else if (rand > 0.8) { count = 3; level = 3; }
-      else if (rand > 0.65) { count = 2; level = 2; }
-      else { count = 1; level = 1; }
-    }
-
-    days.push({ date: dateStr, count, level });
-    totalContributions += count;
-
-    if (count > 0) {
-      tempStreak++;
-      if (tempStreak > longestStreak) longestStreak = tempStreak;
-    } else {
-      tempStreak = 0;
-    }
-  }
-
-  // Calculate trailing active streak
-  for (let i = days.length - 1; i >= 0; i--) {
-    if (days[i].count > 0) {
-      currentStreak++;
-    } else if (i === days.length - 1) {
-      // allow today to be 0 without breaking streak if yesterday had contributions
-      continue;
-    } else {
-      break;
-    }
-  }
+  } catch {}
 
   return {
-    days,
-    totalContributions,
-    currentStreak: Math.max(1, currentStreak),
-    longestStreak: Math.max(currentStreak, longestStreak, 14)
+    days: [],
+    totalContributions: 0,
+    currentStreak: 0,
+    longestStreak: 0
   };
 }
 
@@ -714,49 +663,16 @@ export async function fetchAuthorTelemetry(token?: string | null): Promise<Autho
     if (!res.ok) throw new Error('Author telemetry failed');
     const data = await res.json();
     if (data.telemetry) return data.telemetry;
-  } catch {
-    // Offline fallback
-  }
+  } catch {}
 
   return {
-    totalViews: 318500,
-    totalClaps: 6890,
-    totalFollowers: 1240,
-    publishedPushesCount: 28,
-    draftsCount: 3,
-    avgRetentionRate: 78.4,
-    recentStories: [
-      {
-        id: 'st-1',
-        title: 'Building High-Throughput Web Applications with Fastify and Next.js 15',
-        slug: 'fastify-5-nextjs-15-high-throughput',
-        format: 'dev-logs',
-        status: 'published',
-        viewsCount: 18450,
-        clapsCount: 642,
-        publishedAt: 'Nov 15, 2026'
-      },
-      {
-        id: 'st-2',
-        title: 'Building a High-Performance Public Insights Heatmap from Scratch',
-        slug: 'fastify-redis-streams',
-        format: 'tutorials',
-        status: 'published',
-        viewsCount: 9820,
-        clapsCount: 388,
-        publishedAt: 'Nov 08, 2026'
-      },
-      {
-        id: 'st-3',
-        title: 'Zero-Copy Serialization in Fastify v5 with Avro and Native Structs',
-        slug: 'zero-copy-serialization-fastify-v5',
-        format: 'dev-logs',
-        status: 'draft',
-        viewsCount: 0,
-        clapsCount: 0,
-        publishedAt: null
-      }
-    ]
+    totalViews: 0,
+    totalClaps: 0,
+    totalFollowers: 0,
+    publishedPushesCount: 0,
+    draftsCount: 0,
+    avgRetentionRate: 0,
+    recentStories: []
   };
 }
 
@@ -778,18 +694,16 @@ export async function fetchPlatformStats(token?: string | null): Promise<Platfor
     if (!res.ok) throw new Error('Platform stats failed');
     const data = await res.json();
     if (data.stats) return data.stats;
-  } catch {
-    // Offline fallback
-  }
+  } catch {}
 
   return {
-    totalUsers: 14820,
-    totalPosts: 3450,
-    totalPublishedPosts: 3120,
-    totalDrafts: 330,
-    totalConfessions: 842,
-    totalComments: 12940,
-    totalClaps: 48920
+    totalUsers: 0,
+    totalPosts: 0,
+    totalPublishedPosts: 0,
+    totalDrafts: 0,
+    totalConfessions: 0,
+    totalComments: 0,
+    totalClaps: 0
   };
 }
 
@@ -806,6 +720,6 @@ export async function updateUserRole(
     });
     return res.ok;
   } catch {
-    return true;
+    return false;
   }
 }
